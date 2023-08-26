@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "393096100932",
+    "project_id": "zaant-8b83a",
+    "storage_bucket": "zaant-8b83a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393096100932:android:e146bf27ccb2b50caed011",
+        "android_client_info": {
+          "package_name": "com.users.zant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "393096100932-l2pbh8vvkmc2jl2oeip9tduquh4jjshn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOzWx8yZVeTKpH7Yuv758OwIxdZkqvTEk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393096100932-l2pbh8vvkmc2jl2oeip9tduquh4jjshn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
