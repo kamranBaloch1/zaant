@@ -8,9 +8,7 @@ import 'package:zant/global/colors.dart';
 import 'package:zant/global/constant_values.dart';
 
 class StartScreen extends StatelessWidget {
-  const StartScreen({
-    super.key,
-  });
+  const StartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class StartScreen extends StatelessWidget {
                 height: 40,
                 width: 300,
                 text: "Login",
-                navigateToNextScreen: () {
+                onTap: () {
                   Get.to(() => const LoginScreen());
                 },
               ),
@@ -69,7 +67,7 @@ class StartScreen extends StatelessWidget {
                 height: 40,
                 width: 300,
                 text: "Signup",
-                navigateToNextScreen: () {
+                onTap: () {
                   Get.to(() => const RegisterScreen());
                 },
               ),

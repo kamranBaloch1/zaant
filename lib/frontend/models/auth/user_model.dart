@@ -1,0 +1,66 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class UserModel {
+  final String? uid;
+  final String? name;
+  final String? email;
+  final String? profileUrl;
+  final DateTime? dob;
+  final String? gender;
+  final String? location;
+  final String? phoneNumber;
+  final bool? isEmailVerified;
+  final bool? isPhoneNumberVerified;
+  final Timestamp? createdOn;
+  final bool? accountStatus;
+  UserModel({
+    required this.uid,
+    required this.name,
+    required this.email,
+    required this.profileUrl,
+    required this.dob,
+    required this.gender,
+    required this.location,
+    required this.phoneNumber,
+    required this.isEmailVerified,
+    required this.isPhoneNumberVerified,
+    required this.createdOn,
+    required this.accountStatus,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'uid': uid,
+      'name': name,
+      'email': email,
+      'profileUrl': profileUrl,
+      'dob': dob,
+      'gender': gender,
+      'location': location,
+      'phoneNumber': phoneNumber,
+      'isEmailVerified': isEmailVerified,
+      'isPhoneNumberVerified': isPhoneNumberVerified,
+      'createdOn': createdOn,
+      'accountStatus': accountStatus,
+    };
+  }
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      uid: map['uid'] as String,
+      name: map['name'] as String,
+      email: map['email'] as String,
+      profileUrl: map['profileUrl'] as String,
+      dob: map['dob'] == null ? null : (map['dob'] as Timestamp).toDate(),
+      gender: map['gender'] as String,
+      location: map['location'] as String,
+      phoneNumber: map['phoneNumber'] as String,
+      isEmailVerified: map['isEmailVerified'] as bool,
+      isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,
+      createdOn: map['createdOn'] as Timestamp,
+      accountStatus: map['accountStatus'] as bool,
+    );
+  }
+}

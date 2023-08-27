@@ -7,20 +7,20 @@ class CustomButton extends StatelessWidget {
  final double height;
  final String text;
 final Color bgColor;
-final void Function()? navigateToNextScreen;
+final void Function()? onTap;
   const CustomButton({
     Key? key,
     required this.width,
     required this.height,
     required this.text,
     required this.bgColor,
-    this.navigateToNextScreen,
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: navigateToNextScreen,
+      onTap: onTap,
       child: Container(
         alignment: Alignment.center,
         height: height.h,

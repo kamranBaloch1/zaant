@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:zant/frontend/providers/auth/login_providers.dart';
 import 'package:zant/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
 import 'package:zant/frontend/screens/authSceens/login/forgot_password.dart';
 import 'package:zant/frontend/screens/authSceens/register/register_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
+import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/global/constant_values.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailC = TextEditingController();
-  final TextEditingController _passwordC = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  bool _isObscure = true;
-  // bool _isLoading = false;
+  bool _isPasswordObscured = true;
+  bool _isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -28,8 +32,32 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     super.dispose();
 
-    _emailC.dispose();
-    _passwordC.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
+
+  Future<void> _loginUser() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final loginProvider = Provider.of<LoginProviders>(context, listen: false);
+
+      String email = _emailController.text.trim();
+      String password = _passwordController.text.trim();
+
+      await loginProvider.loginWithEmailAndPasswordProvider(email, password);
+
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomToast("An error occurred. Please try again.");
+    }
   }
 
   @override
@@ -45,51 +73,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(
-                      height: 40.h,
-                    ),
+                    SizedBox(height: 40.h),
                     Center(
                       child: Image.asset(
-                assetLogoImg,
-                width: 250.w,
-                height: 180.h,
-              ),
+                        assetLogoImg,
+                        width: 250.w,
+                        height: 180.h,
+                      ),
                     ),
-                    SizedBox(
-                      height: 80.h,
-                    ),
+                    SizedBox(height: 80.h),
                     CustomAuthTextField(
                       hintText: "Email",
                       icon: const Icon(Icons.email),
                       obSecure: false,
                       keyBoardType: TextInputType.emailAddress,
-                      controller: _emailC,
+                      controller: _emailController,
                       validator: (value) {
                         return RegExp(
-                                    // Regular expression to validate email
-                                    r"[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                                .hasMatch(value!)
+                                // Regular expression to validate email
+                                r"[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                            .hasMatch(value!)
                             ? null
                             : "Please enter a valid email address";
                       },
                     ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
+                    SizedBox(height: 20.h),
                     CustomAuthTextField(
                       hintText: "Password",
                       icon: IconButton(
-                          icon: Icon(_isObscure
-                              ? Icons.visibility_off
-                              : Icons.visibility),
-                          onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          }),
-                      obSecure: _isObscure,
+                        icon: Icon(_isPasswordObscured
+                            ? Icons.visibility_off
+                            : Icons.visibility),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordObscured = !_isPasswordObscured;
+                          });
+                        },
+                      ),
+                      obSecure: _isPasswordObscured,
                       keyBoardType: TextInputType.text,
-                      controller: _passwordC,
+                      controller: _passwordController,
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
@@ -99,9 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
+                    SizedBox(height: 20.h),
                     GestureDetector(
                       onTap: () {
                         Get.to(() => const RegisterScreen());
@@ -119,13 +140,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 50.h,
-                    ),
+                    SizedBox(height: 50.h),
                     Center(
                       child: CustomButton(
-                        navigateToNextScreen: () {
-                          if (_formKey.currentState!.validate()) {}
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            _loginUser();
+                          }
                         },
                         width: 200,
                         height: 40,
@@ -156,6 +177,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
+
+        // Show a loading overlay when isLoading is true
+        if (_isLoading) const CustomLoadingOverlay()
       ],
     );
   }

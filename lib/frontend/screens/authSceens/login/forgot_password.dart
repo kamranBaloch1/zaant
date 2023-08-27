@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
+import 'package:provider/provider.dart';
+import 'package:zant/frontend/providers/auth/login_providers.dart';
 import 'package:zant/frontend/screens/authSceens/login/login_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
+import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zant/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -13,19 +16,33 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final TextEditingController _email = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  bool _isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
-
 
   @override
   void dispose() {
     super.dispose();
-    _email.dispose();
+    _emailController.dispose();
   }
 
+  Future<void> _resetPassword() async {
+    setState(() {
+      _isLoading = true;
+    });
 
-  
+    final loginProviders = Provider.of<LoginProviders>(context, listen: false);
+
+    String email = _emailController.text.trim();
+    loginProviders.resetUserPasswordProvider(email).then((value) => {
+      _emailController.clear(),
+      setState(() {
+        _isLoading = false;
+      })
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +71,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         icon: const Icon(Icons.email),
                         obSecure: false,
                         keyBoardType: TextInputType.emailAddress,
-                        controller: _email,
+                        controller: _emailController,
                         validator: (value) {
                           return RegExp(
-                                // Regular expression to validate email
-                                r"[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                            // Regular expression to validate email
+                            r"[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
                               .hasMatch(value!)
                               ? null
                               : "Please enter a valid email address";
@@ -72,9 +89,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           text: "Submit",
                           width: 200,
                           height: 40,
-                          navigateToNextScreen: () {
+                          onTap: () {
                             if (_formKey.currentState!.validate()) {
-                             
+                              _resetPassword();
                             }
                           },
                         ),
@@ -103,7 +120,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ),
         ),
-       
+
+        // Show a loading overlay if isLoading is true
+        if (_isLoading) const CustomLoadingOverlay()
       ],
     );
   }
