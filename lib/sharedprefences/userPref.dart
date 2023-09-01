@@ -59,6 +59,10 @@ class UserPreferences {
   }
 
 
+ static Future<void> setAccountType(String value) async {
+    await _prefs!.setString('accountType', value);
+  }
+
 
   // Getters
   static String? getUid() {
@@ -109,6 +113,10 @@ class UserPreferences {
 
   static bool? getAccountStatus() {
     return _prefs!.getBool('accountStatus');
+  }
+
+    static String? getAccountType() {
+    return _prefs!.getString('accountType');
   }
 
 

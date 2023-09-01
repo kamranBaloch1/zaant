@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:zant/enum/account_type.dart';
 import 'package:zant/frontend/models/auth/user_model.dart';
 import 'package:zant/frontend/screens/authSceens/register/verify_email.screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
@@ -69,6 +70,7 @@ class RegisterMethod {
           isPhoneNumberVerified: false,
           createdOn: Timestamp.fromDate(DateTime.now()),
           accountStatus: false,
+          accountType: AccountTypeEnum.user
         );
 
         // Save user data to Firestore
@@ -90,6 +92,7 @@ class RegisterMethod {
         await UserPreferences.setIsPhoneNumberVerified(false);
         await UserPreferences.setLocation("");
         await UserPreferences.setPhoneNumber("");
+        await UserPreferences.setAccountType(AccountTypeEnum.user.toString().split('.').last);
 
         showCustomToast(
             "We have sent an email verification link to this email address");

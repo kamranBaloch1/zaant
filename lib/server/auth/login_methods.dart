@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/models/auth/user_model.dart';
-import 'package:zant/frontend/screens/homeScreens/home.dart';
+import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/sharedprefences/userPref.dart';
@@ -32,6 +32,7 @@ class LoginMethods {
             if (userModel.accountStatus!) {
               // Save user information to Shared Preferences
               await saveUserInfoToSharedPref(userModel);
+              await UserPreferences.setAccountType(userSnapshot.data()!["accountType"]);
 
               showCustomToast("Welcome back ${userModel.name}");
 
@@ -78,6 +79,9 @@ class LoginMethods {
         userModel.isPhoneNumberVerified!);
     await UserPreferences.setLocation(userModel.location!);
     await UserPreferences.setPhoneNumber(userModel.phoneNumber!);
+    await UserPreferences.setPhoneNumber(userModel.phoneNumber!);
+  
+
   }
 
  

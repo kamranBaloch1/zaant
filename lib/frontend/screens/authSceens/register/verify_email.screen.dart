@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
 import 'package:zant/frontend/providers/auth/register_providers.dart';
-import 'package:zant/frontend/screens/homeScreens/home.dart';
+import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';

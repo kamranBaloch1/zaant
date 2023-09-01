@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:zant/enum/account_type.dart';
 
 class UserModel {
   final String? uid;
@@ -15,6 +16,7 @@ class UserModel {
   final bool? isPhoneNumberVerified;
   final Timestamp? createdOn;
   final bool? accountStatus;
+ AccountTypeEnum? accountType;
   UserModel({
     required this.uid,
     required this.name,
@@ -28,6 +30,7 @@ class UserModel {
     required this.isPhoneNumberVerified,
     required this.createdOn,
     required this.accountStatus,
+    required this.accountType,
   });
 
   Map<String, dynamic> toMap() {
@@ -44,6 +47,7 @@ class UserModel {
       'isPhoneNumberVerified': isPhoneNumberVerified,
       'createdOn': createdOn,
       'accountStatus': accountStatus,
+      'accountType': accountType?.toString().split('.').last, // Store the enum value as a string
     };
   }
 
@@ -61,6 +65,14 @@ class UserModel {
       isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,
       createdOn: map['createdOn'] as Timestamp,
       accountStatus: map['accountStatus'] as bool,
+   accountType: map['accountType'] != null
+  ? AccountTypeEnum.values.firstWhere(
+      (e) => e.toString() == map['accountType'],
+      orElse: () => AccountTypeEnum.unknown, // Use 'unknown' as the default
+    )
+  : AccountTypeEnum.unknown, // Use 'unknown' as the default
+
+
     );
   }
 }

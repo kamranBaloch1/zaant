@@ -8,8 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:zant/frontend/models/auth/user_model.dart';
 import 'package:zant/frontend/providers/auth/login_providers.dart';
 import 'package:zant/frontend/providers/auth/register_providers.dart';
+import 'package:zant/frontend/providers/home/instructor_provider.dart';
 import 'package:zant/frontend/screens/authSceens/login/onBoarding_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/home.dart';
+import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/sharedprefences/userPref.dart';
@@ -28,6 +29,10 @@ void main() async {
         // Auth Providers
         ChangeNotifierProvider(create: (context) => RegisterProviders()),
         ChangeNotifierProvider(create: (context) => LoginProviders()),
+
+        // home providers
+
+        ChangeNotifierProvider(create: (context) => InstructorProviders()),
       ],
       // Initialize the app
       child: const MyApp(),
@@ -73,58 +78,56 @@ class MyApp extends StatelessWidget {
   }
 }
 
-  Future<User?> _getCurrentUser() async {
-    return FirebaseAuth.instance.currentUser;
-  }
+Future<User?> _getCurrentUser() async {
+  return FirebaseAuth.instance.currentUser;
+}
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> _getUserDocument(
-      User user) async {
-    return FirebaseFirestore.instance
-        .collection(userCollection)
-        .doc(user.uid)
-        .get();
-  }
+Future<DocumentSnapshot<Map<String, dynamic>>> _getUserDocument(
+    User user) async {
+  return FirebaseFirestore.instance
+      .collection(userCollection)
+      .doc(user.uid)
+      .get();
+}
 
-  Future<Widget> _buildHomeScreen() async {
-    User? user = await _getCurrentUser();
-    if (user != null) {
-      DocumentSnapshot<Map<String, dynamic>> docSnapshot =
-          await _getUserDocument(user);
-      if (docSnapshot.exists) {
-        UserModel userModel = UserModel.fromMap(docSnapshot.data()!);
-        bool isEmailVerified = userModel.isEmailVerified!;
+Future<Widget> _buildHomeScreen() async {
+  User? user = await _getCurrentUser();
+  if (user != null) {
+    DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+        await _getUserDocument(user);
+    if (docSnapshot.exists) {
+      UserModel userModel = UserModel.fromMap(docSnapshot.data()!);
+      bool isEmailVerified = userModel.isEmailVerified!;
 
-        bool accountStatus = userModel.accountStatus!;
+      bool accountStatus = userModel.accountStatus!;
 
-        if (!isEmailVerified) {
-          await _deleteUserData(user);
-          return const StartScreen();
-        } else if (!accountStatus) {
-          FirebaseAuth.instance.signOut();
-          return const StartScreen();
-        } else {
-          return const HomeScreen();
-        }
-      } else {
-        
-        await FirebaseAuth.instance.signOut();
+      if (!isEmailVerified) {
+        await _deleteUserData(user);
         return const StartScreen();
+      } else if (!accountStatus) {
+        FirebaseAuth.instance.signOut();
+        return const StartScreen();
+      } else {
+        return const HomeScreen();
       }
     } else {
+      await FirebaseAuth.instance.signOut();
       return const StartScreen();
     }
+  } else {
+    return const StartScreen();
   }
+}
 
-  Future<void> _deleteUserData(User user) async {
-    // Delete user data from Firestore and Firebase Auth if isEmailVerified is false
-    try {
-      await FirebaseFirestore.instance
-          .collection(userCollection)
-          .doc(user.uid)
-          .delete();
-      await user.delete();
-    } catch (e) {
-      showCustomToast("Somethig went wrong");
-    }
+Future<void> _deleteUserData(User user) async {
+  // Delete user data from Firestore and Firebase Auth if isEmailVerified is false
+  try {
+    await FirebaseFirestore.instance
+        .collection(userCollection)
+        .doc(user.uid)
+        .delete();
+    await user.delete();
+  } catch (e) {
+    showCustomToast("Somethig went wrong");
   }
-
+}
