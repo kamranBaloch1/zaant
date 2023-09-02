@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/add_an_instructor_screen.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
@@ -86,7 +87,7 @@ class _MyDrawerState extends State<MyDrawer> {
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
-              // Get.offAll(() => const ViewAllTransportScreen());
+              Get.offAll(() => const AddInstructorScreen());
             },
           ):  accountType=="instructor"? ListTile(
             leading: const Icon(Icons.person_outline),
