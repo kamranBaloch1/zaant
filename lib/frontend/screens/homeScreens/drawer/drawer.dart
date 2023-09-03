@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/add_an_instructor_screen.dart';
 import 'package:zant/global/colors.dart';
@@ -43,9 +45,19 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 40.r,
-                  backgroundImage: NetworkImage(profileUrl!),
+                GestureDetector(
+                  onTap: (){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return FullImageDialog(imageUrl: profileUrl!);
+                      },
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 40.r,
+                    backgroundImage: NetworkImage(profileUrl!),
+                  ),
                 ),
                 SizedBox(height: 15.h),
                 Text(
@@ -77,7 +89,7 @@ class _MyDrawerState extends State<MyDrawer> {
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
-             
+              Get.to(() => const ProfileScreen());
             },
           ),
         accountType=="user"?  ListTile(
@@ -87,7 +99,7 @@ class _MyDrawerState extends State<MyDrawer> {
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
-              Get.offAll(() => const AddInstructorScreen());
+              Get.to(() => const AddInstructorScreen());
             },
           ):  accountType=="instructor"? ListTile(
             leading: const Icon(Icons.person_outline),

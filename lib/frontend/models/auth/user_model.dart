@@ -11,7 +11,7 @@ class UserModel {
   final DateTime? dob;
   final String? gender;
   final String? location;
-  final String? phoneNumber;
+  final int? phoneNumber;
   final bool? isEmailVerified;
   final bool? isPhoneNumberVerified;
   final Timestamp? createdOn;
@@ -60,7 +60,7 @@ class UserModel {
       dob: map['dob'] == null ? null : (map['dob'] as Timestamp).toDate(),
       gender: map['gender'] as String,
       location: map['location'] as String,
-      phoneNumber: map['phoneNumber'] as String,
+      phoneNumber: map['phoneNumber'] as int,
       isEmailVerified: map['isEmailVerified'] as bool,
       isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,
       createdOn: map['createdOn'] as Timestamp,

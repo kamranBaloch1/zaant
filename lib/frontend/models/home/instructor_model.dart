@@ -4,7 +4,7 @@ import 'package:zant/enum/account_type.dart';
 
 class InstructorModel {
   String uid;
-  String phoneNumber;
+  int phoneNumber;
   bool isPhoneNumberVerified;
   String qualification;
   String location;
@@ -12,7 +12,7 @@ class InstructorModel {
   List<String> reviews;
   int ratings;
   List<String> subjects;
-  List<String> availableTimings;
+  Map<String, Map<String, String>> availableTimings; // Change the type to a Map
   AccountTypeEnum? accountType; // Make the accountType field nullable
   Timestamp createdOn;
 
@@ -26,7 +26,7 @@ class InstructorModel {
     required this.reviews,
     required this.ratings,
     required this.subjects,
-    required this.availableTimings,
+    required this.availableTimings, // Update the field type
     this.accountType, // Allow the accountType parameter to be nullable
     required this.createdOn,
   });
@@ -42,7 +42,7 @@ class InstructorModel {
       'reviews': reviews,
       'ratings': ratings,
       'subjects': subjects,
-      'availableTimings': availableTimings,
+      'availableTimings': availableTimings, // Store the updated field
       'accountType': accountType?.toString().split('.').last, // Store the enum value as a string
       'createdOn': createdOn,
     };
@@ -51,7 +51,7 @@ class InstructorModel {
   factory InstructorModel.fromMap(Map<String, dynamic> map) {
     return InstructorModel(
       uid: map['uid'] as String,
-      phoneNumber: map['phoneNumber'] as String,
+      phoneNumber: map['phoneNumber'] as int,
       isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,
       qualification: map['qualification'] as String,
       location: map['location'] as String,
@@ -59,14 +59,15 @@ class InstructorModel {
       reviews: List<String>.from(map['reviews'] as List<dynamic>),
       ratings: map['ratings'] as int,
       subjects: List<String>.from(map['subjects'] as List<dynamic>),
-      availableTimings: List<String>.from(map['availableTimings'] as List<dynamic>),
+      availableTimings: Map<String, Map<String, String>>.from(
+        map['availableTimings'] as Map<String, dynamic>,
+      ), // Parse the updated field
       accountType: map['accountType'] != null
-  ? AccountTypeEnum.values.firstWhere(
-      (e) => e.toString() == map['accountType'],
-      orElse: () => AccountTypeEnum.unknown, // Use 'unknown' as the default
-    )
-  : AccountTypeEnum.unknown, // Use 'unknown' as the default
-
+          ? AccountTypeEnum.values.firstWhere(
+              (e) => e.toString() == map['accountType'],
+              orElse: () => AccountTypeEnum.unknown, // Use 'unknown' as the default
+            )
+          : AccountTypeEnum.unknown, // Use 'unknown' as the default
       createdOn: map['createdOn'] as Timestamp,
     );
   }

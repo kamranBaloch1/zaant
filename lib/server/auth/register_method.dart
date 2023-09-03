@@ -65,7 +65,7 @@ class RegisterMethod {
           dob: dob!,
           gender: gender,
           location: "",
-          phoneNumber: "",
+          phoneNumber:int.parse(""),
           isEmailVerified: false,
           isPhoneNumberVerified: false,
           createdOn: Timestamp.fromDate(DateTime.now()),

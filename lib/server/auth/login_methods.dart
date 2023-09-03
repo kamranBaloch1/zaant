@@ -78,9 +78,8 @@ class LoginMethods {
     await UserPreferences.setIsPhoneNumberVerified(
         userModel.isPhoneNumberVerified!);
     await UserPreferences.setLocation(userModel.location!);
-    await UserPreferences.setPhoneNumber(userModel.phoneNumber!);
-    await UserPreferences.setPhoneNumber(userModel.phoneNumber!);
-  
+    await UserPreferences.setPhoneNumber(userModel.phoneNumber.toString());
+ 
 
   }
 
