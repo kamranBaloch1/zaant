@@ -16,7 +16,7 @@ class PhoneOTPVerificationScreen extends StatefulWidget {
   final String? selectedQualification;
   final int? phoneNumber;
   final int? feesPerHour;
-  final Map<String, Map<String, String>> availableTimings;
+  final Map<String, Map<String, Map<String, String>>> availableTimings;
   const PhoneOTPVerificationScreen({
     Key? key,
     required this.verificationId,

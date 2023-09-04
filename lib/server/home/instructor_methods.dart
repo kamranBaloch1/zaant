@@ -16,7 +16,7 @@ class InstructorMethods {
     // required String location,
     required List<String> subjects,
     required int feesPerHour,
-    required Map<String, Map<String, String>> subjectTimings,
+    required Map<String, Map<String, Map<String, String>>> subjectTimings
   
   }) async {
     try {
@@ -59,7 +59,7 @@ class InstructorMethods {
     // required String location,
     required List<String> subjects,
     required int feesPerHour,
-    required Map<String, Map<String, String>> availableTimings,
+    required Map<String, Map<String, Map<String, String>>> availableTimings,
     required String verificationCode,
     required String verificationId,
   }) async {

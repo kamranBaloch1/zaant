@@ -12,7 +12,7 @@ class InstructorModel {
   List<String> reviews;
   int ratings;
   List<String> subjects;
-  Map<String, Map<String, String>> availableTimings; // Change the type to a Map
+  Map<String, Map<String, Map<String, String>>> availableTimings;
   AccountTypeEnum? accountType; // Make the accountType field nullable
   Timestamp createdOn;
 
@@ -42,7 +42,7 @@ class InstructorModel {
       'reviews': reviews,
       'ratings': ratings,
       'subjects': subjects,
-      'availableTimings': availableTimings, // Store the updated field
+    'availableTimings': availableTimings,
       'accountType': accountType?.toString().split('.').last, // Store the enum value as a string
       'createdOn': createdOn,
     };
@@ -59,9 +59,22 @@ class InstructorModel {
       reviews: List<String>.from(map['reviews'] as List<dynamic>),
       ratings: map['ratings'] as int,
       subjects: List<String>.from(map['subjects'] as List<dynamic>),
-      availableTimings: Map<String, Map<String, String>>.from(
-        map['availableTimings'] as Map<String, dynamic>,
-      ), // Parse the updated field
+      availableTimings: (map['availableTimings'] as Map<String, dynamic>).map(
+      (subject, subjectData) {
+        return MapEntry(
+          subject,
+          (subjectData as Map<String, dynamic>).map(
+            (day, dayData) {
+              return MapEntry(
+                day,
+                Map<String, String>.from(dayData as Map<String, dynamic>),
+              );
+            },
+          ),
+        );
+      },
+    ),
+    
       accountType: map['accountType'] != null
           ? AccountTypeEnum.values.firstWhere(
               (e) => e.toString() == map['accountType'],

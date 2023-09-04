@@ -32,14 +32,25 @@ class SelectTimingsScreen extends StatefulWidget {
 class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
   Map<String, Map<String, TimeOfDay>> subjectTimings = {};
 
+  Map<String, Map<String, String>> dayTimings = {}; // Added dayTimings map
+
   bool _isLoading = false;
 
-  void _handleSubjectTiming(String subject, String timeType, TimeOfDay time) {
+  void _handleSubjectTiming(
+    String subject,
+    String day, // Added day parameter
+    String timeType,
+    TimeOfDay time,
+  ) {
     setState(() {
       if (!subjectTimings.containsKey(subject)) {
         subjectTimings[subject] = {};
       }
+      if (!dayTimings.containsKey(subject)) {
+        dayTimings[subject] = {};
+      }
       subjectTimings[subject]![timeType] = time;
+      dayTimings[subject]![day] = "${time.hour}:${time.minute}";
     });
   }
 
@@ -67,21 +78,29 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
 
       final instructorProvider =
           Provider.of<InstructorProviders>(context, listen: false);
-
-      // Convert subjectTimings to the required format (Map<String, Map<String, String>>)
-      final availableTimings = subjectTimings.map((subject, timings) {
-        return MapEntry(subject, {
-          "start": "${timings['start']!.hour}:${timings['start']!.minute}",
-          "end": "${timings['end']!.hour}:${timings['end']!.minute}",
+      final availableTimings = <String, Map<String, Map<String, String>>>{};
+      subjectTimings.forEach((subject, timings) {
+        final dayTimings = <String, Map<String, String>>{};
+        timings.forEach((day, time) {
+          if (time != null) {
+            final start = '${time.hour}:${time.minute}';
+            dayTimings[day] = {
+              'start': start,
+              'end': start, // You can adjust 'end' as needed
+            };
+          }
         });
+
+        availableTimings[subject] = dayTimings;
       });
 
       await instructorProvider.sendVerificationCodeProvider(
-          phoneNumber: widget.phoneNumber!,
-          qualification: widget.selectedQualification!,
-          subjects: widget.selectedSubjects,
-          feesPerHour: widget.feesPerHour!,
-          subjectTimings: availableTimings);
+        phoneNumber: widget.phoneNumber!,
+        qualification: widget.selectedQualification!,
+        subjects: widget.selectedSubjects,
+        feesPerHour: widget.feesPerHour!,
+        subjectTimings: availableTimings,
+      );
 
       setState(() {
         _isLoading = false;
@@ -90,7 +109,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
       setState(() {
         _isLoading = false;
       });
-      showCustomToast("error accoured");
+      showCustomToast("Error occurred");
     }
   }
 
@@ -112,6 +131,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                   itemBuilder: (context, index) {
                     final subject = widget.selectedSubjects[index];
                     final timings = subjectTimings[subject] ?? {};
+                    final selectedDay = dayTimings[subject]?.keys.first;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,6 +153,43 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                         SizedBox(
                           height: 10.h,
                         ),
+                       DropdownButton<String>(
+  style: const TextStyle(color: Colors.black),
+  value: selectedDay,
+  onChanged: (day) {
+    setState(() {
+      dayTimings[subject] = {
+        day!: ""
+      };
+    });
+  },
+  items: [
+  const  DropdownMenuItem<String>(
+      value: null,
+      child:  Text(
+        "Select a day",
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ),
+    ),
+    for (String value in [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ])
+      DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      ),
+  ],
+),
+
+                      
                         ListTile(
                           title: Row(
                             children: [
@@ -142,7 +199,11 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                                   labelText: "Start Time",
                                   selectedTime: timings['start'],
                                   onTimeChanged: (time) => _handleSubjectTiming(
-                                      subject, 'start', time),
+                                    subject,
+                                    selectedDay!,
+                                    'start',
+                                    time,
+                                  ),
                                 ),
                               ),
                               Expanded(
@@ -151,7 +212,11 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                                   labelText: "End Time",
                                   selectedTime: timings['end'],
                                   onTimeChanged: (time) => _handleSubjectTiming(
-                                      subject, 'end', time),
+                                    subject,
+                                    selectedDay!,
+                                    'end',
+                                    time,
+                                  ),
                                 ),
                               ),
                             ],
