@@ -82,13 +82,13 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
       subjectTimings.forEach((subject, timings) {
         final dayTimings = <String, Map<String, String>>{};
         timings.forEach((day, time) {
-          if (time != null) {
+        
             final start = '${time.hour}:${time.minute}';
             dayTimings[day] = {
               'start': start,
               'end': start, // You can adjust 'end' as needed
             };
-          }
+          
         });
 
         availableTimings[subject] = dayTimings;
