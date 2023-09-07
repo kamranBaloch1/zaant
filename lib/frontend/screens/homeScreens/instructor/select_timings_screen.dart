@@ -16,7 +16,7 @@ class SelectTimingsScreen extends StatefulWidget {
   final String? selectedQualification;
   final String? phoneNumber;
   final int? feesPerHour;
-final  Map<String, List<String>> selectedDays;
+  final Map<String, List<String>> selectedDaysForSubjects;
 
   const SelectTimingsScreen({
     Key? key,
@@ -24,7 +24,7 @@ final  Map<String, List<String>> selectedDays;
     required this.selectedQualification,
     required this.phoneNumber,
     required this.feesPerHour,
-    required this.selectedDays,
+    required this.selectedDaysForSubjects,
   }) : super(key: key);
 
   @override
@@ -35,18 +35,15 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
   Map<String, Map<String, TimeOfDay>> subjectTimings = {};
   bool _isLoading = true;
 
-
-   @override
+  @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
 
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
       });
     });
-
-    super.initState();
   }
 
   void _handleSubjectTiming(
@@ -62,7 +59,69 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
     });
   }
 
-  // Rest of your code...
+  Future<void> _sendVerificationCode() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Check if all subjects have timings selected
+      bool allSubjectsTimed = widget.selectedSubjects.every((subject) {
+        final timings = subjectTimings[subject] ?? {};
+        return timings.containsKey('start') && timings.containsKey('end');
+      });
+
+      if (!allSubjectsTimed) {
+        // Display an error message if any subject is missing timing information
+        showCustomToast("Please select timings for all subjects.");
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
+      // Proceed to send the verification code
+
+      // Convert TimeOfDay objects to strings
+      Map<String, Map<String, Map<String, String>>> selectedTimings = {};
+      subjectTimings.forEach((subject, timings) {
+        selectedTimings[subject] = {
+          'start': {
+            'hour': timings['start']!.hour.toString(),
+            'minute': timings['start']!.minute.toString(),
+          },
+          'end': {
+            'hour': timings['end']!.hour.toString(),
+            'minute': timings['end']!.minute.toString(),
+          },
+        };
+      });
+
+      final instructorProvider =
+          Provider.of<InstructorProviders>(context, listen: false);
+
+      await instructorProvider.addInstructorProvider(
+        phoneNumber: widget.phoneNumber!,
+        qualification: widget.selectedQualification!,
+        subjects: widget.selectedSubjects,
+        feesPerHour: widget.feesPerHour!,
+        selectedTimingsForSubjects: selectedTimings,
+        selectedDaysForSubjects: widget.selectedDaysForSubjects,
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      // Show a success message or navigate to the next screen if needed
+      showCustomToast("Verification code sent successfully.");
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomToast("An error occurred: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +133,6 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
             title: "Select timings for subjects",
           ),
           body: Column(
-            // Wrap ListView.builder and custom button in a Column
             children: [
               Expanded(
                 child: ListView.builder(
@@ -108,7 +166,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                             children: [
                               Expanded(
                                 child: CustomTimePicker(
-                                  icon: Icons.time_to_leave_outlined,
+                                  icon: Icons.access_time,
                                   labelText: "Start Time",
                                   selectedTime: timings['start'],
                                   onTimeChanged: (time) => _handleSubjectTiming(
@@ -120,7 +178,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                               ),
                               Expanded(
                                 child: CustomTimePicker(
-                                  icon: Icons.time_to_leave_outlined,
+                                  icon: Icons.access_time,
                                   labelText: "End Time",
                                   selectedTime: timings['end'],
                                   onTimeChanged: (time) => _handleSubjectTiming(
@@ -133,18 +191,16 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                             ],
                           ),
                         ),
-                        const Divider(), // Add a divider to separate subjects
+                        const Divider(),
                       ],
                     );
                   },
                 ),
               ),
-              // Custom button added outside the ListView.builder
               Padding(
                 padding: EdgeInsets.all(16.0.w),
                 child: CustomButton(
-                  onTap: (){},
-                  // saveTheInstructorData,
+                  onTap: _isLoading ? null : _sendVerificationCode,
                   width: 200,
                   height: 40,
                   text: "Done",
@@ -155,7 +211,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
           ),
         ),
 
-        // showing a loading bar if loading is true
+        // Showing a loading overlay if _isLoading is true
         if (_isLoading) const CustomLoadingOverlay()
       ],
     );

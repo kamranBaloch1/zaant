@@ -50,7 +50,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _fetchUserInfoFromSharedPref() async {
     // Fetch user info from SharedPreferences
     name = UserPreferences.getName();
-
     profilePicUrl = UserPreferences.getProfileUrl();
 
     // Initialize the controllers after fetching data from SharedPreferences
@@ -72,9 +71,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         });
       }
     } catch (e) {
-      showCustomToast(
-        "Error selecting profile picture: $e",
-      );
+      showCustomToast("Error selecting profile picture: $e");
     }
   }
 
@@ -109,7 +106,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _buildProfileAvatar() {
     return Center(
       child: GestureDetector(
-       
         onTap: _selectProfilePicture,
         child: CircleAvatar(
           radius: 80.r,

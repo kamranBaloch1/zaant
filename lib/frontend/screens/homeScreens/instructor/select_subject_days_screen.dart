@@ -13,6 +13,7 @@ class SelectSubjectDaysScreen extends StatefulWidget {
   final String? selectedQualification;
   final String? phoneNumber;
   final int? feesPerHour;
+
   const SelectSubjectDaysScreen({
     Key? key,
     required this.selectedSubjects,
@@ -27,22 +28,22 @@ class SelectSubjectDaysScreen extends StatefulWidget {
 }
 
 class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
-  bool _isLoading = true;
+  bool _isLoading = false;
+
+  // Create a map to store selected days for each subject
+  Map<String, List<String>> selectedDays = {};
+
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
 
+    // Simulate loading delay
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
       });
     });
-
-    super.initState();
   }
-
-  // Create a map to store selected days for each subject
-  Map<String, List<String>> selectedDays = {};
 
   void _navigateToNextScreen() {
     bool allSubjectsHaveDaysSelected = true;
@@ -56,10 +57,8 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
 
     if (allSubjectsHaveDaysSelected) {
       // Proceed to the next screen
-      // Implement navigation to the next screen here
-
       Get.to(() => SelectTimingsScreen(
-          selectedDays: selectedDays,
+          selectedDaysForSubjects: selectedDays,
           selectedSubjects: widget.selectedSubjects,
           selectedQualification: widget.selectedQualification,
           phoneNumber: widget.phoneNumber,
@@ -166,7 +165,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
                   padding:
                       EdgeInsets.symmetric(vertical: 40.h, horizontal: 20.w),
                   child: CustomButton(
-                    onTap: _navigateToNextScreen,
+                    onTap: _isLoading ? null : _navigateToNextScreen,
                     width: 200,
                     height: 40,
                     text: "Next",
@@ -178,8 +177,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
           ),
         ),
 
-        // show an loading bar if loading is true
-
+        // Show a loading overlay if loading is true
         if (_isLoading) const CustomLoadingOverlay()
       ],
     );

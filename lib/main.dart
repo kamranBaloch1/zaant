@@ -33,7 +33,7 @@ void main() async {
 
         // home providers
 
-        // ChangeNotifierProvider(create: (context) => InstructorProviders()),
+        ChangeNotifierProvider(create: (context) => InstructorProviders()),
         ChangeNotifierProvider(create: (context) => ProfileProviders()),
       ],
       // Initialize the app
@@ -117,6 +117,7 @@ Future<Widget> _buildHomeScreen() async {
       return const StartScreen();
     }
   } else {
+  
     return const StartScreen();
   }
 }

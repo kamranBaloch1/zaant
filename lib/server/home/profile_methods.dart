@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,7 +7,6 @@ import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/sharedprefences/userPref.dart';
-
 
 class ProfileMethods {
   // Upload image to Firebase Storage and return download URL
@@ -20,8 +18,10 @@ class ProfileMethods {
 
       // Generate a unique image ID based on the current timestamp
       String imgId = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference ref =
-          FirebaseStorage.instance.ref().child(usersProfileImages).child(imgId);
+      Reference ref = FirebaseStorage.instance
+          .ref()
+          .child(usersProfileImages)
+          .child(imgId);
 
       TaskSnapshot snapshot = await ref.putFile(photoUrl);
       String downloadUrl = await snapshot.ref.getDownloadURL();
@@ -72,19 +72,15 @@ class ProfileMethods {
         Map<String, dynamic> userData = snapshot.data()!;
 
         UserPreferences.setName(userData['name']);
-     
         UserPreferences.setProfileUrl(userData['profileUrl']);
       }
 
       // Show a success message
-      showCustomToast("user information updated successfully");
+      showCustomToast("User information updated successfully");
       Get.offAll(() => const ProfileScreen());
     } catch (e) {
       // Show an error message
-      showCustomToast("error occurred while updating the information");
+      showCustomToast("An error occurred while updating the information");
     }
   }
-
-
-
 }

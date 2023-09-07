@@ -6,58 +6,59 @@ import 'package:zant/frontend/screens/homeScreens/profile/edit_profile_screen.da
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 
-
 class ProfileEditOptionsScreen extends StatefulWidget {
- final String? accountType;
+  final String? accountType;
+
   const ProfileEditOptionsScreen({
     Key? key,
-   required this.accountType,
+    required this.accountType,
   }) : super(key: key);
+
   @override
   State<ProfileEditOptionsScreen> createState() =>
       _ProfileEditOptionsScreenState();
 }
 
 class _ProfileEditOptionsScreenState extends State<ProfileEditOptionsScreen> {
-    
-
-   
-
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Scaffold(
-          appBar:
-              ReusableAppBar(backgroundColor: appBarColor, title: "Edit Profile"),
+          appBar: ReusableAppBar(
+            backgroundColor: appBarColor,
+            title: "Edit Profile",
+          ),
           body: ListView(
             children: [
               SizedBox(
                 height: 20.h,
               ),
+              // Edit Profile ListTile
               _buildListTile(Icons.person, 'Edit Profile', () {
                 Get.to(() => const EditProfileScreen());
-             
               }),
-           widget.accountType=="instructor"?   _buildListTile(Icons.numbers, 'Add Phone Number', () {
-                // Get.to(()=> const PhoneNumberScreen());
-              }):Container(),
-             
+
+              // Add Phone Number ListTile (only for instructors)
+              if (widget.accountType == "instructor")
+                _buildListTile(Icons.phone, 'Add Phone Number', () {
+                  // Implement navigation to the Phone Number Screen here.
+                  // Get.to(() => const PhoneNumberScreen());
+                }),
             ],
           ),
         ),
-       
       ],
     );
   }
 
+  // Helper function to create a ListTile with an icon and title
   Widget _buildListTile(IconData icon, String title, VoidCallback onTap) {
     return ListTile(
       leading: Icon(icon),
       title: Text(
         title,
-        style:const TextStyle(color: Colors.black),
+        style: TextStyle(color: Colors.black),
       ),
       onTap: onTap,
     );

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_home_text_field.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/select_subjects_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_dropdown.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_home_text_field.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
@@ -26,9 +26,9 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
 
   List<String> qualificationList = [
     "Matric",
-    "Phd",
+    "PhD",
     "Bachelor",
-    "School student",
+    "School Student",
     "Master"
   ];
 
@@ -39,26 +39,31 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
     _feesPerHour.dispose();
   }
 
-  Future<void> _movieToNextScreenMethod() async {
+  Future<void> _moveToNextScreenMethod() async {
     setState(() {
       _isLoading = true;
     });
-    String number = _phoneNumber.text.trim();
+
+    // Get input values
+    String phoneNumber = _phoneNumber.text.trim();
     String feesPerHour = _feesPerHour.text.trim();
 
-    if (number.isNotEmpty &&
+    if (phoneNumber.isNotEmpty &&
         feesPerHour.isNotEmpty &&
         selectedQualification != null &&
         selectedQualification!.isNotEmpty) {
+      // Input validation successful
       setState(() {
         _isLoading = false;
       });
 
+      // Navigate to the next screen with collected data
       Get.to(() => SelectSubjectsScreen(
           selectedQualification: selectedQualification,
-          phoneNumber: number,
+          phoneNumber: phoneNumber,
           feesPerHour: int.parse(feesPerHour)));
     } else {
+      // Input validation failed
       setState(() {
         _isLoading = false;
       });
@@ -84,7 +89,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                 homeCustomTextField(
                   controller: _phoneNumber,
                   labelText: "Phone Number",
-                  icon: Icons.numbers,
+                  icon: Icons.phone,
                   keyBoardType: TextInputType.number,
                 ),
                 SizedBox(
@@ -93,7 +98,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                 homeCustomTextField(
                   controller: _feesPerHour,
                   labelText: "Fees per hour",
-                  icon: Icons.numbers,
+                  icon: Icons.money,
                   keyBoardType: TextInputType.number,
                 ),
                 SizedBox(
@@ -104,40 +109,28 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                     value: selectedQualification,
                     onChanged: (value) {
                       setState(() {
-                        selectedQualification =
-                            value; // Store the selected value
+                        selectedQualification = value; // Store the selected value
                       });
                     },
-                    labelText: "select qualification",
+                    labelText: "Select Qualification",
                     icon: Icons.book),
                 SizedBox(
                   height: 20.h,
                 ),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                //   child: PickSubjectsDropdown(
-                //     selectedSubjects: _selectedSubjects,
-                //     onChanged: (selectedSubjects) {
-                //       setState(() {
-                //         _selectedSubjects = selectedSubjects;
-                //       });
-                //     },
-                //   ),
-                // ),
                 SizedBox(
                   height: 70.h,
                 ),
                 CustomButton(
-                    onTap: _movieToNextScreenMethod,
+                    onTap: _moveToNextScreenMethod,
                     width: 200,
                     height: 40,
-                    text: "next",
+                    text: "Next",
                     bgColor: Colors.blue)
               ],
             ),
           ),
         ),
-        // showing an loading bar if loading is true
+        // Showing a loading overlay if _isLoading is true
         if (_isLoading) const CustomLoadingOverlay()
       ],
     );

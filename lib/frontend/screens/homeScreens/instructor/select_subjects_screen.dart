@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/pick_subejcts_dropdown.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/select_subject_days_screen.dart';
-
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
@@ -16,6 +15,7 @@ class SelectSubjectsScreen extends StatefulWidget {
   final String? selectedQualification;
   final String? phoneNumber;
   final int? feesPerHour;
+
   const SelectSubjectsScreen({
     Key? key,
     required this.selectedQualification,
@@ -29,23 +29,21 @@ class SelectSubjectsScreen extends StatefulWidget {
 
 class _SelectSubjectsScreenState extends State<SelectSubjectsScreen> {
   List<String> _selectedSubjects = [];
-
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
 
+    // Simulate loading delay
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
       });
     });
-
-    super.initState();
   }
 
-  Future<void> _movieToNextScreenMethod() async {
+  Future<void> _moveToNextScreenMethod() async {
     if (_selectedSubjects.isNotEmpty) {
       Get.to(() => SelectSubjectDaysScreen(
           selectedSubjects: _selectedSubjects,
@@ -53,7 +51,7 @@ class _SelectSubjectsScreenState extends State<SelectSubjectsScreen> {
           phoneNumber: widget.phoneNumber,
           feesPerHour: widget.feesPerHour));
     } else {
-      showCustomToast("Please select at lead one subject");
+      showCustomToast("Please select at least one subject.");
     }
   }
 
@@ -86,17 +84,17 @@ class _SelectSubjectsScreenState extends State<SelectSubjectsScreen> {
                 height: 70.h,
               ),
               CustomButton(
-                  onTap: _movieToNextScreenMethod,
-                  width: 200,
-                  height: 40,
-                  text: "next",
-                  bgColor: Colors.blue)
+                onTap: _isLoading ? null : _moveToNextScreenMethod,
+                width: 200,
+                height: 40,
+                text: "Next",
+                bgColor: Colors.blue,
+              )
             ],
           ),
         ),
 
-        // show an loading bar if loading is true
-
+        // Show a loading overlay if loading is true
         if (_isLoading) const CustomLoadingOverlay()
       ],
     );
