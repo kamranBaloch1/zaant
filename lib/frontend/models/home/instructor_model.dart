@@ -1,10 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:zant/enum/account_type.dart';
 
 class InstructorModel {
   String uid;
-  int phoneNumber;
+  String phoneNumber;
   bool isPhoneNumberVerified;
   String qualification;
   String location;
@@ -12,9 +15,10 @@ class InstructorModel {
   List<String> reviews;
   int ratings;
   List<String> subjects;
-  Map<String, Map<String, Map<String, String>>> availableTimings;
+  Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects;
   AccountTypeEnum? accountType; // Make the accountType field nullable
   Timestamp createdOn;
+  Map<String, List<String>> selectedDaysForSubjects;
 
   InstructorModel({
     required this.uid,
@@ -26,9 +30,10 @@ class InstructorModel {
     required this.reviews,
     required this.ratings,
     required this.subjects,
-    required this.availableTimings, // Update the field type
-    this.accountType, // Allow the accountType parameter to be nullable
+    required this.selectedTimingsForSubjects,
+    this.accountType,
     required this.createdOn,
+    required this.selectedDaysForSubjects,
   });
 
   Map<String, dynamic> toMap() {
@@ -42,16 +47,20 @@ class InstructorModel {
       'reviews': reviews,
       'ratings': ratings,
       'subjects': subjects,
-    'availableTimings': availableTimings,
-      'accountType': accountType?.toString().split('.').last, // Store the enum value as a string
+      'availableTimings': selectedTimingsForSubjects,
+      'accountType': accountType
+          ?.toString()
+          .split('.')
+          .last, // Store the enum value as a string
       'createdOn': createdOn,
+      'selectedDaysForSubjects': selectedDaysForSubjects,
     };
   }
 
   factory InstructorModel.fromMap(Map<String, dynamic> map) {
     return InstructorModel(
       uid: map['uid'] as String,
-      phoneNumber: map['phoneNumber'] as int,
+      phoneNumber: map['phoneNumber'] as String,
       isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,
       qualification: map['qualification'] as String,
       location: map['location'] as String,
@@ -59,29 +68,31 @@ class InstructorModel {
       reviews: List<String>.from(map['reviews'] as List<dynamic>),
       ratings: map['ratings'] as int,
       subjects: List<String>.from(map['subjects'] as List<dynamic>),
-      availableTimings: (map['availableTimings'] as Map<String, dynamic>).map(
-      (subject, subjectData) {
-        return MapEntry(
-          subject,
-          (subjectData as Map<String, dynamic>).map(
-            (day, dayData) {
-              return MapEntry(
-                day,
-                Map<String, String>.from(dayData as Map<String, dynamic>),
-              );
-            },
-          ),
-        );
-      },
-    ),
-    
+        selectedTimingsForSubjects: (map['selectedTimingsForSubjects'] as Map<String, dynamic>).map(
+        (subject, subjectData) {
+          return MapEntry(
+            subject,
+            (subjectData as Map<String, dynamic>).map(
+              (day, dayData) {
+                return MapEntry(
+                  day,
+                  Map<String, String>.from(dayData as Map<String, dynamic>),
+                );
+              },
+            ),
+          );
+        },
+      ),
       accountType: map['accountType'] != null
           ? AccountTypeEnum.values.firstWhere(
               (e) => e.toString() == map['accountType'],
-              orElse: () => AccountTypeEnum.unknown, // Use 'unknown' as the default
+              orElse: () =>
+                  AccountTypeEnum.unknown, // Use 'unknown' as the default
             )
           : AccountTypeEnum.unknown, // Use 'unknown' as the default
       createdOn: map['createdOn'] as Timestamp,
+      selectedDaysForSubjects: Map<String, List<String>>.from(
+          map['selectedDaysForSubjects'] as Map<String, dynamic>),
     );
   }
 

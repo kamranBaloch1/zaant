@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:zant/frontend/providers/home/instructor_provider.dart';
 
+import 'package:zant/frontend/providers/home/instructor_provider.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_time_picker.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
@@ -14,8 +14,9 @@ import 'package:zant/global/colors.dart';
 class SelectTimingsScreen extends StatefulWidget {
   final List<String> selectedSubjects;
   final String? selectedQualification;
-  final int? phoneNumber;
+  final String? phoneNumber;
   final int? feesPerHour;
+final  Map<String, List<String>> selectedDays;
 
   const SelectTimingsScreen({
     Key? key,
@@ -23,6 +24,7 @@ class SelectTimingsScreen extends StatefulWidget {
     required this.selectedQualification,
     required this.phoneNumber,
     required this.feesPerHour,
+    required this.selectedDays,
   }) : super(key: key);
 
   @override
@@ -31,14 +33,24 @@ class SelectTimingsScreen extends StatefulWidget {
 
 class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
   Map<String, Map<String, TimeOfDay>> subjectTimings = {};
+  bool _isLoading = true;
 
-  Map<String, Map<String, String>> dayTimings = {}; // Added dayTimings map
 
-  bool _isLoading = false;
+   @override
+  void initState() {
+    // TODO: implement initState
+
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+
+    super.initState();
+  }
 
   void _handleSubjectTiming(
     String subject,
-    String day, // Added day parameter
     String timeType,
     TimeOfDay time,
   ) {
@@ -46,72 +58,11 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
       if (!subjectTimings.containsKey(subject)) {
         subjectTimings[subject] = {};
       }
-      if (!dayTimings.containsKey(subject)) {
-        dayTimings[subject] = {};
-      }
       subjectTimings[subject]![timeType] = time;
-      dayTimings[subject]![day] = "${time.hour}:${time.minute}";
     });
   }
 
-  Future<void> saveTheInstructorData() async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-      // Iterate through selectedSubjects and check if timings are selected for each subject
-      for (final subject in widget.selectedSubjects) {
-        final timings = subjectTimings[subject];
-        if (timings == null ||
-            timings['start'] == null ||
-            timings['end'] == null) {
-          // Timings are missing for at least one subject
-          setState(() {
-            _isLoading = false;
-          });
-          showCustomToast("Please select timings for all subjects");
-          return; // Exit the method if any subject's timings are missing
-        }
-      }
-
-      // All subjects have timings selected, proceed with saving data
-
-      final instructorProvider =
-          Provider.of<InstructorProviders>(context, listen: false);
-      final availableTimings = <String, Map<String, Map<String, String>>>{};
-      subjectTimings.forEach((subject, timings) {
-        final dayTimings = <String, Map<String, String>>{};
-        timings.forEach((day, time) {
-        
-            final start = '${time.hour}:${time.minute}';
-            dayTimings[day] = {
-              'start': start,
-              'end': start, // You can adjust 'end' as needed
-            };
-          
-        });
-
-        availableTimings[subject] = dayTimings;
-      });
-
-      await instructorProvider.sendVerificationCodeProvider(
-        phoneNumber: widget.phoneNumber!,
-        qualification: widget.selectedQualification!,
-        subjects: widget.selectedSubjects,
-        feesPerHour: widget.feesPerHour!,
-        subjectTimings: availableTimings,
-      );
-
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      showCustomToast("Error occurred");
-    }
-  }
+  // Rest of your code...
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +82,6 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                   itemBuilder: (context, index) {
                     final subject = widget.selectedSubjects[index];
                     final timings = subjectTimings[subject] ?? {};
-                    final selectedDay = dayTimings[subject]?.keys.first;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,43 +103,6 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                         SizedBox(
                           height: 10.h,
                         ),
-                       DropdownButton<String>(
-  style: const TextStyle(color: Colors.black),
-  value: selectedDay,
-  onChanged: (day) {
-    setState(() {
-      dayTimings[subject] = {
-        day!: ""
-      };
-    });
-  },
-  items: [
-  const  DropdownMenuItem<String>(
-      value: null,
-      child:  Text(
-        "Select a day",
-        style: TextStyle(
-          color: Colors.black,
-        ),
-      ),
-    ),
-    for (String value in [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ])
-      DropdownMenuItem<String>(
-        value: value,
-        child: Text(value),
-      ),
-  ],
-),
-
-                      
                         ListTile(
                           title: Row(
                             children: [
@@ -200,7 +113,6 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                                   selectedTime: timings['start'],
                                   onTimeChanged: (time) => _handleSubjectTiming(
                                     subject,
-                                    selectedDay!,
                                     'start',
                                     time,
                                   ),
@@ -213,7 +125,6 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
                                   selectedTime: timings['end'],
                                   onTimeChanged: (time) => _handleSubjectTiming(
                                     subject,
-                                    selectedDay!,
                                     'end',
                                     time,
                                   ),
@@ -232,7 +143,8 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
               Padding(
                 padding: EdgeInsets.all(16.0.w),
                 child: CustomButton(
-                  onTap: saveTheInstructorData,
+                  onTap: (){},
+                  // saveTheInstructorData,
                   width: 200,
                   height: 40,
                   text: "Done",
@@ -243,7 +155,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
           ),
         ),
 
-        // showing an loading bar if loading is true
+        // showing a loading bar if loading is true
         if (_isLoading) const CustomLoadingOverlay()
       ],
     );

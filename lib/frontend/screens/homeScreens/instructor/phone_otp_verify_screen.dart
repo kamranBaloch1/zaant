@@ -14,7 +14,7 @@ class PhoneOTPVerificationScreen extends StatefulWidget {
   final String verificationId;
   final List<String> selectedSubjects;
   final String? selectedQualification;
-  final int? phoneNumber;
+  final String? phoneNumber;
   final int? feesPerHour;
   final Map<String, Map<String, Map<String, String>>> availableTimings;
   const PhoneOTPVerificationScreen({
@@ -55,35 +55,37 @@ class _PhoneOTPVerificationScreenState
 
   
 
-  Future<void> _verifyPhoneNumber(String value) async {
+  // Future<void> _verifyPhoneNumber(String value) async {
      
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-      final instructorProvider =
-          Provider.of<InstructorProviders>(context, listen: false);
+  //   try {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     final instructorProvider =
+  //         Provider.of<InstructorProviders>(context, listen: false);
      
     
-      await instructorProvider.addInstructorProvider(
-          phoneNumber: widget.phoneNumber!,
-          qualification: widget.selectedQualification!,
-          subjects: widget.selectedSubjects,
-          feesPerHour: widget.feesPerHour!,
-          availableTimings: widget.availableTimings,
-          verificationCode: value,
-          verificationId: widget.verificationId);
+  //     await instructorProvider.addInstructorProvider(
+  //         phoneNumber: widget.phoneNumber!,
+  //         qualification: widget.selectedQualification!,
+  //         subjects: widget.selectedSubjects,
+  //         feesPerHour: widget.feesPerHour!,
+  //         availableTimings: widget.availableTimings,
+  //         verificationCode: value,
+  //         verificationId: widget.verificationId);
 
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      showCustomToast("Error verifying the otp $e");
-    }
-  }
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     showCustomToast("Error verifying the otp $e");
+  //   }
+  // }
+
+
 
   bool areAllOTPFilled() {
     for (var controller in controllers) {
@@ -123,16 +125,16 @@ class _PhoneOTPVerificationScreenState
                 ),
                 CustomButton(
                   onTap: () {
-                    if (areAllOTPFilled()) {
-                      // All OTP fields are filled, proceed with verification
-                      final otp = controllers
-                          .map((controller) => controller.text)
-                          .join();
-                      _verifyPhoneNumber(otp);
-                    } else {
-                      // Display an error message or take appropriate action if fields are not filled
-                      showCustomToast("Please enter the complete OTP");
-                    }
+                    // if (areAllOTPFilled()) {
+                    //   // All OTP fields are filled, proceed with verification
+                    //   final otp = controllers
+                    //       .map((controller) => controller.text)
+                    //       .join();
+                    //   _verifyPhoneNumber(otp);
+                    // } else {
+                    //   // Display an error message or take appropriate action if fields are not filled
+                    //   showCustomToast("Please enter the complete OTP");
+                    // }
                   },
                   width: 200,
                   height: 40,

@@ -33,7 +33,7 @@ void main() async {
 
         // home providers
 
-        ChangeNotifierProvider(create: (context) => InstructorProviders()),
+        // ChangeNotifierProvider(create: (context) => InstructorProviders()),
         ChangeNotifierProvider(create: (context) => ProfileProviders()),
       ],
       // Initialize the app

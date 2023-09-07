@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/add_an_instructor_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/add_details_screen.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
@@ -99,7 +99,7 @@ class _MyDrawerState extends State<MyDrawer> {
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
-              Get.to(() => const AddInstructorScreen());
+              Get.to(() => const AddDetailsScreen());
             },
           ):  accountType=="instructor"? ListTile(
             leading: const Icon(Icons.person_outline),

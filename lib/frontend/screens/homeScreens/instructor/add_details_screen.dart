@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_home_text_field.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/pick_subejcts_dropdown.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/select_timings_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/select_subjects_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_dropdown.dart';
@@ -11,18 +10,17 @@ import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
-class AddInstructorScreen extends StatefulWidget {
-  const AddInstructorScreen({super.key});
+class AddDetailsScreen extends StatefulWidget {
+  const AddDetailsScreen({super.key});
 
   @override
-  State<AddInstructorScreen> createState() => _AddInstructorScreenState();
+  State<AddDetailsScreen> createState() => _AddDetailsScreenState();
 }
 
-class _AddInstructorScreenState extends State<AddInstructorScreen> {
+class _AddDetailsScreenState extends State<AddDetailsScreen> {
   final TextEditingController _phoneNumber = TextEditingController();
   final TextEditingController _feesPerHour = TextEditingController();
 
-  List<String> _selectedSubjects = [];
   String? selectedQualification;
   bool _isLoading = false;
 
@@ -43,33 +41,30 @@ class _AddInstructorScreenState extends State<AddInstructorScreen> {
 
   Future<void> _movieToNextScreenMethod() async {
     setState(() {
-      _isLoading=true;
+      _isLoading = true;
     });
-  String  number = _phoneNumber.text.trim();
-  String feesPerHour = _feesPerHour.text.trim();
+    String number = _phoneNumber.text.trim();
+    String feesPerHour = _feesPerHour.text.trim();
 
-  if (number.isNotEmpty &&
-      feesPerHour.isNotEmpty &&
-      selectedQualification != null &&
-      selectedQualification!.isNotEmpty &&
-      _selectedSubjects.isNotEmpty) {
-         setState(() {
-      _isLoading=false;
-    });
-  
-    Get.to(() => SelectTimingsScreen(
-        selectedSubjects: _selectedSubjects,
-        selectedQualification: selectedQualification,
-        phoneNumber: int.parse(number),
-        feesPerHour:int.parse(feesPerHour)));
-       
-  } else {
-    setState(() {
-      _isLoading=false;
-    });
-    showCustomToast("Please fill in all the fields");
+    if (number.isNotEmpty &&
+        feesPerHour.isNotEmpty &&
+        selectedQualification != null &&
+        selectedQualification!.isNotEmpty) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      Get.to(() => SelectSubjectsScreen(
+          selectedQualification: selectedQualification,
+          phoneNumber: number,
+          feesPerHour: int.parse(feesPerHour)));
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomToast("Please fill in all the fields");
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +104,8 @@ class _AddInstructorScreenState extends State<AddInstructorScreen> {
                     value: selectedQualification,
                     onChanged: (value) {
                       setState(() {
-                        selectedQualification = value; // Store the selected value
+                        selectedQualification =
+                            value; // Store the selected value
                       });
                     },
                     labelText: "select qualification",
@@ -117,17 +113,17 @@ class _AddInstructorScreenState extends State<AddInstructorScreen> {
                 SizedBox(
                   height: 20.h,
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: PickSubjectsDropdown(
-                    selectedSubjects: _selectedSubjects,
-                    onChanged: (selectedSubjects) {
-                      setState(() {
-                        _selectedSubjects = selectedSubjects;
-                      });
-                    },
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 20.w),
+                //   child: PickSubjectsDropdown(
+                //     selectedSubjects: _selectedSubjects,
+                //     onChanged: (selectedSubjects) {
+                //       setState(() {
+                //         _selectedSubjects = selectedSubjects;
+                //       });
+                //     },
+                //   ),
+                // ),
                 SizedBox(
                   height: 70.h,
                 ),
@@ -141,9 +137,8 @@ class _AddInstructorScreenState extends State<AddInstructorScreen> {
             ),
           ),
         ),
-         // showing an loading bar if loading is true
-        if(_isLoading)
-        const CustomLoadingOverlay()
+        // showing an loading bar if loading is true
+        if (_isLoading) const CustomLoadingOverlay()
       ],
     );
   }

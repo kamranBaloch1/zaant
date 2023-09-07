@@ -65,7 +65,7 @@ class RegisterMethod {
           dob: dob!,
           gender: gender,
           location: "",
-          phoneNumber:int.parse(""),
+          phoneNumber:"",
           isEmailVerified: false,
           isPhoneNumberVerified: false,
           createdOn: Timestamp.fromDate(DateTime.now()),
@@ -105,7 +105,7 @@ class RegisterMethod {
         showCustomToast("The account already exists for that email.");
       }
     } catch (e) {
-      showCustomToast("Error occurred while creating an account ");
+      showCustomToast("Error occurred while creating an account $e");
     }
   }
 
