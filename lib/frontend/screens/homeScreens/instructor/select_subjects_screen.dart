@@ -12,12 +12,16 @@ import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
 class SelectSubjectsScreen extends StatefulWidget {
+  final String address;
+  final String city;
   final String? selectedQualification;
   final String? phoneNumber;
   final int? feesPerHour;
 
   const SelectSubjectsScreen({
     Key? key,
+    required this.address,
+    required this.city,
     required this.selectedQualification,
     required this.phoneNumber,
     required this.feesPerHour,
@@ -46,6 +50,8 @@ class _SelectSubjectsScreenState extends State<SelectSubjectsScreen> {
   Future<void> _moveToNextScreenMethod() async {
     if (_selectedSubjects.isNotEmpty) {
       Get.to(() => SelectSubjectDaysScreen(
+         address: widget.address,
+         city: widget.city,
           selectedSubjects: _selectedSubjects,
           selectedQualification: widget.selectedQualification,
           phoneNumber: widget.phoneNumber,

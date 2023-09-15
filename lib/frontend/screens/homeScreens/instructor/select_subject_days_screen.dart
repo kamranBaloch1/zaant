@@ -1,6 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import 'package:zant/frontend/screens/homeScreens/instructor/select_timings_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
@@ -9,6 +11,8 @@ import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
 class SelectSubjectDaysScreen extends StatefulWidget {
+    final String address;
+  final String city;
   final List<String> selectedSubjects;
   final String? selectedQualification;
   final String? phoneNumber;
@@ -16,6 +20,8 @@ class SelectSubjectDaysScreen extends StatefulWidget {
 
   const SelectSubjectDaysScreen({
     Key? key,
+    required this.address,
+    required this.city,
     required this.selectedSubjects,
     required this.selectedQualification,
     required this.phoneNumber,
@@ -58,6 +64,8 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
     if (allSubjectsHaveDaysSelected) {
       // Proceed to the next screen
       Get.to(() => SelectTimingsScreen(
+        address: widget.address,
+        city: widget.city,
           selectedDaysForSubjects: selectedDays,
           selectedSubjects: widget.selectedSubjects,
           selectedQualification: widget.selectedQualification,

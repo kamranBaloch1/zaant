@@ -1,141 +1,26 @@
+public class InsertionSort {
+    public static void insertionSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 1; i < n; i++) {
+            int key = arr[i];
+            int j = i - 1;
+            
+            while (j >= 0 && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            
+            arr[j + 1] = key;
+        }
+    }
 
+    public static void main(String[] args) {
+        int[] arr = {12, 11, 13, 5, 6};
+        insertionSort(arr);
 
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: ReusableAppBar(
-            backgroundColor: appBarColor,
-            title: "Select timings for subjects",
-          ),
-          body: _isStartLoad
-              ? Container()
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: widget.selectedSubjects.length,
-                        itemBuilder: (context, index) {
-                          final subject = widget.selectedSubjects[index];
-                          final timings = subjectTimings[subject] ?? {};
-                          final selectedDays = dayTimings[subject] ?? {};
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 16.0.w,
-                                ),
-                                child: Text(
-                                  subject,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.sp,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              DropdownButton<Set<String>>(
-                                style: const TextStyle(color: Colors.black),
-                                value: selectedDays.isNotEmpty ? selectedDays : null,
-                                onChanged: (days) {
-                                  setState(() {
-                                    dayTimings[subject] = days ?? {};
-                                  });
-                                },
-                                items: [
-                                  DropdownMenuItem<Set<String>>(
-                                    value: Set<String>(), // Empty set value
-                                    child: Text(
-                                      "Select days",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  for (String value in [
-                                    "Monday",
-                                    "Tuesday",
-                                    "Wednesday",
-                                    "Thursday",
-                                    "Friday",
-                                    "Saturday",
-                                    "Sunday",
-                                  ])
-                                    DropdownMenuItem<Set<String>>(
-                                      value: selectedDays.contains(value)
-                                          ? selectedDays.difference({value})
-                                          : selectedDays.union({value}),
-                                      child: Text(value),
-                                    ),
-                                ],
-                              ),
-                              ListTile(
-                                title: Row(
-                                  children: [
-                                    Expanded(
-                                      child: CustomTimePicker(
-                                        icon: Icons.time_to_leave_outlined,
-                                        labelText: "Start Time",
-                                        selectedTime: timings['start'],
-                                        onTimeChanged: (time) {
-                                          _handleSubjectTiming(
-                                            subject,
-                                            selectedDays.toList(),
-                                            'start',
-                                            time,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: CustomTimePicker(
-                                        icon: Icons.time_to_leave_outlined,
-                                        labelText: "End Time",
-                                        selectedTime: timings['end'],
-                                        onTimeChanged: (time) {
-                                          _handleSubjectTiming(
-                                            subject,
-                                            selectedDays.toList(),
-                                            'end',
-                                            time,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Divider(),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(16.0.w),
-                      child: CustomButton(
-                        // onTap: saveTheInstructorData,
-                        width: 200,
-                        height: 40,
-                        text: "Done",
-                        bgColor: Colors.blue,
-                      ),
-                    ),
-                  ],
-                ),
-        ),
-        if (_isLoading) const CustomLoadingOverlay(),
-        if (_isStartLoad) const CustomLoadingOverlay(),
-      ],
-    );
-  }
-
+        System.out.println("Sorted array using Insertion Sort:");
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+    }
+}

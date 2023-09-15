@@ -18,8 +18,13 @@ class InstructorMethods {
     required Map<String, Map<String, Map<String, String>>>
         selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
+    required String city,
+    required String address,
   }) async {
     try {
+      String? name = UserPreferences.getName();
+      String? profilePicUrl = UserPreferences.getProfileUrl();
+
       // Get the current user's UID
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
@@ -36,20 +41,22 @@ class InstructorMethods {
 
       // Create an InstructorModel instance
       InstructorModel instructorModel = InstructorModel(
-        uid: uid,
-        phoneNumber: phoneNumber,
-        isPhoneNumberVerified: true,
-        qualification: qualification,
-        location: "",
-        feesPerHour: feesPerHour,
-        reviews: [],
-        ratings: 0,
-        subjects: subjects,
-        selectedTimingsForSubjects: selectedTimingsForSubjects,
-        accountType: AccountTypeEnum.instructor,
-        createdOn: Timestamp.fromDate(DateTime.now()),
-        selectedDaysForSubjects: selectedDaysForSubjects,
-      );
+          uid: uid,
+          phoneNumber: phoneNumber,
+          isPhoneNumberVerified: true,
+          qualification: qualification,
+          location: address,
+          feesPerHour: feesPerHour,
+          reviews: [],
+          ratings: 0,
+          subjects: subjects,
+          selectedTimingsForSubjects: selectedTimingsForSubjects,
+          accountType: AccountTypeEnum.instructor,
+          createdOn: Timestamp.fromDate(DateTime.now()),
+          selectedDaysForSubjects: selectedDaysForSubjects,
+          name: name!,
+          profilePicUrl: profilePicUrl!,
+          city: city);
 
       // Add the instructor model to Firestore
       await FirebaseFirestore.instance
@@ -59,11 +66,18 @@ class InstructorMethods {
           .doc(uid)
           .set(instructorModel.toMap());
 
+      // creating an istructor collection
+      await FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(uid)
+          .set(instructorModel.toMap());
+
       // Update user document with instructor information
       await userDocRef.update({
         "accountType": AccountTypeEnum.instructor.value,
         "phoneNumber": phoneNumber,
-        "isPhoneNumberVerified": true,
+        "isPhoneNumberVerified": false,
+        "location": address,
       });
 
       // Update SharedPreferences
@@ -71,6 +85,7 @@ class InstructorMethods {
           AccountTypeEnum.instructor.toString().split('.').last);
       await UserPreferences.setPhoneNumber(phoneNumber);
       await UserPreferences.setIsPhoneNumberVerified(true);
+      await UserPreferences.setLocation(address);
 
       // Display a success message
       showCustomToast("You have successfully become an instructor");
@@ -81,6 +96,27 @@ class InstructorMethods {
       // Handle errors gracefully
       showCustomToast(
           "An error occurred while becoming an instructor. Please try again later.");
+    }
+  }
+
+  // getting the instructor collection to fecth the info in search screen
+
+  Stream<QuerySnapshot> getInstructorsStream({required String query}) {
+    try {
+      // Create a Firestore query based on the location and city queries
+      final queryText = query.toLowerCase();
+      final queryRef = FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .where('location', isGreaterThanOrEqualTo: queryText)
+          .where('location', isLessThan: queryText + 'z');
+
+      return queryRef.snapshots();
+    } catch (e) {
+      // Handle the error (e.g., print it to the console)
+      print('Error in getInstructorsStream: $e');
+      showCustomToast(e.toString());
+      // Return an empty stream or handle the error as needed
+      return const Stream.empty();
     }
   }
 }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/select_subjects_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/select_user_location.screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_dropdown.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_home_text_field.dart';
+
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
@@ -22,6 +24,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
   final TextEditingController _feesPerHour = TextEditingController();
 
   String? selectedQualification;
+  String? selectedCity;
   bool _isLoading = false;
 
   List<String> qualificationList = [
@@ -58,10 +61,12 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
       });
 
       // Navigate to the next screen with collected data
-      Get.to(() => SelectSubjectsScreen(
+       Get.to(() => SelectUserLocationScreen(
+         city:selectedCity! ,
           selectedQualification: selectedQualification,
           phoneNumber: phoneNumber,
           feesPerHour: int.parse(feesPerHour)));
+
     } else {
       // Input validation failed
       setState(() {
@@ -109,13 +114,25 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                     value: selectedQualification,
                     onChanged: (value) {
                       setState(() {
-                        selectedQualification = value; // Store the selected value
+                        selectedQualification =
+                            value; // Store the selected value
                       });
                     },
                     labelText: "Select Qualification",
                     icon: Icons.book),
                 SizedBox(
                   height: 20.h,
+                ),
+                Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                  child: CustomCitiesDropdown(
+                      selectedCity: selectedCity,
+                      labelText: "Select your city",
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCity = value;
+                        });
+                      }),
                 ),
                 SizedBox(
                   height: 70.h,

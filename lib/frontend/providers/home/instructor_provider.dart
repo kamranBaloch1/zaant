@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/server/home/instructor_methods.dart';
@@ -9,11 +10,13 @@ class InstructorProviders extends ChangeNotifier {
   Future<void> addInstructorProvider({
     required String phoneNumber,
     required String qualification,
-    // required String location,
     required List<String> subjects,
     required int feesPerHour,
     required Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
+    required String city, 
+    required String address, 
+  
   }) async {
     try {
       // Call the instructorMethods to add an instructor
@@ -25,17 +28,29 @@ class InstructorProviders extends ChangeNotifier {
         feesPerHour: feesPerHour,
         selectedTimingsForSubjects: selectedTimingsForSubjects,
         selectedDaysForSubjects: selectedDaysForSubjects,
+        address: address,
+        city: city
       );
 
       // Notify listeners to update UI
       notifyListeners();
     } catch (e) {
       // Display a user-friendly error message
-      showCustomToast("An error occurred while adding the instructor.");
+      showCustomToast("an error occurred while adding the instructor.");
     }
+  }
+  
+Stream<QuerySnapshot> getInstructorsStreamProvider({required String query})  {
+  try {
+    return  _instructorMethods.getInstructorsStream(query: query);
+  } catch (e) {
+     showCustomToast("an error occurred");
+    return const Stream.empty();
   }
 }
 
+
+}
 
 
 

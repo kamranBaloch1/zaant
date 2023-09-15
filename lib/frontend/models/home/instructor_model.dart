@@ -19,6 +19,10 @@ class InstructorModel {
   AccountTypeEnum? accountType; // Make the accountType field nullable
   Timestamp createdOn;
   Map<String, List<String>> selectedDaysForSubjects;
+  String profilePicUrl;
+  String name;
+  String city;
+ 
 
   InstructorModel({
     required this.uid,
@@ -34,6 +38,9 @@ class InstructorModel {
     this.accountType,
     required this.createdOn,
     required this.selectedDaysForSubjects,
+    required this.profilePicUrl,
+    required this.name,
+    required this.city,
   });
 
   Map<String, dynamic> toMap() {
@@ -54,6 +61,9 @@ class InstructorModel {
           .last, // Store the enum value as a string
       'createdOn': createdOn,
       'selectedDaysForSubjects': selectedDaysForSubjects,
+      'profilePicUrl': profilePicUrl,
+      'name': name,
+      'city': city,
     };
   }
 
@@ -93,6 +103,9 @@ class InstructorModel {
       createdOn: map['createdOn'] as Timestamp,
       selectedDaysForSubjects: Map<String, List<String>>.from(
           map['selectedDaysForSubjects'] as Map<String, dynamic>),
+           profilePicUrl: map['profilePicUrl'] as String,
+           name: map['name'] as String,
+           city: map['city'] as String,
     );
   }
 
