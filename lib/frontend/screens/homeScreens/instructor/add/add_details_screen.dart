@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/select_user_location.screen.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/add/select_user_location.screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_dropdown.dart';

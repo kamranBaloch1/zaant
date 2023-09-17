@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
+import 'package:zant/frontend/models/home/instructor_model.dart';
 import 'package:zant/frontend/providers/home/instructor_provider.dart';
 import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/details/instructor_details_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
@@ -122,54 +125,59 @@ class _SearchScreenState extends State<SearchScreen> {
     final int instructorRating =
         instructorData['ratings'] ?? 0.0; // Get the instructor's rating
 
-    return ListTile(
-      title: Text(
-        instructorName,
-        style: const TextStyle(color: Colors.black), // Text color in black
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                city,
-                style: const TextStyle(
-                    color: Colors.black54), // Text color in black
-              ),
-              SizedBox(
-                width: 10.w,
-              ),
-              Text(
-                instructorLocation,
-                style: const TextStyle(
-                    color: Colors.black45), // Text color in black
-              ),
-            ],
-          ),
-          RatingBar.builder(
-            initialRating: instructorRating.toDouble(),
-            minRating: 1,
-            direction: Axis.horizontal,
-            allowHalfRating: true,
-            itemCount: 5,
-            itemSize: 20.0,
-            itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-            itemBuilder: (context, _) => const Icon(
-              Icons.star,
-              color: Colors.amber,
+    return GestureDetector(
+      onTap: (){
+          Get.to(()=>InstructorDetailScreen(instructorModel: InstructorModel.fromMap(instructorData)));
+      },
+      child: ListTile(
+        title: Text(
+          instructorName,
+          style: const TextStyle(color: Colors.black), // Text color in black
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  city,
+                  style: const TextStyle(
+                      color: Colors.black54), // Text color in black
+                ),
+                SizedBox(
+                  width: 10.w,
+                ),
+                Text(
+                  instructorLocation,
+                  style: const TextStyle(
+                      color: Colors.black45), // Text color in black
+                ),
+              ],
             ),
-            onRatingUpdate: (rating) {
-              // Handle user rating update if needed
-            },
-          ),
-        ],
+            RatingBar.builder(
+              initialRating: instructorRating.toDouble(),
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemSize: 20.0,
+              itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                // Handle user rating update if needed
+              },
+            ),
+          ],
+        ),
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(
+              instructorProfilePicUrl), // Use the instructor's profile picture
+        ),
+        // Add more widgets to display instructor details as needed
       ),
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(
-            instructorProfilePicUrl), // Use the instructor's profile picture
-      ),
-      // Add more widgets to display instructor details as needed
     );
   }
 }

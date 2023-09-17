@@ -78,21 +78,25 @@ class InstructorModel {
       reviews: List<String>.from(map['reviews'] as List<dynamic>),
       ratings: map['ratings'] as int,
       subjects: List<String>.from(map['subjects'] as List<dynamic>),
-        selectedTimingsForSubjects: (map['selectedTimingsForSubjects'] as Map<String, dynamic>).map(
-        (subject, subjectData) {
-          return MapEntry(
-            subject,
-            (subjectData as Map<String, dynamic>).map(
-              (day, dayData) {
-                return MapEntry(
-                  day,
-                  Map<String, String>.from(dayData as Map<String, dynamic>),
-                );
-              },
-            ),
-          );
-        },
-      ),
+       selectedTimingsForSubjects: (map['selectedTimingsForSubjects'] as Map<String, dynamic>?)?.map(
+      (subject, subjectData) {
+        return MapEntry(
+          subject,
+          (subjectData as Map<String, dynamic>).map(
+            (day, dayData) {
+              return MapEntry(
+                day,
+                Map<String, String>.from(dayData as Map<String, dynamic>),
+              );
+            },
+          ),
+        );
+      },
+    ) ?? {},
+   
+   
+   
+   
       accountType: map['accountType'] != null
           ? AccountTypeEnum.values.firstWhere(
               (e) => e.toString() == map['accountType'],
@@ -101,8 +105,9 @@ class InstructorModel {
             )
           : AccountTypeEnum.unknown, // Use 'unknown' as the default
       createdOn: map['createdOn'] as Timestamp,
-      selectedDaysForSubjects: Map<String, List<String>>.from(
-          map['selectedDaysForSubjects'] as Map<String, dynamic>),
+       selectedDaysForSubjects: (map['selectedDaysForSubjects'] as Map<String, dynamic>).map(
+      (key, value) => MapEntry(key, (value as List<dynamic>).cast<String>()),
+    ),
            profilePicUrl: map['profilePicUrl'] as String,
            name: map['name'] as String,
            city: map['city'] as String,

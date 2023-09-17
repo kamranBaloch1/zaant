@@ -108,7 +108,7 @@ class InstructorMethods {
       final queryRef = FirebaseFirestore.instance
           .collection(instructorsCollections)
           .where('location', isGreaterThanOrEqualTo: queryText)
-          .where('location', isLessThan: queryText + 'z');
+          .where('location', isLessThan: '${queryText}z');
 
       return queryRef.snapshots();
     } catch (e) {
