@@ -35,8 +35,11 @@ class RegisterMethod {
 
   // Method to register a user with email and password
   Future<void> registerWithEmailAndPassword(
-      String email, String password, XFile? photoUrl, String name,
-      String? gender, DateTime? dob) async {
+      {required String email,required String password,required XFile? photoUrl,required String name,
+     required String? gender,required DateTime? dob,required String city}
+      
+      
+      ) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -70,7 +73,8 @@ class RegisterMethod {
           isPhoneNumberVerified: false,
           createdOn: Timestamp.fromDate(DateTime.now()),
           accountStatus: false,
-          accountType: AccountTypeEnum.user
+          accountType: AccountTypeEnum.user,
+          city: city
         );
 
         // Save user data to Firestore
@@ -93,6 +97,7 @@ class RegisterMethod {
         await UserPreferences.setLocation("");
         await UserPreferences.setPhoneNumber("");
         await UserPreferences.setAccountType(AccountTypeEnum.user.toString().split('.').last);
+        await UserPreferences.setCity(city);
 
         showCustomToast(
             "We have sent an email verification link to this email address");

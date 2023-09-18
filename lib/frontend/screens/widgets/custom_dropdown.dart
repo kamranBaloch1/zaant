@@ -52,7 +52,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 0.w),
         child: DropdownButtonFormField<T>(
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
           value: selectedValue,
           onChanged: (value) {
             setState(() {

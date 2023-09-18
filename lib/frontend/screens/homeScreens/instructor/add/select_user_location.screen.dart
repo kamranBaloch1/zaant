@@ -12,13 +12,11 @@ import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
 class SelectUserLocationScreen extends StatefulWidget {
-  final String city;
   final String? selectedQualification;
   final String? phoneNumber;
   final int? feesPerHour;
   const SelectUserLocationScreen({
     Key? key,
-    required this.city,
     this.selectedQualification,
     this.phoneNumber,
     this.feesPerHour,
@@ -49,14 +47,13 @@ class _SelectUserLocationScreenState extends State<SelectUserLocationScreen> {
   Future<void> _moveToNextScreenMethod() async {
     String address = _addressController.text.trim();
 
-    if(address.isNotEmpty){
+    if (address.isNotEmpty) {
       Get.to(() => SelectSubjectsScreen(
-        address: address,
-        city: widget.city,
-        selectedQualification: widget.selectedQualification,
-        phoneNumber: widget.phoneNumber,
-        feesPerHour: widget.feesPerHour));
-    }else{
+          address: address,
+          selectedQualification: widget.selectedQualification,
+          phoneNumber: widget.phoneNumber,
+          feesPerHour: widget.feesPerHour));
+    } else {
       showCustomToast("please write your address");
     }
   }
@@ -78,22 +75,24 @@ class _SelectUserLocationScreenState extends State<SelectUserLocationScreen> {
             title: "Please write your full address",
           ),
           body: Column(children: [
-            SizedBox(height: 50.h,),
+            SizedBox(
+              height: 50.h,
+            ),
             homeCustomTextField(
                 controller: _addressController,
                 labelText: "Add your address",
                 icon: Icons.house,
                 keyBoardType: TextInputType.text),
-                 SizedBox(
-                height: 70.h,
-              ),
-              CustomButton(
-                onTap: _isLoading ? null : _moveToNextScreenMethod,
-                width: 200,
-                height: 40,
-                text: "Next",
-                bgColor: Colors.blue,
-              )
+            SizedBox(
+              height: 70.h,
+            ),
+            CustomButton(
+              onTap: _isLoading ? null : _moveToNextScreenMethod,
+              width: 200,
+              height: 40,
+              text: "Next",
+              bgColor: Colors.blue,
+            )
           ]),
         ),
 

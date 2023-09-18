@@ -62,6 +62,9 @@ class UserPreferences {
  static Future<void> setAccountType(String value) async {
     await _prefs!.setString('accountType', value);
   }
+   static Future<void> setCity(String value) async {
+    await _prefs!.setString('city', value.toString());
+  }
 
 
   // Getters
@@ -117,6 +120,9 @@ class UserPreferences {
 
     static String? getAccountType() {
     return _prefs!.getString('accountType');
+  }
+   static String? getCity() {
+    return _prefs!.getString('city');
   }
 
 

@@ -8,15 +8,22 @@ class RegisterProviders extends ChangeNotifier {
 
   // Method to register a new user with email and password
   Future<void> registerWithEmailAndPasswordProvider(
-      String email,
-      String password,
-      String name,
-      String gender,
-      DateTime? dob,
-      XFile photoUrl) async {
+      {required String email,
+      required String password,
+      required XFile? photoUrl,
+      required String name,
+      required String? gender,
+      required DateTime? dob,
+      required String city}) async {
     try {
       await _registerMethod.registerWithEmailAndPassword(
-          email, password, photoUrl, name, gender, dob);
+          email: email,
+          password: password,
+          photoUrl: photoUrl,
+          name: name,
+          gender: gender,
+          dob: dob,
+          city: city);
 
       notifyListeners();
     } catch (e) {

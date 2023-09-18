@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:zant/frontend/providers/auth/register_providers.dart';
 import 'package:zant/frontend/screens/authSceens/login/login_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_dropdown.dart';
@@ -28,12 +29,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isLoading = false;
   String? selectedGender;
   DateTime? selectedDate;
+  String? selectedCity;
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _dobController = TextEditingController();
 
   @override
@@ -86,7 +89,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() {
       _isLoading = true;
     });
-    final registerProvider = Provider.of<RegisterProviders>(context, listen: false);
+    final registerProvider =
+        Provider.of<RegisterProviders>(context, listen: false);
 
     String email = _emailController.text.trim();
     String name = _nameController.text.trim();
@@ -98,12 +102,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (selectedDate!.isBefore(minDate)) {
         await registerProvider
-            .registerWithEmailAndPasswordProvider(email, password, name, selectedGender!, selectedDate, _selectedImage!)
+            .registerWithEmailAndPasswordProvider(
+                email: email,
+                password: password,
+                photoUrl: _selectedImage,
+                name: name,
+                gender: selectedGender,
+                dob: selectedDate,
+                city: selectedCity!)
             .then((value) => {
-          setState(() {
-            _isLoading = false;
-          })
-        });
+                  setState(() {
+                    _isLoading = false;
+                  })
+                });
       } else {
         setState(() {
           _isLoading = false;
@@ -124,7 +135,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       children: [
         Scaffold(
           appBar: ReusableAppBar(
-              backgroundColor: appBarColor, title: _isLoading? "please wait..." :"Register an account"),
+              backgroundColor: appBarColor,
+              title: _isLoading ? "please wait..." : "Register an account"),
           body: SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -138,7 +150,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Center(
                       child: _selectedImage != null
                           ? CircleAvatar(
-                              backgroundImage: FileImage(File(_selectedImage!.path)),
+                              backgroundImage:
+                                  FileImage(File(_selectedImage!.path)),
                               radius: 60.r,
                             )
                           : CircleAvatar(
@@ -170,9 +183,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _emailController,
                     validator: (value) {
                       return RegExp(
-                        // Regular expression to validate email
-                        "[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                          .hasMatch(value!)
+                                  // Regular expression to validate email
+                                  "[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                              .hasMatch(value!)
                           ? null
                           : "Please enter a valid email address";
                     },
@@ -238,6 +251,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icons.person,
                   ),
                   SizedBox(height: 20.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: CustomCitiesDropdown(
+                        selectedCity: selectedCity,
+                        labelText: "Select your city",
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCity = value;
+                          });
+                        }),
+                  ),
+                  SizedBox(height: 20.h),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 30.w),
                     decoration: BoxDecoration(
@@ -288,8 +313,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   CustomButton(
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                       
-                     
                         _registerUser();
                       }
                     },

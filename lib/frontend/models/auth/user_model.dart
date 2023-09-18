@@ -17,6 +17,8 @@ class UserModel {
   final Timestamp? createdOn;
   final bool? accountStatus;
  AccountTypeEnum? accountType;
+  final String? city;
+
   UserModel({
     required this.uid,
     required this.name,
@@ -31,6 +33,7 @@ class UserModel {
     required this.createdOn,
     required this.accountStatus,
     required this.accountType,
+    required this.city
   });
 
   Map<String, dynamic> toMap() {
@@ -48,6 +51,7 @@ class UserModel {
       'createdOn': createdOn,
       'accountStatus': accountStatus,
       'accountType': accountType?.toString().split('.').last, // Store the enum value as a string
+      'city': city,
     };
   }
 
@@ -71,6 +75,7 @@ class UserModel {
       orElse: () => AccountTypeEnum.unknown, // Use 'unknown' as the default
     )
   : AccountTypeEnum.unknown, // Use 'unknown' as the default
+  city: map['city'] as String,
 
 
     );

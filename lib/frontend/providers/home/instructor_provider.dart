@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
@@ -12,11 +11,10 @@ class InstructorProviders extends ChangeNotifier {
     required String qualification,
     required List<String> subjects,
     required int feesPerHour,
-    required Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects,
+    required Map<String, Map<String, Map<String, String>>>
+        selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
-    required String city, 
-    required String address, 
-  
+    required String address,
   }) async {
     try {
       // Call the instructorMethods to add an instructor
@@ -29,7 +27,6 @@ class InstructorProviders extends ChangeNotifier {
         selectedTimingsForSubjects: selectedTimingsForSubjects,
         selectedDaysForSubjects: selectedDaysForSubjects,
         address: address,
-        city: city
       );
 
       // Notify listeners to update UI
@@ -39,17 +36,15 @@ class InstructorProviders extends ChangeNotifier {
       showCustomToast("an error occurred while adding the instructor.");
     }
   }
-  
-Stream<QuerySnapshot> getInstructorsStreamProvider({required String query})  {
-  try {
-    return  _instructorMethods.getInstructorsStream(query: query);
-  } catch (e) {
-     showCustomToast("an error occurred");
-    return const Stream.empty();
+
+  Stream<QuerySnapshot> getInstructorsStreamProvider({required String query}) {
+    try {
+      return _instructorMethods.getInstructorsStream(query: query);
+    } catch (e) {
+      showCustomToast("an error occurred");
+      return const Stream.empty();
+    }
   }
-}
-
-
 }
 
 

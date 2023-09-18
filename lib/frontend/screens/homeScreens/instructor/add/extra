@@ -1,0 +1,54 @@
+@override
+Widget build(BuildContext context) {
+  // Fetch user data based on the uid.
+  Future<Map<String, dynamic>> userDataFuture = fetchUserData(widget.instructorModel.uid);
+
+  return FutureBuilder<Map<String, dynamic>>(
+    future: userDataFuture,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator(); // Show a loading indicator while fetching data.
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else if (!snapshot.hasData || snapshot.data.isEmpty) {
+        return Text('User data not found.'); // Handle the case where user data is not found.
+      } else {
+        final userData = snapshot.data!;
+        final name = userData['name'] ?? 'Name not found'; // Provide a default value if name is missing.
+        final gender = userData['gender'] ?? 'Gender not found'; // Provide a default value if gender is missing.
+        final profilePicUrl = userData['profilePicUrl'] ?? 'Profile picture not found'; // Provide a default value if profilePicUrl is missing.
+
+        // Your UI code using the fetched data.
+        return Scaffold(
+          appBar: ReusableAppBar(
+            title: 'Instructor Details',
+            backgroundColor: appBarColor,
+          ),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 80.r,
+                  backgroundImage: NetworkImage(profilePicUrl),
+                ),
+                SizedBox(height: 20.h),
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontSize: 28.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                // ... Rest of your UI with updated data.
+              ],
+            ),
+          ),
+        );
+      }
+    },
+  );
+}

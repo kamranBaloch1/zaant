@@ -10,7 +10,6 @@ class InstructorModel {
   String phoneNumber;
   bool isPhoneNumberVerified;
   String qualification;
-  String location;
   int feesPerHour;
   List<String> reviews;
   int ratings;
@@ -19,29 +18,23 @@ class InstructorModel {
   AccountTypeEnum? accountType; // Make the accountType field nullable
   Timestamp createdOn;
   Map<String, List<String>> selectedDaysForSubjects;
-  String profilePicUrl;
-  String name;
-  String city;
- 
 
-  InstructorModel({
-    required this.uid,
-    required this.phoneNumber,
-    required this.isPhoneNumberVerified,
-    required this.qualification,
-    required this.location,
-    required this.feesPerHour,
-    required this.reviews,
-    required this.ratings,
-    required this.subjects,
-    required this.selectedTimingsForSubjects,
-    this.accountType,
-    required this.createdOn,
-    required this.selectedDaysForSubjects,
-    required this.profilePicUrl,
-    required this.name,
-    required this.city,
-  });
+  List<String> enrollments;
+
+  InstructorModel(
+      {required this.uid,
+      required this.phoneNumber,
+      required this.isPhoneNumberVerified,
+      required this.qualification,
+      required this.feesPerHour,
+      required this.reviews,
+      required this.ratings,
+      required this.subjects,
+      required this.selectedTimingsForSubjects,
+      this.accountType,
+      required this.createdOn,
+      required this.selectedDaysForSubjects,
+      required this.enrollments});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -49,21 +42,20 @@ class InstructorModel {
       'phoneNumber': phoneNumber,
       'isPhoneNumberVerified': isPhoneNumberVerified,
       'qualification': qualification,
-      'location': location,
+
       'feesPerHour': feesPerHour,
       'reviews': reviews,
       'ratings': ratings,
       'subjects': subjects,
-      'availableTimings': selectedTimingsForSubjects,
+      'selectedTimingsForSubjects': selectedTimingsForSubjects,
       'accountType': accountType
           ?.toString()
           .split('.')
           .last, // Store the enum value as a string
       'createdOn': createdOn,
       'selectedDaysForSubjects': selectedDaysForSubjects,
-      'profilePicUrl': profilePicUrl,
-      'name': name,
-      'city': city,
+
+      'enrollments': enrollments,
     };
   }
 
@@ -73,30 +65,30 @@ class InstructorModel {
       phoneNumber: map['phoneNumber'] as String,
       isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,
       qualification: map['qualification'] as String,
-      location: map['location'] as String,
+
       feesPerHour: map['feesPerHour'] as int,
       reviews: List<String>.from(map['reviews'] as List<dynamic>),
       ratings: map['ratings'] as int,
       subjects: List<String>.from(map['subjects'] as List<dynamic>),
-       selectedTimingsForSubjects: (map['selectedTimingsForSubjects'] as Map<String, dynamic>?)?.map(
-      (subject, subjectData) {
-        return MapEntry(
-          subject,
-          (subjectData as Map<String, dynamic>).map(
-            (day, dayData) {
+      selectedTimingsForSubjects: (map['selectedTimingsForSubjects']
+                  as Map<String, dynamic>?)
+              ?.map(
+            (subject, subjectData) {
               return MapEntry(
-                day,
-                Map<String, String>.from(dayData as Map<String, dynamic>),
+                subject,
+                (subjectData as Map<String, dynamic>).map(
+                  (day, dayData) {
+                    return MapEntry(
+                      day,
+                      Map<String, String>.from(dayData as Map<String, dynamic>),
+                    );
+                  },
+                ),
               );
             },
-          ),
-        );
-      },
-    ) ?? {},
-   
-   
-   
-   
+          ) ??
+          {},
+
       accountType: map['accountType'] != null
           ? AccountTypeEnum.values.firstWhere(
               (e) => e.toString() == map['accountType'],
@@ -105,12 +97,12 @@ class InstructorModel {
             )
           : AccountTypeEnum.unknown, // Use 'unknown' as the default
       createdOn: map['createdOn'] as Timestamp,
-       selectedDaysForSubjects: (map['selectedDaysForSubjects'] as Map<String, dynamic>).map(
-      (key, value) => MapEntry(key, (value as List<dynamic>).cast<String>()),
-    ),
-           profilePicUrl: map['profilePicUrl'] as String,
-           name: map['name'] as String,
-           city: map['city'] as String,
+      selectedDaysForSubjects:
+          (map['selectedDaysForSubjects'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, (value as List<dynamic>).cast<String>()),
+      ),
+
+      enrollments: List<String>.from(map['enrollments'] as List<dynamic>),
     );
   }
 

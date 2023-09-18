@@ -18,15 +18,12 @@ class InstructorMethods {
     required Map<String, Map<String, Map<String, String>>>
         selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
-    required String city,
     required String address,
   }) async {
     try {
-      String? name = UserPreferences.getName();
-      String? profilePicUrl = UserPreferences.getProfileUrl();
-
       // Get the current user's UID
       String uid = FirebaseAuth.instance.currentUser!.uid;
+      String? city = UserPreferences.getCity().toString();
 
       // Reference to the user document
       DocumentReference userDocRef =
@@ -43,9 +40,8 @@ class InstructorMethods {
       InstructorModel instructorModel = InstructorModel(
           uid: uid,
           phoneNumber: phoneNumber,
-          isPhoneNumberVerified: true,
+          isPhoneNumberVerified: false,
           qualification: qualification,
-          location: address,
           feesPerHour: feesPerHour,
           reviews: [],
           ratings: 0,
@@ -54,9 +50,7 @@ class InstructorMethods {
           accountType: AccountTypeEnum.instructor,
           createdOn: Timestamp.fromDate(DateTime.now()),
           selectedDaysForSubjects: selectedDaysForSubjects,
-          name: name!,
-          profilePicUrl: profilePicUrl!,
-          city: city);
+          enrollments: []);
 
       // Add the instructor model to Firestore
       await FirebaseFirestore.instance
@@ -66,7 +60,7 @@ class InstructorMethods {
           .doc(uid)
           .set(instructorModel.toMap());
 
-      // creating an istructor collection
+      // creating an instructor collection
       await FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(uid)
@@ -119,16 +113,29 @@ class InstructorMethods {
       return const Stream.empty();
     }
   }
+
+  /// code for fecting the user data in  instructor details screen
+
+  Future<Map<String, dynamic>> fetchUserDataForInstrcutorDetailScreen(
+      {required String uid}) async {
+    final userCollectionDoc =
+        FirebaseFirestore.instance.collection(userCollection);
+    final userDoc = await userCollectionDoc.doc(uid).get();
+
+    if (userDoc.exists) {
+      // Document exists, return its data as a Map.
+      return userDoc.data() as Map<String, dynamic>;
+    } else {
+      // Document does not exist.
+      return {}; // You can handle this case as needed.
+    }
+  }
 }
 
  
  
- 
- 
- 
- 
- 
- 
+
+
  
  
  

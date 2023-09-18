@@ -13,7 +13,7 @@ import 'package:zant/global/colors.dart';
 
 class SelectTimingsScreen extends StatefulWidget {
   final String address;
-  final String city;
+
   final List<String> selectedSubjects;
   final String? selectedQualification;
   final String? phoneNumber;
@@ -23,7 +23,6 @@ class SelectTimingsScreen extends StatefulWidget {
   const SelectTimingsScreen({
     Key? key,
     required this.address,
-    required this.city,
     required this.selectedSubjects,
     required this.selectedQualification,
     required this.phoneNumber,
@@ -90,13 +89,11 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
       Map<String, Map<String, Map<String, String>>> selectedTimings = {};
       subjectTimings.forEach((subject, timings) {
         selectedTimings[subject] = {
-          'start': {
-            'hour': timings['start']!.hour.toString(),
-            'minute': timings['start']!.minute.toString(),
+          'Start Time': {
+            'time': "${timings['start']!.hour}:${timings['start']!.minute}",
           },
-          'end': {
-            'hour': timings['end']!.hour.toString(),
-            'minute': timings['end']!.minute.toString(),
+          'End Time': {
+            'time': "${timings['end']!.hour}:${timings['end']!.minute}",
           },
         };
       });
@@ -112,7 +109,6 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
         selectedTimingsForSubjects: selectedTimings,
         selectedDaysForSubjects: widget.selectedDaysForSubjects,
         address: widget.address,
-        city: widget.city
       );
 
       setState(() {
