@@ -23,7 +23,7 @@ class InstructorMethods {
     try {
       // Get the current user's UID
       String uid = FirebaseAuth.instance.currentUser!.uid;
-      String? city = UserPreferences.getCity().toString();
+     
 
       // Reference to the user document
       DocumentReference userDocRef =
