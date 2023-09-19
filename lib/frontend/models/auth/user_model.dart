@@ -18,6 +18,7 @@ class UserModel {
   final bool? accountStatus;
  AccountTypeEnum? accountType;
   final String? city;
+  List<String> enrollments;
 
   UserModel({
     required this.uid,
@@ -33,7 +34,8 @@ class UserModel {
     required this.createdOn,
     required this.accountStatus,
     required this.accountType,
-    required this.city
+    required this.city,
+    required this.enrollments
   });
 
   Map<String, dynamic> toMap() {
@@ -51,7 +53,8 @@ class UserModel {
       'createdOn': createdOn,
       'accountStatus': accountStatus,
       'accountType': accountType?.toString().split('.').last, // Store the enum value as a string
-      'city': city,
+      'city': city,           
+      'enrollments': enrollments,           
     };
   }
 
@@ -76,6 +79,7 @@ class UserModel {
     )
   : AccountTypeEnum.unknown, // Use 'unknown' as the default
   city: map['city'] as String,
+  enrollments: List<String>.from(map['enrollments'] as List<dynamic>),
 
 
     );

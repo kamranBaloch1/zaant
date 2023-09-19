@@ -21,36 +21,48 @@ class InstructorMethods {
     required String address,
   }) async {
     try {
-      // Get the current user's UID
-      String uid = FirebaseAuth.instance.currentUser!.uid;
-     
+      // Get the current user's information
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception("User not authenticated.");
+      }
+
+      final uid = user.uid;
+      final name = UserPreferences.getName() ?? "";
+      final city = UserPreferences.getCity() ?? "";
+      final profilePicUrl = UserPreferences.getProfileUrl() ?? "";
+      final gender = UserPreferences.getGender() ?? "";
 
       // Reference to the user document
-      DocumentReference userDocRef =
-          FirebaseFirestore.instance.collection(userCollection).doc(uid);
+      final userDocRef = FirebaseFirestore.instance.collection(userCollection).doc(uid);
 
       // Check if the user document with the UID exists
-      DocumentSnapshot userDoc = await userDocRef.get();
-
+      final userDoc = await userDocRef.get();
       if (!userDoc.exists) {
         throw Exception("User document not found.");
       }
 
       // Create an InstructorModel instance
-      InstructorModel instructorModel = InstructorModel(
-          uid: uid,
-          phoneNumber: phoneNumber,
-          isPhoneNumberVerified: false,
-          qualification: qualification,
-          feesPerHour: feesPerHour,
-          reviews: [],
-          ratings: 0,
-          subjects: subjects,
-          selectedTimingsForSubjects: selectedTimingsForSubjects,
-          accountType: AccountTypeEnum.instructor,
-          createdOn: Timestamp.fromDate(DateTime.now()),
-          selectedDaysForSubjects: selectedDaysForSubjects,
-          enrollments: []);
+      final instructorModel = InstructorModel(
+        uid: uid,
+        phoneNumber: phoneNumber,
+        isPhoneNumberVerified: false,
+        qualification: qualification,
+        feesPerHour: feesPerHour,
+        reviews: [],
+        ratings: 0,
+        subjects: subjects,
+        selectedTimingsForSubjects: selectedTimingsForSubjects,
+        accountType: AccountTypeEnum.instructor,
+        createdOn: Timestamp.fromDate(DateTime.now()),
+        selectedDaysForSubjects: selectedDaysForSubjects,
+        enrollments: [],
+        location: address,
+        city: city,
+        name: name,
+        profilePicUrl: profilePicUrl,
+        gender: gender,
+      );
 
       // Add the instructor model to Firestore
       await FirebaseFirestore.instance
@@ -60,7 +72,7 @@ class InstructorMethods {
           .doc(uid)
           .set(instructorModel.toMap());
 
-      // creating an instructor collection
+      // Create an instructor collection
       await FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(uid)
@@ -75,8 +87,7 @@ class InstructorMethods {
       });
 
       // Update SharedPreferences
-      await UserPreferences.setAccountType(
-          AccountTypeEnum.instructor.toString().split('.').last);
+      await UserPreferences.setAccountType(AccountTypeEnum.instructor.toString().split('.').last);
       await UserPreferences.setPhoneNumber(phoneNumber);
       await UserPreferences.setIsPhoneNumberVerified(true);
       await UserPreferences.setLocation(address);
@@ -88,16 +99,14 @@ class InstructorMethods {
       Get.offAll(() => const HomeScreen());
     } catch (e) {
       // Handle errors gracefully
-      showCustomToast(
-          "An error occurred while becoming an instructor. Please try again later.");
+      showCustomToast("An error occurred while becoming an instructor. Please try again later.");
     }
   }
 
-  // getting the instructor collection to fecth the info in search screen
-
+  // Getting the instructor collection to fetch the info in the search screen
   Stream<QuerySnapshot> getInstructorsStream({required String query}) {
     try {
-      // Create a Firestore query based on the location and city queries
+      // Create a Firestore query based on the location query
       final queryText = query.toLowerCase();
       final queryRef = FirebaseFirestore.instance
           .collection(instructorsCollections)
@@ -106,87 +115,10 @@ class InstructorMethods {
 
       return queryRef.snapshots();
     } catch (e) {
-      // Handle the error (e.g., print it to the console)
+      // Handle the error and return an empty stream or handle the error as needed
       print('Error in getInstructorsStream: $e');
       showCustomToast(e.toString());
-      // Return an empty stream or handle the error as needed
       return const Stream.empty();
     }
   }
-
-  /// code for fecting the user data in  instructor details screen
-
-  Future<Map<String, dynamic>> fetchUserDataForInstrcutorDetailScreen(
-      {required String uid}) async {
-    final userCollectionDoc =
-        FirebaseFirestore.instance.collection(userCollection);
-    final userDoc = await userCollectionDoc.doc(uid).get();
-
-    if (userDoc.exists) {
-      // Document exists, return its data as a Map.
-      return userDoc.data() as Map<String, dynamic>;
-    } else {
-      // Document does not exist.
-      return {}; // You can handle this case as needed.
-    }
-  }
 }
-
- 
- 
-
-
- 
- 
- 
- 
- 
- 
- 
- 
- // Future<void> sendVerificationCode({
-  //   required String phoneNumber,
-  //   required String qualification,
-  //   // required String location,
-  //   required List<String> subjects,
-  //   required int feesPerHour,
-  //   required Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects,
-  //   required  Map<String, List<String>> selectedDaysForSubjects
-    
-  
-  // }) async {
-  //   try {
-  //     // Send a verification code to the new phone number
-  //     String number = "+92$phoneNumber";
-  //     await FirebaseAuth.instance.verifyPhoneNumber(
-  //       phoneNumber: number,
-  //       verificationCompleted: (PhoneAuthCredential credential) {
-  //         // Verification completed automatically (optional).
-  //         // You can proceed with updating the user's phone number.
-  //       },
-  //       verificationFailed: (FirebaseAuthException e) {
-  //         // Handle verification failure, e.g., invalid phone number format.
-  //         showCustomToast("unable to send the verification code number $number $e ");
-  //       },
-  //       codeSent: (String verificationId, int? resendToken) {
-  //         // Save the verification ID and redirect the user to the verification screen.
-  //         Get.offAll(() => PhoneOTPVerificationScreen(
-  //             verificationId: verificationId,
-  //             selectedSubjects: subjects,
-  //             selectedQualification: qualification,
-  //             feesPerHour: feesPerHour,
-  //             phoneNumber: phoneNumber,
-  //             selectedTimingsForSubjects: selectedTimingsForSubjects,
-  //             selectedDaysForSubjects: selectedDaysForSubjects,
-  //             ));
-  //       },
-  //       codeAutoRetrievalTimeout: (String verificationId) {
-  //         // Auto-retrieval timeout, if needed.
-  //         showCustomToast("verification code is been expired");
-  //       },
-  //     );
-  //   } catch (e) {
-  //     // Handle errors, e.g., unable to send the verification code.
-  //     showCustomToast("Error verifying phone number: $e");
-  //   }
-  // }

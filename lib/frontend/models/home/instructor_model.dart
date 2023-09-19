@@ -18,8 +18,12 @@ class InstructorModel {
   AccountTypeEnum? accountType; // Make the accountType field nullable
   Timestamp createdOn;
   Map<String, List<String>> selectedDaysForSubjects;
-
   List<String> enrollments;
+  String location;
+  String name;
+  String profilePicUrl;
+  String city;
+  String gender;
 
   InstructorModel(
       {required this.uid,
@@ -34,7 +38,13 @@ class InstructorModel {
       this.accountType,
       required this.createdOn,
       required this.selectedDaysForSubjects,
-      required this.enrollments});
+      required this.enrollments,
+      required this.location,
+      required this.city,
+      required this.name,
+      required this.profilePicUrl,
+      required this.gender,
+      });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -54,8 +64,12 @@ class InstructorModel {
           .last, // Store the enum value as a string
       'createdOn': createdOn,
       'selectedDaysForSubjects': selectedDaysForSubjects,
-
       'enrollments': enrollments,
+      'location': location,
+      'name': name,
+      'city': city,
+      'profilePicUrl': profilePicUrl,
+      'gender': gender,
     };
   }
 
@@ -65,7 +79,6 @@ class InstructorModel {
       phoneNumber: map['phoneNumber'] as String,
       isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,
       qualification: map['qualification'] as String,
-
       feesPerHour: map['feesPerHour'] as int,
       reviews: List<String>.from(map['reviews'] as List<dynamic>),
       ratings: map['ratings'] as int,
@@ -103,6 +116,11 @@ class InstructorModel {
       ),
 
       enrollments: List<String>.from(map['enrollments'] as List<dynamic>),
+      location: map['location'] as String,
+      name: map['name'] as String,
+      city: map['city'] as String,
+      profilePicUrl: map['profilePicUrl'] as String,
+      gender: map['gender'] as String,
     );
   }
 

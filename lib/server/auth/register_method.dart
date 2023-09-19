@@ -74,7 +74,8 @@ class RegisterMethod {
           createdOn: Timestamp.fromDate(DateTime.now()),
           accountStatus: false,
           accountType: AccountTypeEnum.user,
-          city: city
+          city: city,
+          enrollments: []
         );
 
         // Save user data to Firestore
