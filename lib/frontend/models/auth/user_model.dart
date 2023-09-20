@@ -18,7 +18,7 @@ class UserModel {
   final bool? accountStatus;
  AccountTypeEnum? accountType;
   final String? city;
-  List<String> enrollments;
+ List<Map<String, String>> enrollments;
 
   UserModel({
     required this.uid,
@@ -79,8 +79,14 @@ class UserModel {
     )
   : AccountTypeEnum.unknown, // Use 'unknown' as the default
   city: map['city'] as String,
-  enrollments: List<String>.from(map['enrollments'] as List<dynamic>),
-
+  enrollments: (map['enrollments'] as List<dynamic>).map((enrollmentData) {
+        final Map<String, dynamic> enrollmentMap =
+            enrollmentData as Map<String, dynamic>;
+        return {
+          for (final entry in enrollmentMap.entries)
+            entry.key: entry.value.toString(),
+        };
+      }).toList(),
 
     );
   }

@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
+import 'package:get/get.dart';
 import 'package:zant/frontend/models/home/instructor_model.dart';
 import 'package:zant/frontend/providers/home/user_provider.dart';
+import 'package:zant/frontend/screens/homeScreens/chat/chat_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/rating_card_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
@@ -38,8 +40,8 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     setState(() {
       isLoading = true;
     });
-    bool userEnrolled = await userProvider
-        .checkEnrollmentStatusProvider(instructorId: widget.instructorModel.uid);
+    bool userEnrolled = await userProvider.checkEnrollmentStatusProvider(
+        instructorId: widget.instructorModel.uid);
     setState(() {
       isEnrolled = userEnrolled;
       isLoading = false;
@@ -110,8 +112,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 BuildInfoCardWidget(
                   icon: Icons.attach_money,
                   title: "Fees per Hour",
-                  content:
-                      "\$${widget.instructorModel.feesPerHour.toString()}",
+                  content: "\$${widget.instructorModel.feesPerHour.toString()}",
                 ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
@@ -147,7 +148,8 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 ),
                 SizedBox(height: 20.h),
                 ShowDaysWidget(
-                  daysForSubjects: widget.instructorModel.selectedDaysForSubjects,
+                  daysForSubjects:
+                      widget.instructorModel.selectedDaysForSubjects,
                 ),
                 ShowTimingWidget(
                   selectedTimings:
@@ -175,8 +177,9 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 if (!isEnrolled) {
                   enrollUser();
                 } else {
-                  // Handle chat button action when the user is already enrolled
-                  // For example, navigate to the chat screen
+                  Get.to(() => ChatScreen(
+                      receiverId: widget.instructorModel.uid,
+                      senderId: FirebaseAuth.instance.currentUser!.uid));
                 }
               },
               label: Text(isEnrolled ? 'Chat' : 'Enroll'),

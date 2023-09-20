@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:zant/frontend/models/auth/user_model.dart';
 import 'package:zant/frontend/providers/auth/login_providers.dart';
 import 'package:zant/frontend/providers/auth/register_providers.dart';
+import 'package:zant/frontend/providers/home/chat_providers.dart';
 import 'package:zant/frontend/providers/home/instructor_provider.dart';
 import 'package:zant/frontend/providers/home/profile_providers.dart';
 import 'package:zant/frontend/providers/home/user_provider.dart';
@@ -37,6 +38,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => InstructorProviders()),
         ChangeNotifierProvider(create: (context) => ProfileProviders()),
         ChangeNotifierProvider(create: (context) => UserProviders()),
+        ChangeNotifierProvider(create: (context) => ChatProviders()),
       ],
       // Initialize the app
       child: const MyApp(),

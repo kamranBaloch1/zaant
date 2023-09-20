@@ -18,7 +18,7 @@ class InstructorModel {
   AccountTypeEnum? accountType; // Make the accountType field nullable
   Timestamp createdOn;
   Map<String, List<String>> selectedDaysForSubjects;
-  List<String> enrollments;
+  List<Map<String, String>> enrollments;
   String location;
   String name;
   String profilePicUrl;
@@ -115,7 +115,15 @@ class InstructorModel {
         (key, value) => MapEntry(key, (value as List<dynamic>).cast<String>()),
       ),
 
-      enrollments: List<String>.from(map['enrollments'] as List<dynamic>),
+
+      enrollments: (map['enrollments'] as List<dynamic>).map((enrollmentData) {
+        final Map<String, dynamic> enrollmentMap =
+            enrollmentData as Map<String, dynamic>;
+        return {
+          for (final entry in enrollmentMap.entries)
+            entry.key: entry.value.toString(),
+        };
+      }).toList(),
       location: map['location'] as String,
       name: map['name'] as String,
       city: map['city'] as String,
