@@ -18,9 +18,10 @@ class ChatMethods {
   final CollectionReference instructorsCollection =
       FirebaseFirestore.instance.collection(instructorsCollections);
 
-  String messageId = const Uuid().v4();
+  
 
   final Reference _storageReference = FirebaseStorage.instance.ref();
+
 
   Future<String> uploadFile({
     required String path,
@@ -62,8 +63,8 @@ class ChatMethods {
       receiverId: receiverId,
       text: text,
       type: MessageEnum.text,
-      timeSent: Timestamp.fromDate(DateTime.now()),
-      messageId: messageId, // Generate a unique message ID
+      timeSent: DateTime.now(),
+      messageId: Uuid().v4(), // Generate a unique message ID
       isSeen: false,
     );
 
@@ -72,7 +73,7 @@ class ChatMethods {
     await _saveDataToContactSubCollection(
         receiverUserData: recieverUserData, lastMessage: text);
 
-    await _storeMessage(senderId, receiverId, message.toMap(), messageId);
+    await _storeMessage(senderId, receiverId, message.toMap());
   }
 
   void sendImageMessage({
@@ -91,8 +92,8 @@ class ChatMethods {
       receiverId: receiverId,
       text: imageDownloadedUrl, // Store the image URL in the text field
       type: MessageEnum.image,
-      timeSent: Timestamp.fromDate(DateTime.now()),
-      messageId: messageId, // Generate a unique message ID
+      timeSent: DateTime.now(),
+      messageId: Uuid().v4(), // Generate a unique message ID
       isSeen: false,
     );
 
@@ -107,7 +108,7 @@ class ChatMethods {
     await _saveDataToContactSubCollection(
         receiverUserData: recieverUserData, lastMessage: "📷");
 
-    await _storeMessage(senderId, receiverId, message.toMap(), messageId);
+    await _storeMessage(senderId, receiverId, message.toMap());
   }
 
   void sendVideoMessage({
@@ -126,8 +127,8 @@ class ChatMethods {
       receiverId: receiverId,
       text: videoDownloadUrl, // Store the video URL in the text field
       type: MessageEnum.video,
-      timeSent: Timestamp.fromDate(DateTime.now()),
-      messageId: messageId, // Generate a unique message ID
+      timeSent: DateTime.now(),
+      messageId: Uuid().v4(), // Generate a unique message ID
       isSeen: false,
     );
 
@@ -142,21 +143,26 @@ class ChatMethods {
     await _saveDataToContactSubCollection(
         receiverUserData: recieverUserData, lastMessage: "📷");
 
-    await _storeMessage(senderId, receiverId, message.toMap(), messageId);
+    await _storeMessage(senderId, receiverId, message.toMap());
   }
 
   void sendVoiceMessage({
     required String senderId,
     required String receiverId,
-    required String audioUrl,
+     required File audioFile,
   }) async {
+    final audioUrl = await uploadFile(
+      path: 'chat_audio',
+      file: audioFile,
+      fileExtension: 'mp3',
+    );
     final message = MessageModel(
       senderId: senderId,
       receiverId: receiverId,
       text: audioUrl, // Store the audio URL in the text field
       type: MessageEnum.audio,
-      timeSent: Timestamp.fromDate(DateTime.now()),
-      messageId: messageId, // Generate a unique message ID
+      timeSent: DateTime.now(),
+      messageId: Uuid().v4(), // Generate a unique message ID
       isSeen: false,
     );
 
@@ -171,7 +177,7 @@ class ChatMethods {
     await _saveDataToContactSubCollection(
         receiverUserData: recieverUserData, lastMessage: "🎵");
 
-    await _storeMessage(senderId, receiverId, message.toMap(), messageId);
+    await _storeMessage(senderId, receiverId, message.toMap());
   }
 
   _saveDataToContactSubCollection(
@@ -211,7 +217,8 @@ class ChatMethods {
   }
 
   Future<void> _storeMessage(String senderId, String receiverId,
-      Map<String, dynamic> messageData, String messageId) async {
+      Map<String, dynamic> messageData) async {
+        String messageId = const Uuid().v4();
     await usersCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection(chatsCollection)
@@ -236,7 +243,7 @@ class ChatMethods {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection(chatsCollection)
         .doc(resicverId)
-        .collection(messageCollection)
+        .collection(messageCollection).orderBy("timeSent")
         .snapshots()
         .map((event) {
       List<MessageModel> messages = [];

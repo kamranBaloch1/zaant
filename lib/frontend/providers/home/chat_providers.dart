@@ -36,11 +36,11 @@ class ChatProviders extends ChangeNotifier {
   }
 
   void sendVoiceMessageProvider({
-    required String senderId,
+   required String senderId,
     required String receiverId,
-    required String audioUrl,
+     required File audioFile,
   }){
-     _chatMethods.sendVoiceMessage(senderId: senderId, receiverId: receiverId, audioUrl: audioUrl);
+     _chatMethods.sendVoiceMessage(senderId: senderId, receiverId: receiverId, audioFile: audioFile);
      notifyListeners();
   }
 

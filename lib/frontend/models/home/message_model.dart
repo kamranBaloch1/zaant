@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:zant/frontend/enum/messgae_enum.dart';
 
 class MessageModel {
@@ -6,7 +6,7 @@ class MessageModel {
   final String receiverId;
   final String text;
   final MessageEnum type;
-  final Timestamp timeSent;
+  final DateTime timeSent;
   final String messageId;
   final bool isSeen;
 
@@ -38,7 +38,7 @@ class MessageModel {
       receiverId: map['recieverid'] ?? '',
       text: map['text'] ?? '',
       type: (map['type'] as String).toEnum(),
-       timeSent: map["timeSent"] as Timestamp,
+      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
       messageId: map['messageId'] ?? '',
       isSeen: map['isSeen'] ?? false,
     );

@@ -1,219 +1,212 @@
-// import 'dart:io';
-// import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:flutter_sound/public/flutter_sound_recorder.dart';
-// import 'package:path_provider/path_provider.dart';
-// import 'package:permission_handler/permission_handler.dart';
-// import 'package:whatsapp_ui/common/utils/colors.dart';
-// import 'package:whatsapp_ui/common/enums/message_enum.dart';
-// import 'package:whatsapp_ui/common/providers/message_reply_provider.dart';
-// import 'package:whatsapp_ui/common/utils/utils.dart';
-// import 'package:whatsapp_ui/features/chat/controller/chat_controller.dart';
-// import 'package:whatsapp_ui/features/chat/widgets/message_reply_preview.dart';
+import 'dart:io';
 
-// class BottomChatField extends ConsumerStatefulWidget {
-//   final String recieverUserId;
-//   final bool isGroupChat;
-//   const BottomChatField({
-//     Key? key,
-//     required this.recieverUserId,
-//     required this.isGroupChat,
-//   }) : super(key: key);
+import 'package:flutter/material.dart';
+import 'package:flutter_sound/public/flutter_sound_recorder.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:zant/frontend/providers/home/chat_providers.dart';
 
-//   @override
-//   ConsumerState<BottomChatField> createState() => _BottomChatFieldState();
-// }
+class BottomChatField extends StatefulWidget {
+  final String receiverId;
+  final String senderId;
+  const BottomChatField({
+    Key? key,
+    required this.receiverId,
+    required this.senderId,
+  }) : super(key: key);
 
-// class _BottomChatFieldState extends ConsumerState<BottomChatField> {
-//   bool isShowSendButton = false;
-//   final TextEditingController _messageController = TextEditingController();
-//   FlutterSoundRecorder? _soundRecorder;
-//   bool isRecorderInit = false;
-//   bool isShowEmojiContainer = false;
-//   bool isRecording = false;
-//   FocusNode focusNode = FocusNode();
+  @override
+  _BottomChatFieldState createState() => _BottomChatFieldState();
+}
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _soundRecorder = FlutterSoundRecorder();
-//     openAudio();
-//   }
+class _BottomChatFieldState extends State<BottomChatField> {
+  bool isShowSendButton = false;
+  final TextEditingController _messageController = TextEditingController();
+  FlutterSoundRecorder? _soundRecorder;
+  bool isRecorderInit = false;
+  bool isShowEmojiContainer = false;
+  bool isRecording = false;
+  FocusNode focusNode = FocusNode();
 
-//   void openAudio() async {
-//     final status = await Permission.microphone.request();
-//     if (status != PermissionStatus.granted) {
-//       throw RecordingPermissionException('Mic permission not allowed!');
-//     }
-//     await _soundRecorder!.openRecorder();
-//     isRecorderInit = true;
-//   }
+  @override
+  void initState() {
+    super.initState();
+    _soundRecorder = FlutterSoundRecorder();
+    openAudio();
+  }
 
-//   void sendTextMessage() async {
-//     if (isShowSendButton) {
-//       ref.read(chatControllerProvider).sendTextMessage(
-//             context,
-//             _messageController.text.trim(),
-//             widget.recieverUserId,
-//             widget.isGroupChat,
-//           );
-//       setState(() {
-//         _messageController.text = '';
-//       });
-//     } else {
-//       var tempDir = await getTemporaryDirectory();
-//       var path = '${tempDir.path}/flutter_sound.aac';
-//       if (!isRecorderInit) {
-//         return;
-//       }
-//       if (isRecording) {
-//         await _soundRecorder!.stopRecorder();
-//         sendFileMessage(File(path), MessageEnum.audio);
-//       } else {
-//         await _soundRecorder!.startRecorder(
-//           toFile: path,
-//         );
-//       }
+  void openAudio() async {
+    final status = await Permission.microphone.request();
+    if (status != PermissionStatus.granted) {
+      throw RecordingPermissionException('Mic permission not allowed!');
+    }
+    await _soundRecorder!.openRecorder();
+    isRecorderInit = true;
+  }
 
-//       setState(() {
-//         isRecording = !isRecording;
-//       });
-//     }
-//   }
+  void _sendTextMessage() async {
+    final chatProvider = Provider.of<ChatProviders>(context, listen: false);
+    if (isShowSendButton) {
+      chatProvider.sendTextMessageProvider(
+          senderId: widget.senderId,
+          receiverId: widget.receiverId,
+          text: _messageController.text.trim());
+      setState(() {
+        _messageController.clear();
+      });
+    } else {
+      var tempDir = await getTemporaryDirectory();
+      var path = '${tempDir.path}/flutter_sound.aac';
+      if (!isRecorderInit) {
+        return;
+      }
+      if (isRecording) {
+        await _soundRecorder!.stopRecorder();
+        // Implement your sendFileMessage logic here
+        chatProvider.sendVoiceMessageProvider(
+            senderId: widget.senderId,
+            receiverId: widget.receiverId,
+            audioFile: File(path));
+      } else {
+        await _soundRecorder!.startRecorder(
+          toFile: path,
+        );
+      }
 
+      setState(() {
+        isRecording = !isRecording;
+      });
+    }
+  }
 
-  
+// Inside your _ChatScreenState class
+  Future<void> _sendImageMessage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final messageReply = ref.watch(messageReplyProvider);
-//     final isShowMessageReply = messageReply != null;
-//     return Column(
-//       children: [
-//         isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
-//         Row(
-//           children: [
-//             Expanded(
-//               child: TextFormField(
-//                 focusNode: focusNode,
-//                 controller: _messageController,
-//                 onChanged: (val) {
-//                   if (val.isNotEmpty) {
-//                     setState(() {
-//                       isShowSendButton = true;
-//                     });
-//                   } else {
-//                     setState(() {
-//                       isShowSendButton = false;
-//                     });
-//                   }
-//                 },
-//                 decoration: InputDecoration(
-//                   filled: true,
-//                   fillColor: mobileChatBoxColor,
-//                   prefixIcon: Padding(
-//                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-//                     child: SizedBox(
-//                       width: 100,
-//                       child: Row(
-//                         children: [
-//                           IconButton(
-//                             onPressed: toggleEmojiKeyboardContainer,
-//                             icon: const Icon(
-//                               Icons.emoji_emotions,
-//                               color: Colors.grey,
-//                             ),
-//                           ),
-//                           IconButton(
-//                             onPressed: selectGIF,
-//                             icon: const Icon(
-//                               Icons.gif,
-//                               color: Colors.grey,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                   suffixIcon: SizedBox(
-//                     width: 100,
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.end,
-//                       children: [
-//                         IconButton(
-//                           onPressed: selectImage,
-//                           icon: const Icon(
-//                             Icons.camera_alt,
-//                             color: Colors.grey,
-//                           ),
-//                         ),
-//                         IconButton(
-//                           onPressed: selectVideo,
-//                           icon: const Icon(
-//                             Icons.attach_file,
-//                             color: Colors.grey,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                   hintText: 'Type a message!',
-//                   border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.circular(20.0),
-//                     borderSide: const BorderSide(
-//                       width: 0,
-//                       style: BorderStyle.none,
-//                     ),
-//                   ),
-//                   contentPadding: const EdgeInsets.all(10),
-//                 ),
-//               ),
-//             ),
-//             Padding(
-//               padding: const EdgeInsets.only(
-//                 bottom: 8,
-//                 right: 2,
-//                 left: 2,
-//               ),
-//               child: CircleAvatar(
-//                 backgroundColor: const Color(0xFF128C7E),
-//                 radius: 25,
-//                 child: GestureDetector(
-//                   child: Icon(
-//                     isShowSendButton
-//                         ? Icons.send
-//                         : isRecording
-//                             ? Icons.close
-//                             : Icons.mic,
-//                     color: Colors.white,
-//                   ),
-//                   onTap: sendTextMessage,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//         isShowEmojiContainer
-//             ? SizedBox(
-//                 height: 310,
-//                 child: EmojiPicker(
-//                   onEmojiSelected: ((category, emoji) {
-//                     setState(() {
-//                       _messageController.text =
-//                           _messageController.text + emoji.emoji;
-//                     });
+    if (pickedFile != null) {
+      // Now you have the picked image, you can upload it to the server or process it as needed
+      // Call your send image method with the pickedFile.path
 
-//                     if (!isShowSendButton) {
-//                       setState(() {
-//                         isShowSendButton = true;
-//                       });
-//                     }
-//                   }),
-//                 ),
-//               )
-//             : const SizedBox(),
-//       ],
-//     );
-//   }
-// }
+      File imageFile = File(pickedFile.path);
+      final chatProvider = Provider.of<ChatProviders>(context, listen: false);
+      chatProvider.sendImageMessageProvider(
+          senderId: widget.senderId,
+          receiverId: widget.receiverId,
+          imageFile: imageFile);
+    }
+  }
+
+  void _sendVideo() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      // Now you have the picked video, you can upload it to the server or process it as needed
+      // Call your send video method with the pickedFile.path
+      File videoFile = File(pickedFile.path);
+      final chatProvider = Provider.of<ChatProviders>(context, listen: false);
+      chatProvider.sendVideoMessageProvider(
+          senderId: widget.senderId,
+          receiverId: widget.receiverId,
+          videoFile: videoFile);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _messageController.dispose();
+    _soundRecorder!.closeRecorder();
+    isRecorderInit = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Add your other widgets here
+     Row(
+  children: [
+    // Add an IconButton for sending images
+    IconButton(
+      icon: const Icon(Icons.image),
+      onPressed: _sendImageMessage,
+    ),
+    // Add an IconButton for sending videos
+    IconButton(
+      icon: const Icon(Icons.videocam),
+      onPressed: _sendVideo,
+    ),
+    Expanded(
+      child: TextFormField(
+        style: const TextStyle(
+          color: Colors.black
+        ),
+        focusNode: focusNode,
+        controller: _messageController,
+        onChanged: (val) {
+          if (val.isNotEmpty) {
+            setState(() {
+              isShowSendButton = true;
+            });
+          } else {
+            setState(() {
+              isShowSendButton = false;
+            });
+          }
+        },
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white, // Set the background color to white
+          hintText: 'Type a message!',
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+            borderSide: BorderSide(
+              color: Colors.grey, // Set the border color to grey
+              width: 1.0, // Set the border width
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+            borderSide: BorderSide(
+              color: Colors.grey, // Set the border color to grey
+              width: 1.0, // Set the border width
+            ),
+          ),
+          contentPadding: const EdgeInsets.all(10),
+        ),
+      ),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(
+        bottom: 8,
+        right: 2,
+        left: 2,
+      ),
+      child: CircleAvatar(
+        backgroundColor: const Color.fromARGB(255, 226, 221, 221),
+        radius: 25,
+        child: GestureDetector(
+          child: Icon(
+            isShowSendButton
+                ?  Icons.send
+                : isRecording
+                    ? Icons.close
+                    : Icons.mic,
+            color: Colors.black,
+          ),
+          onTap: _sendTextMessage,
+        ),
+      ),
+    ),
+  ],
+),
+
+      
+      ],
+    );
+  }
+}
