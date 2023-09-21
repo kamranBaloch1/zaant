@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zant/frontend/enum/messgae_enum.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/widgets/display_message_card.dart';
-
-
 
 class MyMessageCard extends StatelessWidget {
   final String message;
   final String date;
   final MessageEnum type;
+  final bool isSeen;
 
-  const MyMessageCard({Key? key, required this.message, required this.date,required this.type}) : super(key: key);
+  const MyMessageCard({
+    Key? key,
+    required this.message,
+    required this.date,
+    required this.type,
+    required this.isSeen,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-        Color cardBackgroundColor = type == MessageEnum.image || type == MessageEnum.video
+    // Determine the card background color based on the message type
+    Color cardBackgroundColor = type == MessageEnum.image || type == MessageEnum.video
         ? Colors.white // Set the card background color to transparent for image and video types
         : Colors.blue;
 
@@ -25,40 +32,39 @@ class MyMessageCard extends StatelessWidget {
         ),
         child: Card(
           elevation: 1,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
           color: cardBackgroundColor,
-          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          margin:  EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(
-                  left: 15,
-                  right: 40,
-                  top: 5,
-                  bottom: 20,
+                padding:  EdgeInsets.only(
+                  left: 15.w,
+                  right: 40.w,
+                  top: 5.h,
+                  bottom: 20.h,
                 ),
-                child:DisplayMessageCard(message: message, type: type),
-                ),
-              
+                child: DisplayMessageCard(message: message, type: type),
+              ),
               Positioned(
-                bottom: 4,
-                right: 10,
+                bottom: 4.h,
+                right: 10.w,
                 child: Row(
                   children: [
                     Text(
                       date,
-                      style:const TextStyle(
-                        fontSize: 13,
+                      style:  TextStyle(
+                        fontSize: 13.sp,
                         color: Colors.white60,
                       ),
                     ),
-                    const SizedBox(
-                      width: 5,
+                     SizedBox(
+                      width: 5.w,
                     ),
-                    const Icon(
-                      Icons.done_all,
-                      size: 20,
-                      color: Colors.white60,
+                     Icon(
+                     isSeen? Icons.done_all : Icons.done,
+                      size: 20.sp,
+                      color:isSeen?const Color.fromARGB(255, 16, 91, 18): Colors.white60,
                     ),
                   ],
                 ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
+
   const VideoPlayerItem({
     Key? key,
     required this.videoUrl,
@@ -14,13 +15,13 @@ class VideoPlayerItem extends StatefulWidget {
 
 class _VideoPlayerItemState extends State<VideoPlayerItem> {
   late CachedVideoPlayerController videoPlayerController;
-  bool isPlay = false;
+  bool isPlaying = false;
 
   @override
   void initState() {
     super.initState();
     videoPlayerController = CachedVideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((value) {
+      ..initialize().then((_) {
         videoPlayerController.setVolume(1);
       });
   }
@@ -34,7 +35,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 16 / 9,
+      aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
       child: Stack(
         children: [
           CachedVideoPlayer(videoPlayerController),
@@ -42,18 +43,20 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
             alignment: Alignment.center,
             child: IconButton(
               onPressed: () {
-                if (isPlay) {
+                if (isPlaying) {
                   videoPlayerController.pause();
                 } else {
                   videoPlayerController.play();
                 }
 
                 setState(() {
-                  isPlay = !isPlay;
+                  isPlaying = !isPlaying;
                 });
               },
               icon: Icon(
-                isPlay ? Icons.pause_circle : Icons.play_circle,
+                isPlaying ? Icons.pause_circle : Icons.play_circle,
+                size: 40, // Adjust the icon size as needed
+                color: Colors.white, // Customize the icon color
               ),
             ),
           ),

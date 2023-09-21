@@ -134,7 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: ReusableAppBar(
+          appBar: CustomAppBar(
               backgroundColor: appBarColor,
               title: _isLoading ? "please wait..." : "Register an account"),
           body: SingleChildScrollView(

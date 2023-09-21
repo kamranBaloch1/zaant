@@ -25,7 +25,7 @@ class _ProfileEditOptionsScreenState extends State<ProfileEditOptionsScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: ReusableAppBar(
+          appBar: CustomAppBar(
             backgroundColor: appBarColor,
             title: "Edit Profile",
           ),

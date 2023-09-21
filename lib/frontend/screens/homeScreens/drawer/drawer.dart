@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zant/frontend/screens/homeScreens/chat/chat_inbox_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
@@ -112,6 +113,16 @@ class _MyDrawerState extends State<MyDrawer> {
             },
           ):Container(),
          
+          ListTile(
+            leading: const Icon(Icons.chat),
+            title: const Text(
+              'Inbox',
+              style: TextStyle(color: Colors.black),
+            ),
+            onTap: () {
+               Get.to(()=> const ChatInboxScreen());
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text(

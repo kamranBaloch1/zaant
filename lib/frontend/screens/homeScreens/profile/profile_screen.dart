@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: ReusableAppBar(
+          appBar: CustomAppBar(
             backgroundColor: appBarColor,
             title: "Your Profile",
           ),

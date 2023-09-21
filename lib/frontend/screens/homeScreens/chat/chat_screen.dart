@@ -1,15 +1,22 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/widgets/bottom_chat_field.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/widgets/chat_list.dart';
+
+import 'package:zant/global/colors.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverId;
   final String senderId;
+  final String receiverName;
+  final String receiverProfilePicUrl;
+
   const ChatScreen({
     Key? key,
     required this.receiverId,
     required this.senderId,
+    required this.receiverProfilePicUrl,
+    required this.receiverName,
   }) : super(key: key);
 
   @override
@@ -17,31 +24,40 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
-
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat Screen', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+    appBar: AppBar(
+      iconTheme: const IconThemeData(color: Colors.black),
+      backgroundColor: appBarColor,
+  title: Row(
+    children: <Widget>[
+      CircleAvatar(
+        backgroundImage: NetworkImage(widget.receiverProfilePicUrl),
+        radius: 18.r,
       ),
+      SizedBox(width: 10.w),
+      Text(widget.receiverName,style: TextStyle(
+        color: Colors.black,
+        fontSize: 18.sp
+      ),), // Display the receiver's name here
+    ],
+  ),
+ 
+),
+
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ChatList(resicverId: widget.receiverId),
+            child: ChatList(receiverId: widget.receiverId), // Fixed spelling issue here.
           ),
-          const Divider(height: 1),
-         
-          BottomChatField(receiverId: widget.receiverId, senderId: widget.senderId)
+          Divider(height: 1.h),
+          BottomChatField(
+            receiverId: widget.receiverId,
+            senderId: widget.senderId,
+          ),
         ],
       ),
     );
   }
-
- 
-
-
 }

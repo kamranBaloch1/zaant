@@ -70,7 +70,7 @@ class _SelectUserLocationScreenState extends State<SelectUserLocationScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: ReusableAppBar(
+          appBar: CustomAppBar(
             backgroundColor: appBarColor,
             title: "Please write your full address",
           ),

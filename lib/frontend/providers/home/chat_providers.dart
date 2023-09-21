@@ -1,48 +1,116 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/server/home/chat_methods.dart';
+import 'package:zant/frontend/models/home/message_model.dart';
 
 class ChatProviders extends ChangeNotifier {
   final ChatMethods _chatMethods = ChatMethods();
+  Stream<List<MessageModel>>? _chatStream;
 
-  void sendTextMessageProvider({
+  Stream<List<MessageModel>>? get chatStream => _chatStream;
+
+  // Send a text message.
+  Future<void> sendTextMessageProvider({
     required String senderId,
     required String receiverId,
     required String text,
-  }) {
-    _chatMethods.sendTextMessage(
-        senderId: senderId, receiverId: receiverId, text: text);
-    notifyListeners();
+  }) async {
+    try {
+      await _chatMethods.sendTextMessage(
+        senderId: senderId,
+        receiverId: receiverId,
+        text: text,
+      );
+
+      notifyListeners();
+    } catch (e) {
+      showCustomToast("Error sending text message: $e");
+    }
   }
 
-    void  sendImageMessageProvider({
+  // Send an image message.
+  Future<void> sendImageMessageProvider({
     required String senderId,
     required String receiverId,
     required File imageFile,
-  }){
-      _chatMethods.sendImageMessage(senderId: senderId, receiverId: receiverId, imageFile: imageFile);
-      notifyListeners();
+  }) async {
+    try {
+      await _chatMethods.sendImageMessage(
+        senderId: senderId,
+        receiverId: receiverId,
+        imageFile: imageFile,
+      );
 
+      notifyListeners();
+    } catch (e) {
+      showCustomToast("Error sending image message: $e");
+    }
   }
 
-  void sendVideoMessageProvider({
+  // Send a video message.
+  Future<void> sendVideoMessageProvider({
     required String senderId,
     required String receiverId,
     required File videoFile,
-  }){
-    _chatMethods.sendVideoMessage(senderId: senderId, receiverId: receiverId, videoFile: videoFile);
+  }) async {
+    try {
+      await _chatMethods.sendVideoMessage(
+        senderId: senderId,
+        receiverId: receiverId,
+        videoFile: videoFile,
+      );
+
+      notifyListeners();
+    } catch (e) {
+      showCustomToast("Error sending video message: $e");
+    }
+  }
+
+  // Send a voice message.
+  Future<void> sendVoiceMessageProvider({
+    required String senderId,
+    required String receiverId,
+    required File audioFile,
+  }) async {
+    try {
+      await _chatMethods.sendVoiceMessage(
+        senderId: senderId,
+        receiverId: receiverId,
+        audioFile: audioFile,
+      );
+
+      notifyListeners();
+    } catch (e) {
+      showCustomToast("Error sending voice message: $e");
+    }
+  }
+
+  // Initialize the chat stream for a specific receiver.
+  Future<void> getChatStreamProvider({required String receiverId}) async {
+    try {
+      _chatStream = _chatMethods.getChatStream(receiverId: receiverId);
+      notifyListeners();
+    } catch (e) {
+      showCustomToast("Error initializing chat stream: $e");
+    }
+  }
+
+  // Dispose of the chat stream when no longer needed.
+  void disposeChatStream() {
+    _chatStream = null;
     notifyListeners();
   }
 
-  void sendVoiceMessageProvider({
-   required String senderId,
-    required String receiverId,
-     required File audioFile,
-  }){
-     _chatMethods.sendVoiceMessage(senderId: senderId, receiverId: receiverId, audioFile: audioFile);
-     notifyListeners();
+  void updateMessageIsSeeenProvider(
+      {required String receiverId, required String messageId}) {
+    _chatMethods.updateMessageIsSeen(
+        receiverId: receiverId, messageId: messageId);
+
+    ChangeNotifier();
+
+    try {} catch (e) {
+    print(e.toString());
+    }
   }
-
-
 }

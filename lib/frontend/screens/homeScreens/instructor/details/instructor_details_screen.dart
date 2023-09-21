@@ -66,7 +66,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: ReusableAppBar(
+          appBar: CustomAppBar(
             title: 'Instructor Details',
             backgroundColor: appBarColor,
           ),
@@ -179,7 +179,11 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 } else {
                   Get.to(() => ChatScreen(
                       receiverId: widget.instructorModel.uid,
-                      senderId: FirebaseAuth.instance.currentUser!.uid));
+                      senderId: FirebaseAuth.instance.currentUser!.uid,
+                      receiverName:widget.instructorModel.name ,
+                      receiverProfilePicUrl:widget.instructorModel.profilePicUrl ,
+
+                      ));
                 }
               },
               label: Text(isEnrolled ? 'Chat' : 'Enroll'),

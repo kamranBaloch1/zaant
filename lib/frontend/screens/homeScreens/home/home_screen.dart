@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ReusableAppBar(backgroundColor: appBarColor, title: "Home Screen"),
+      appBar: CustomAppBar(backgroundColor: appBarColor, title: "Home Screen"),
       drawer: const MyDrawer(),
       body: Column(
         children: [

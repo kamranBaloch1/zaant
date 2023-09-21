@@ -35,7 +35,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          ReusableAppBar(backgroundColor: appBarColor, title: "Search Screen"),
+          CustomAppBar(backgroundColor: appBarColor, title: "Search Screen"),
       drawer: const MyDrawer(),
       body: Column(
         children: [

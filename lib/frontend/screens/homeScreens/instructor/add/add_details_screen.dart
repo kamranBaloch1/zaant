@@ -79,7 +79,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: ReusableAppBar(
+          appBar: CustomAppBar(
             backgroundColor: appBarColor,
             title: "Become an instructor",
           ),

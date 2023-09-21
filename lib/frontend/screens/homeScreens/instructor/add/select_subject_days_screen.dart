@@ -80,7 +80,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: ReusableAppBar(
+          appBar: CustomAppBar(
             backgroundColor: appBarColor,
             title: "Select Subject Days",
           ),
