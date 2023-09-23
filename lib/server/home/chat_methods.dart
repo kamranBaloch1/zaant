@@ -76,7 +76,7 @@ class ChatMethods {
   }
 
   // Send an image message.
-  Future<void> sendImageMessage({
+void  sendImageMessage({
     required String senderId,
     required String receiverId,
     required File imageFile,
@@ -116,7 +116,7 @@ class ChatMethods {
   }
 
   // Send a video message.
-  Future<void> sendVideoMessage({
+void  sendVideoMessage({
     required String senderId,
     required String receiverId,
     required File videoFile,
@@ -156,7 +156,7 @@ class ChatMethods {
   }
 
   // Send a voice message.
-  Future<void> sendVoiceMessage({
+void sendVoiceMessage({
     required String senderId,
     required String receiverId,
     required File audioFile,
@@ -269,7 +269,7 @@ class ChatMethods {
           .collection(chatsCollection)
           .doc(receiverId)
           .collection(messageCollection)
-          .orderBy("timeSent")
+          .orderBy("timeSent",descending: false)
           .snapshots()
           .map((event) {
         List<MessageModel> messages = [];

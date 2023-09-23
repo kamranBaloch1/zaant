@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -13,9 +14,11 @@ import 'package:zant/server/home/chat_methods.dart';
 class ChatList extends StatefulWidget {
   final String receiverId;
 
+
   const ChatList({
     Key? key,
     required this.receiverId,
+   
   }) : super(key: key);
 
   @override
@@ -34,8 +37,7 @@ class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<MessageModel>>(
-      stream: ChatMethods()
-          .getChatStream(receiverId: widget.receiverId), // Use receiverId here
+      stream: ChatMethods().getChatStream(receiverId: widget.receiverId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -44,7 +46,6 @@ class _ChatListState extends State<ChatList> {
         }
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          // Handle the case where snapshot.data is null or empty
           return const Center(
             child: Text(
               "Start a Chat",
@@ -77,7 +78,6 @@ class _ChatListState extends State<ChatList> {
 
             if (messageData.senderId ==
                 FirebaseAuth.instance.currentUser!.uid) {
-              // Display user's own messages
               return MyMessageCard(
                 message: messageData.text,
                 date: timeSent,
@@ -85,13 +85,13 @@ class _ChatListState extends State<ChatList> {
                 isSeen: messageData.isSeen,
               );
             } else {
-              // Display messages from other senders
               return SenderMessageCard(
                 message: messageData.text,
                 date: timeSent,
                 type: messageData.type,
               );
             }
+            
           },
         );
       },

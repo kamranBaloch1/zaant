@@ -64,7 +64,7 @@ class MyMessageCard extends StatelessWidget {
                      Icon(
                      isSeen? Icons.done_all : Icons.done,
                       size: 20.sp,
-                      color:isSeen?const Color.fromARGB(255, 16, 91, 18): Colors.white60,
+                      color:isSeen? Colors.green: Colors.black,
                     ),
                   ],
                 ),

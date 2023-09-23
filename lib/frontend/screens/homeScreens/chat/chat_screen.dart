@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/widgets/bottom_chat_field.dart';
@@ -24,6 +25,10 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+
+  
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +38,11 @@ class _ChatScreenState extends State<ChatScreen> {
   title: Row(
     children: <Widget>[
       CircleAvatar(
-        backgroundImage: NetworkImage(widget.receiverProfilePicUrl),
-        radius: 18.r,
-      ),
+  backgroundImage: CachedNetworkImageProvider(
+    widget.receiverProfilePicUrl, // Use the actual profile picture URL from your data
+  ),
+  radius: 18.r,
+),
       SizedBox(width: 10.w),
       Text(widget.receiverName,style: TextStyle(
         color: Colors.black,
@@ -55,6 +62,8 @@ class _ChatScreenState extends State<ChatScreen> {
           BottomChatField(
             receiverId: widget.receiverId,
             senderId: widget.senderId,
+           
+
           ),
         ],
       ),

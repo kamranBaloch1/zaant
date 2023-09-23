@@ -120,7 +120,7 @@ class _MyDrawerState extends State<MyDrawer> {
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
-               Get.to(()=> const ChatInboxScreen());
+               Get.to(()=>  ChatInboxScreen());
             },
           ),
           ListTile(

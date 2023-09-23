@@ -170,7 +170,7 @@ class _DisplayMessageCardState extends State<DisplayMessageCard> {
   }
 
   Widget _buildDefaultMessage() {
-    return Container(
+    return  Container(
       width: double.infinity,
       child: CachedNetworkImage(
         imageUrl: widget.message,
