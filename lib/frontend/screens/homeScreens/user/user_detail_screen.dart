@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'package:zant/frontend/models/auth/user_model.dart';
+import 'package:zant/frontend/providers/home/enrollmens_provider.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/chat_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart'; // Corrected spelling here
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/global/colors.dart';
 
@@ -23,6 +26,21 @@ class UserDetailScreen extends StatefulWidget {
 
 class _UserDetailScreenState extends State<UserDetailScreen> {
   bool isLoading = false;
+
+
+  Future<void> unenrollTheUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    final enrollmnetsProvider =
+        Provider.of<EnrollmentsProvider>(context, listen: false);
+    await enrollmnetsProvider.unenrollUserForInstructorProvider(
+        userId: widget.userModel.uid!);
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +129,18 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   title: "Gender",
                   content: widget.userModel.gender!,
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 20.h),
+
+                 Align(
+                        alignment: Alignment.bottomLeft,
+                        child: CustomButton(
+                            onTap: unenrollTheUser,
+                            width: 180,
+                            height: 40,
+                            text: "Remove",
+                            bgColor: Colors.red))
+
+
               ],
             ),
           ),

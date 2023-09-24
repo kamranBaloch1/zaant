@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/models/home/instructor_model.dart';
-import 'package:zant/frontend/providers/home/user_provider.dart';
+import 'package:zant/frontend/providers/home/enrollmens_provider.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/chat_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
@@ -12,6 +12,7 @@ import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/rat
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_timings_widget.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/global/colors.dart';
 
@@ -37,11 +38,12 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
   }
 
   Future<void> checkEnrollmentStatus() async {
-    final userProvider = Provider.of<UserProviders>(context, listen: false);
+     final enrollmnetsProvider =
+        Provider.of<EnrollmentsProvider>(context, listen: false);
     setState(() {
       isLoading = true;
     });
-    bool userEnrolled = await userProvider.checkEnrollmentStatusProvider(
+    bool userEnrolled = await enrollmnetsProvider.checkEnrollmentStatusProvider(
         instructorId: widget.instructorModel.uid);
     setState(() {
       isEnrolled = userEnrolled;
@@ -53,11 +55,26 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     setState(() {
       isLoading = true;
     });
-    final userProvider = Provider.of<UserProviders>(context, listen: false);
-    await userProvider.enrollUserToInstructorProvider(
+   final enrollmnetsProvider =
+        Provider.of<EnrollmentsProvider>(context, listen: false);
+    await enrollmnetsProvider.enrollUserToInstructorProvider(
         instructorId: widget.instructorModel.uid);
     setState(() {
       isEnrolled = true;
+      isLoading = false;
+    });
+  }
+
+  Future<void> unenrollTheUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    final enrollmnetsProvider =
+        Provider.of<EnrollmentsProvider>(context, listen: false);
+    await enrollmnetsProvider.unenrollInstructorForUserProvider(
+        instructorId: widget.instructorModel.uid);
+
+    setState(() {
       isLoading = false;
     });
   }
@@ -77,11 +94,12 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
-                    onTap: (){
-                     showDialog(
+                  onTap: () {
+                    showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return FullImageDialog(imageUrl:  widget.instructorModel.profilePicUrl);
+                        return FullImageDialog(
+                            imageUrl: widget.instructorModel.profilePicUrl);
                       },
                     );
                   },
@@ -178,6 +196,17 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                       ? "No reviews yet."
                       : widget.instructorModel.reviews.join("\n"),
                 ),
+                SizedBox(height: 30.h),
+                isEnrolled
+                    ? Align(
+                        alignment: Alignment.bottomLeft,
+                        child: CustomButton(
+                            onTap: unenrollTheUser,
+                            width: 180,
+                            height: 40,
+                            text: "Remove",
+                            bgColor: Colors.red))
+                    : Container()
               ],
             ),
           ),
@@ -189,11 +218,11 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   enrollUser();
                 } else {
                   Get.to(() => ChatScreen(
-                      receiverId: widget.instructorModel.uid,
-                      senderId: FirebaseAuth.instance.currentUser!.uid,
-                      receiverName:widget.instructorModel.name ,
-                      receiverProfilePicUrl:widget.instructorModel.profilePicUrl ,
-
+                        receiverId: widget.instructorModel.uid,
+                        senderId: FirebaseAuth.instance.currentUser!.uid,
+                        receiverName: widget.instructorModel.name,
+                        receiverProfilePicUrl:
+                            widget.instructorModel.profilePicUrl,
                       ));
                 }
               },
