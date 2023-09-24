@@ -10,7 +10,7 @@ class FullImageDialog extends StatelessWidget {
     return Dialog(
       child: Container(
         width: double.infinity,
-        height: 300, // Adjust the height as needed
+        height: MediaQuery.of(context).size.height, // Adjust the height as needed
         decoration: BoxDecoration(
           image: DecorationImage(
             image: NetworkImage(imageUrl),

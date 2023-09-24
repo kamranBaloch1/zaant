@@ -7,7 +7,7 @@ class UserModel {
   final String? uid;
   final String? name;
   final String? email;
-  final String? profileUrl;
+  final String? profilePicUrl;
   final DateTime? dob;
   final String? gender;
   final String? location;
@@ -24,7 +24,7 @@ class UserModel {
     required this.uid,
     required this.name,
     required this.email,
-    required this.profileUrl,
+    required this.profilePicUrl,
     required this.dob,
     required this.gender,
     required this.location,
@@ -43,7 +43,7 @@ class UserModel {
       'uid': uid,
       'name': name,
       'email': email,
-      'profileUrl': profileUrl,
+      'profilePicUrl': profilePicUrl,
       'dob': dob,
       'gender': gender,
       'location': location,
@@ -63,7 +63,7 @@ class UserModel {
       uid: map['uid'] as String,
       name: map['name'] as String,
       email: map['email'] as String,
-      profileUrl: map['profileUrl'] as String,
+      profilePicUrl: map['profilePicUrl'] as String,
       dob: map['dob'] == null ? null : (map['dob'] as Timestamp).toDate(),
       gender: map['gender'] as String,
       location: map['location'] as String,

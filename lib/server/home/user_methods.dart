@@ -48,7 +48,7 @@ Future<void> enrollUserToInstructor({required String instructorId}) async {
         if (!isUserEnrolled && !isInstructorEnrolled) {
           // If not enrolled, create a new enrollment map with the date and instructor ID
           Map<String, dynamic> newEnrollment = {
-            currentDate.toDate().toString(): instructorId,
+             instructorId: currentDate.toDate().toString(),
           };
 
           // Add the new enrollment map to the user's enrollments list
@@ -57,6 +57,7 @@ Future<void> enrollUserToInstructor({required String instructorId}) async {
           // Create a new enrollment map for the instructor
           Map<String, dynamic> instructorEnrollment = {
             currentUserId: currentDate.toDate().toString(),
+            
           };
 
           // Add the new enrollment map for the instructor
@@ -99,7 +100,7 @@ Future<bool> checkEnrollmentStatus({required String instructorId}) async {
     if (user != null) {
       String currentUserId = user.uid;
 
-      // Fetch the instructor's document from Firestore
+      // Fetch the instructor's document from Firestore 
       DocumentSnapshot instructorDoc = await _firestore
           .collection(instructorsCollections)
           .doc(instructorId)

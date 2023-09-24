@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:zant/frontend/models/home/instructor_model.dart';
 import 'package:zant/frontend/providers/home/user_provider.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/chat_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/rating_card_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
@@ -75,10 +76,20 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 80.r,
-                  backgroundImage: NetworkImage(
-                    widget.instructorModel.profilePicUrl,
+                GestureDetector(
+                    onTap: (){
+                     showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return FullImageDialog(imageUrl:  widget.instructorModel.profilePicUrl);
+                      },
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 80.r,
+                    backgroundImage: NetworkImage(
+                      widget.instructorModel.profilePicUrl,
+                    ),
                   ),
                 ),
                 SizedBox(height: 20.h),

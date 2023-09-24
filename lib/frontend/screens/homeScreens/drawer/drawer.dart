@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/chat_inbox_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_instructor_for_user.dart';
+import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_users_for_insructor.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
@@ -93,6 +95,26 @@ class _MyDrawerState extends State<MyDrawer> {
               Get.to(() => const ProfileScreen());
             },
           ),
+            ListTile(
+            leading: const Icon(Icons.chat),
+            title: const Text(
+              'Inbox',
+              style: TextStyle(color: Colors.black),
+            ),
+            onTap: () {
+               Get.to(()=>  ChatInboxScreen());
+            },
+          ),
+           accountType=="user"?  ListTile(
+            leading: const Icon(Icons.chat),
+            title: const Text(
+              'Enrollments',
+              style: TextStyle(color: Colors.black),
+            ),
+            onTap: () {
+               Get.to(()=>const  ShowEnrolledInstructorForUserScreen());
+            },
+          ):Container(),
         accountType=="user"?  ListTile(
             leading: const Icon(Icons.person_outline),
             title: const Text(
@@ -109,20 +131,11 @@ class _MyDrawerState extends State<MyDrawer> {
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
-              // Get.offAll(() => const ViewAllTransportScreen());
+               Get.to(()=>const  ShowEnrolledUsersForInstructor());
             },
           ):Container(),
          
-          ListTile(
-            leading: const Icon(Icons.chat),
-            title: const Text(
-              'Inbox',
-              style: TextStyle(color: Colors.black),
-            ),
-            onTap: () {
-               Get.to(()=>  ChatInboxScreen());
-            },
-          ),
+        
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text(

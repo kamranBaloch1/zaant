@@ -52,7 +52,7 @@ class SenderMessageCard extends StatelessWidget {
                   date,
                   style: TextStyle(
                     fontSize: 13.sp,
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 124, 105, 98),
                   ),
                 ),
               ),

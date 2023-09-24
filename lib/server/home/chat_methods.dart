@@ -220,7 +220,7 @@ void sendVoiceMessage({
 
       var senderChatContactModel = ChatContactModel(
         name: receiverUserData.name!,
-        profilePicUrl: receiverUserData.profileUrl!,
+        profilePicUrl: receiverUserData.profilePicUrl!,
         contactId: receiverUserData.uid!,
         timeSent:  DateTime.now(),
         lastMessage: lastMessage,
@@ -332,7 +332,7 @@ Stream<List<ChatContactModel>> getChatsContacts() {
 
             contacts.add(ChatContactModel(
               name: user.name!,
-              profilePicUrl: user.profileUrl!,
+              profilePicUrl: user.profilePicUrl!,
               contactId: chatsContacts.contactId,
               timeSent: chatsContacts.timeSent,
               lastMessage: chatsContacts.lastMessage,

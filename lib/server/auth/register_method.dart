@@ -64,7 +64,7 @@ class RegisterMethod {
           uid: user.uid,
           name: name,
           email: email,
-          profileUrl: downloadUrl,
+          profilePicUrl: downloadUrl,
           dob: dob!,
           gender: gender,
           location: "",

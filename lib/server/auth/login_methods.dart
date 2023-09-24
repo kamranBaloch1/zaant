@@ -69,7 +69,7 @@ class LoginMethods {
     await UserPreferences.setName(userModel.name!);
     await UserPreferences.setUid(userModel.uid!);
     await UserPreferences.setEmail(userModel.email!);
-    await UserPreferences.setProfileUrl(userModel.profileUrl!);
+    await UserPreferences.setProfileUrl(userModel.profilePicUrl!);
     await UserPreferences.setAccountStatus(userModel.accountStatus!);
     await UserPreferences.setIsEmailVerified(userModel.isEmailVerified!);
     await UserPreferences.setCreatedOn(userModel.createdOn!.toDate());

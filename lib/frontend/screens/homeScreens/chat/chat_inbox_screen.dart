@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:zant/frontend/models/home/chat_contact_model.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/chat_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/global/firebase_collection_names.dart';
@@ -50,8 +51,9 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
           .collection(chatsCollection)
           .doc(contactId)
           .collection(messageCollection)
-          .where("recieverid",isEqualTo:FirebaseAuth.instance.currentUser!.uid)
-          .where('isSeen', isEqualTo: false) 
+          .where("recieverid",
+              isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('isSeen', isEqualTo: false)
           .get();
 
       // Update the unread message count
@@ -68,6 +70,7 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(backgroundColor: appBarColor, title: "Inbox"),
+      drawer: const MyDrawer(),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: StreamBuilder<List<ChatContactModel>>(
@@ -124,11 +127,16 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
                         child: ListTile(
                           title: Row(
                             children: [
-                              Text(
-                                chatContatData.name,
-                                style: TextStyle(
-                                    fontSize: 18.sp, color: Colors.black),
-                              ),
+                           
+                                 Text(
+                                  chatContatData.name,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14.sp,
+                                  ), 
+                                 
+                                ),
+                              
                               SizedBox(width: 10..h),
                               if (unreadMessageCount >
                                   0) // Display unread message count if it's greater than 0
