@@ -127,16 +127,13 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
                         child: ListTile(
                           title: Row(
                             children: [
-                           
-                                 Text(
-                                  chatContatData.name,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14.sp,
-                                  ), 
-                                 
+                              Text(
+                                chatContatData.name,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
                                 ),
-                              
+                              ),
                               SizedBox(width: 10..h),
                               if (unreadMessageCount >
                                   0) // Display unread message count if it's greater than 0

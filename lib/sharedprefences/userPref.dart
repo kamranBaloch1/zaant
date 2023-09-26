@@ -34,8 +34,8 @@ class UserPreferences {
     await _prefs!.setString('gender', value);
   }
 
-  static Future<void> setLocation(String value) async {
-    await _prefs!.setString('location', value);
+  static Future<void> setAddress(String value) async {
+    await _prefs!.setString('address', value);
   }
 
   static Future<void> setIsEmailVerified(bool value) async {
@@ -93,8 +93,8 @@ class UserPreferences {
     return _prefs!.getString('gender');
   }
 
-  static String? getLocation() {
-    return _prefs!.getString('location');
+  static String? getAddress() {
+    return _prefs!.getString('address');
   }
 
   static bool? getIsEmailVerified() {

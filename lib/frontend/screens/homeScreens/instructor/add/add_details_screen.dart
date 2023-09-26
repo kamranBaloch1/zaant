@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/add/select_user_location.screen.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/add/select_subjects_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_dropdown.dart';
@@ -60,7 +60,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
       });
 
       // Navigate to the next screen with collected data
-      Get.to(() => SelectUserLocationScreen(
+      Get.to(() => SelectSubjectsScreen(
             selectedQualification: selectedQualification,
             phoneNumber: phoneNumber,
             feesPerHour: int.parse(feesPerHour),

@@ -11,8 +11,6 @@ import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
 class SelectSubjectDaysScreen extends StatefulWidget {
-  final String address;
-
   final List<String> selectedSubjects;
   final String? selectedQualification;
   final String? phoneNumber;
@@ -20,7 +18,6 @@ class SelectSubjectDaysScreen extends StatefulWidget {
 
   const SelectSubjectDaysScreen({
     Key? key,
-    required this.address,
     required this.selectedSubjects,
     required this.selectedQualification,
     required this.phoneNumber,
@@ -63,7 +60,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
     if (allSubjectsHaveDaysSelected) {
       // Proceed to the next screen
       Get.to(() => SelectTimingsScreen(
-          address: widget.address,
+         
           selectedDaysForSubjects: selectedDays,
           selectedSubjects: widget.selectedSubjects,
           selectedQualification: widget.selectedQualification,

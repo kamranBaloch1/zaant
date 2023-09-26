@@ -129,7 +129,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 BuildInfoCardWidget(
                   icon: Icons.location_on,
                   title: "Location",
-                  content: widget.instructorModel.location,
+                  content: widget.instructorModel.address,
                 ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(

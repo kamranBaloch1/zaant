@@ -18,7 +18,6 @@ class InstructorMethods {
     required Map<String, Map<String, Map<String, String>>>
         selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
-    required String address,
   }) async {
     try {
       // Get the current user's information
@@ -32,6 +31,7 @@ class InstructorMethods {
       final city = UserPreferences.getCity() ?? "";
       final profilePicUrl = UserPreferences.getProfileUrl() ?? "";
       final gender = UserPreferences.getGender() ?? "";
+      final address = UserPreferences.getAddress() ?? "";
 
       // Reference to the user document
       final userDocRef = FirebaseFirestore.instance.collection(userCollection).doc(uid);
@@ -57,7 +57,7 @@ class InstructorMethods {
         createdOn: Timestamp.fromDate(DateTime.now()),
         selectedDaysForSubjects: selectedDaysForSubjects,
         enrollments: [],
-        location: address,
+        address: address,
         city: city,
         name: name,
         profilePicUrl: profilePicUrl,
@@ -83,14 +83,12 @@ class InstructorMethods {
         "accountType": AccountTypeEnum.instructor.value,
         "phoneNumber": phoneNumber,
         "isPhoneNumberVerified": false,
-        "location": address,
       });
 
       // Update SharedPreferences
       await UserPreferences.setAccountType(AccountTypeEnum.instructor.toString().split('.').last);
       await UserPreferences.setPhoneNumber(phoneNumber);
       await UserPreferences.setIsPhoneNumberVerified(true);
-      await UserPreferences.setLocation(address);
 
       // Display a success message
       showCustomToast("You have successfully become an instructor");
@@ -110,8 +108,8 @@ class InstructorMethods {
       final queryText = query.toLowerCase();
       final queryRef = FirebaseFirestore.instance
           .collection(instructorsCollections)
-          .where('location', isGreaterThanOrEqualTo: queryText)
-          .where('location', isLessThan: '${queryText}z');
+          .where('address', isGreaterThanOrEqualTo: queryText)
+          .where('address', isLessThan: '${queryText}z');
 
       return queryRef.snapshots();
     } catch (e) {

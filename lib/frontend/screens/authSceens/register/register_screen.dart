@@ -38,6 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
   @override
   void dispose() {
@@ -46,6 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _dobController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -95,6 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String email = _emailController.text.trim();
     String name = _nameController.text.trim();
     String password = _passwordController.text.trim();
+    String location = _locationController.text.trim();
 
     if (selectedDate != null && selectedGender != null) {
       final DateTime now = DateTime.now();
@@ -109,7 +112,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 name: name,
                 gender: selectedGender,
                 dob: selectedDate,
-                city: selectedCity!)
+                city: selectedCity!,
+                location: location
+                )
             .then((value) => {
                   setState(() {
                     _isLoading = false;
@@ -250,6 +255,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     labelText: "Select the gender",
                     icon: Icons.person,
                   ),
+                  
+                   SizedBox(height: 20.h),
+                   CustomAuthTextField(
+                controller: _locationController,
+                hintText: "write your full address",
+                icon: const Icon(Icons.house),
+                 validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'please write your address';
+                      }
+                      return null;
+                    },
+                 obSecure:false,
+             
+
+                keyBoardType: TextInputType.text),
+                 
                   SizedBox(height: 20.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),

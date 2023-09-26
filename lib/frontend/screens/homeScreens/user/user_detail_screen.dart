@@ -97,7 +97,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                 BuildInfoCardWidget(
                   icon: Icons.location_on,
                   title: "Location",
-                  content: widget.userModel.location!,
+                  content: widget.userModel.address!,
                 ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(

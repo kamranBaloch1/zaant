@@ -11,6 +11,7 @@ import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/global/constant_values.dart';
 import 'package:zant/sharedprefences/userPref.dart';
+import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -21,12 +22,16 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _nameC;
+  late TextEditingController _address;
+  late TextEditingController _city;
 
   File? _selectedImage;
 
   String? profilePicUrl;
   String? name;
+  String? address;
 
+  String? selectedCity;
   bool _isShimmerLoading = true;
   bool _isLoading = false;
 
@@ -44,16 +49,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void dispose() {
     _nameC.dispose();
+    _address.dispose();
+    _city.dispose();
     super.dispose();
   }
 
   Future<void> _fetchUserInfoFromSharedPref() async {
     // Fetch user info from SharedPreferences
     name = UserPreferences.getName();
+    address = UserPreferences.getAddress();
+    selectedCity = UserPreferences.getCity();
     profilePicUrl = UserPreferences.getProfileUrl();
-
     // Initialize the controllers after fetching data from SharedPreferences
     _nameC = TextEditingController(text: name);
+    _address = TextEditingController(text: address);
+    _city = TextEditingController(text: selectedCity);
 
     setState(() {
       _isShimmerLoading = false;
@@ -81,12 +91,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
 
     String name = _nameC.text.trim();
+    String address = _address.text.trim();
+    
 
-    if (name.isNotEmpty) {
+    if (name.isNotEmpty && address.isNotEmpty && selectedCity!=null ) {
       final accountProvider =
           Provider.of<ProfileProviders>(context, listen: false);
 
-      await accountProvider.updateUserInformationProvider(name, _selectedImage);
+      await accountProvider.updateUserInformationProvider(
+          name: name,
+          imageUrl: _selectedImage,
+          selectedCity: selectedCity!,
+          address: address);
 
       if (mounted) {
         setState(() {
@@ -142,6 +158,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         labelText: 'Name',
                         icon: Icons.person,
                         keyBoardType: TextInputType.name,
+                      ),
+                      SizedBox(height: 20.h),
+                      homeCustomTextField(
+                          controller: _address,
+                          labelText: "write your full address",
+                          icon: Icons.house,
+                          keyBoardType: TextInputType.text),
+                      SizedBox(height: 20.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: CustomCitiesDropdown(
+                            selectedCity: selectedCity,
+                            labelText: "Change your city",
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCity = value;
+                              });
+                            }),
                       ),
                       SizedBox(height: 40.h),
                       Center(

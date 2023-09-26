@@ -35,11 +35,14 @@ class RegisterMethod {
 
   // Method to register a user with email and password
   Future<void> registerWithEmailAndPassword(
-      {required String email,required String password,required XFile? photoUrl,required String name,
-     required String? gender,required DateTime? dob,required String city}
-      
-      
-      ) async {
+      {required String email,
+      required String password,
+      required XFile? photoUrl,
+      required String name,
+      required String? gender,
+      required DateTime? dob,
+      required String city,
+      required String address}) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -54,29 +57,26 @@ class RegisterMethod {
         user.sendEmailVerification();
 
         // Upload user profile image to Firebase Storage
-        
-       
+
         String? downloadUrl = await uploadImageToStorage(photoUrl);
 
-  
         // Create UserModel object
         UserModel userModel = UserModel(
-          uid: user.uid,
-          name: name,
-          email: email,
-          profilePicUrl: downloadUrl,
-          dob: dob!,
-          gender: gender,
-          location: "",
-          phoneNumber:"",
-          isEmailVerified: false,
-          isPhoneNumberVerified: false,
-          createdOn: Timestamp.fromDate(DateTime.now()),
-          accountStatus: false,
-          accountType: AccountTypeEnum.user,
-          city: city,
-          enrollments: []
-        );
+            uid: user.uid,
+            name: name,
+            email: email,
+            profilePicUrl: downloadUrl,
+            dob: dob!,
+            gender: gender,
+            address: address, 
+            phoneNumber: "",
+            isEmailVerified: false,
+            isPhoneNumberVerified: false,
+            createdOn: Timestamp.fromDate(DateTime.now()),
+            accountStatus: false,
+            accountType: AccountTypeEnum.user,
+            city: city,
+            enrollments: []);
 
         // Save user data to Firestore
         await FirebaseFirestore.instance
@@ -95,9 +95,10 @@ class RegisterMethod {
         await UserPreferences.setDob(dob);
         await UserPreferences.setGender(gender!);
         await UserPreferences.setIsPhoneNumberVerified(false);
-        await UserPreferences.setLocation("");
+        await UserPreferences.setAddress(address);
         await UserPreferences.setPhoneNumber("");
-        await UserPreferences.setAccountType(AccountTypeEnum.user.toString().split('.').last);
+        await UserPreferences.setAccountType(
+            AccountTypeEnum.user.toString().split('.').last);
         await UserPreferences.setCity(city);
 
         showCustomToast(
@@ -128,8 +129,6 @@ class RegisterMethod {
       // Update data in SharedPreferences
       await UserPreferences.setAccountStatus(true);
       await UserPreferences.setIsEmailVerified(true);
-
-       
     } catch (e) {
       showCustomToast("Something went wrong");
     }

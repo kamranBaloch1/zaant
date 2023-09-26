@@ -10,7 +10,7 @@ class UserModel {
   final String? profilePicUrl;
   final DateTime? dob;
   final String? gender;
-  final String? location;
+  final String? address;
   final String? phoneNumber;
   final bool? isEmailVerified;
   final bool? isPhoneNumberVerified;
@@ -27,7 +27,7 @@ class UserModel {
     required this.profilePicUrl,
     required this.dob,
     required this.gender,
-    required this.location,
+    required this.address,
     required this.phoneNumber,
     required this.isEmailVerified,
     required this.isPhoneNumberVerified,
@@ -35,7 +35,7 @@ class UserModel {
     required this.accountStatus,
     required this.accountType,
     required this.city,
-    required this.enrollments
+    required this.enrollments,
   });
 
   Map<String, dynamic> toMap() {
@@ -46,7 +46,7 @@ class UserModel {
       'profilePicUrl': profilePicUrl,
       'dob': dob,
       'gender': gender,
-      'location': location,
+      'address': address,
       'phoneNumber': phoneNumber,
       'isEmailVerified': isEmailVerified,
       'isPhoneNumberVerified': isPhoneNumberVerified,
@@ -54,7 +54,7 @@ class UserModel {
       'accountStatus': accountStatus,
       'accountType': accountType?.toString().split('.').last, // Store the enum value as a string
       'city': city,           
-      'enrollments': enrollments,           
+      'enrollments': enrollments,             
     };
   }
 
@@ -66,7 +66,7 @@ class UserModel {
       profilePicUrl: map['profilePicUrl'] as String,
       dob: map['dob'] == null ? null : (map['dob'] as Timestamp).toDate(),
       gender: map['gender'] as String,
-      location: map['location'] as String,
+      address: map['address'] as String,
       phoneNumber: map['phoneNumber'] as String,
       isEmailVerified: map['isEmailVerified'] as bool,
       isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,

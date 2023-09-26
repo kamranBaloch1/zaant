@@ -19,7 +19,7 @@ class InstructorModel {
   Timestamp createdOn;
   Map<String, List<String>> selectedDaysForSubjects;
   List<Map<String, String>> enrollments;
-  String location;
+  String address;
   String name;
   String profilePicUrl;
   String city;
@@ -39,7 +39,7 @@ class InstructorModel {
       required this.createdOn,
       required this.selectedDaysForSubjects,
       required this.enrollments,
-      required this.location,
+      required this.address,
       required this.city,
       required this.name,
       required this.profilePicUrl,
@@ -65,7 +65,7 @@ class InstructorModel {
       'createdOn': createdOn,
       'selectedDaysForSubjects': selectedDaysForSubjects,
       'enrollments': enrollments,
-      'location': location,
+      'address': address,
       'name': name,
       'city': city,
       'profilePicUrl': profilePicUrl,
@@ -124,7 +124,7 @@ class InstructorModel {
             entry.key: entry.value.toString(),
         };
       }).toList(),
-      location: map['location'] as String,
+      address: map['address'] as String,
       name: map['name'] as String,
       city: map['city'] as String,
       profilePicUrl: map['profilePicUrl'] as String,

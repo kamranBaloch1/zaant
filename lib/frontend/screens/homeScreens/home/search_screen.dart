@@ -119,7 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildInstructorTile(Map<String, dynamic> instructorData) {
     // Extract instructor information
     final String instructorName = instructorData['name'];
-    final String instructorLocation = instructorData['location'];
+    final String instructorLocation = instructorData['address'];
     final String instructorProfilePicUrl = instructorData['profilePicUrl'];
     final String city = instructorData['city'];
     final int instructorRating =

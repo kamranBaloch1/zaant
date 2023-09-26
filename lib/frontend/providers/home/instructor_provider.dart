@@ -14,7 +14,6 @@ class InstructorProviders extends ChangeNotifier {
     required Map<String, Map<String, Map<String, String>>>
         selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
-    required String address,
   }) async {
     try {
       // Call the instructorMethods to add an instructor
@@ -26,7 +25,7 @@ class InstructorProviders extends ChangeNotifier {
         feesPerHour: feesPerHour,
         selectedTimingsForSubjects: selectedTimingsForSubjects,
         selectedDaysForSubjects: selectedDaysForSubjects,
-        address: address,
+       
       );
 
       // Notify listeners to update UI

@@ -7,10 +7,18 @@ class ProfileProviders extends ChangeNotifier {
   final ProfileMethods _profileMethods = ProfileMethods();
 
   // Update user information provider method
-  Future<void> updateUserInformationProvider(String name, File? imageUrl) async {
+  Future<void> updateUserInformationProvider(
+      {required String name,
+      required File? imageUrl,
+      required String selectedCity,
+      required String address}) async {
     try {
       // Call the corresponding method from the profile methods class
-      await _profileMethods.updateUserInformation(name, imageUrl);
+      await _profileMethods.updateUserInformation(
+          name: name,
+          imageUrl: imageUrl,
+          selectedCity: selectedCity,
+          address: address);
 
       // Notify any listeners (typically, UI widgets) that the data has changed
       notifyListeners();
