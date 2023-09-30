@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/show_intstructor_details.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/sharedprefences/userPref.dart';
@@ -103,4 +104,152 @@ class ProfileMethods {
       showCustomToast("An error occurred while updating the information");
     }
   }
+
+  // update method for instructor subjects 
+
+  Future<void> updateInstrcutorSubjects(
+      {required List<String> subjects}) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      await FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(uid)
+          .update({
+             "subjects":subjects
+          });
+          showCustomToast("subjects updated");
+          Get.offAll(()=> const ShowInstructorDetailsScreen());
+
+    } catch (e) {
+       showCustomToast(e.toString());
+    }
+  }
+ 
+ 
+  // update method for instructor subjects days
+Future<void> updateInstrcutorSubjectsDays(
+    { required Map<String, List<String>> selectedDaysForSubjects,}) async {
+  try {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+
+    // Retrieve the current data from Firestore
+    final DocumentSnapshot instructorDoc =
+        await FirebaseFirestore.instance.collection(instructorsCollections).doc(uid).get();
+  // Retrieve the current data from Firestore and cast it to Map<String, dynamic>?
+final Map<String, dynamic>? existingData = instructorDoc.data() as Map<String, dynamic>?;
+
+// Create a new map for "selectedDaysForSubjects"
+final Map<String, List<String>> selectedDaysData = {
+  ...?existingData?["selectedDaysForSubjects"], // Use the existing data if available
+  ...selectedDaysForSubjects, // Add the new data
+};
+
+// Merge the existing data with the new data
+final Map<String, dynamic> mergedData = {
+  ...(existingData ?? {}), // Use the empty map as a fallback if existingData is null
+  "selectedDaysForSubjects": selectedDaysData
+};
+
+
+   
+    // Update the Firestore document with the merged data
+    await FirebaseFirestore.instance
+        .collection(instructorsCollections)
+        .doc(uid)
+        .update(mergedData);
+
+    showCustomToast("subjects days updated");
+    Get.offAll(() => const ShowInstructorDetailsScreen());
+  } catch (e) {
+    showCustomToast(e.toString());
+  }
+}
+
+// update method for instructor subjects timings
+Future<void> updateInstrcutorSubjectsTimings(
+    {required Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects}) async {
+  try {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+
+    // Retrieve the current data from Firestore
+    final DocumentSnapshot instructorDoc =
+        await FirebaseFirestore.instance.collection(instructorsCollections).doc(uid).get();
+   // Retrieve the current data from Firestore and cast it to Map<String, dynamic>?
+final Map<String, dynamic>? existingData = instructorDoc.data() as Map<String, dynamic>?;
+
+// Create a new map for "selectedTimingsForSubjects"
+final Map<String, Map<String, Map<String, String>>> selectedTimingsData = {
+  ...?existingData?["selectedTimingsForSubjects"], // Use the existing data if available
+  ...selectedTimingsForSubjects, // Add the new data
+};
+
+// Merge the existing data with the new data
+final Map<String, dynamic> mergedData = {
+  ...(existingData ?? {}), // Use the empty map as a fallback if existingData is null
+  "selectedTimingsForSubjects": selectedTimingsData
+};
+
+
+    // Update the Firestore document with the merged data
+    await FirebaseFirestore.instance
+        .collection(instructorsCollections)
+        .doc(uid)
+        .update(mergedData);
+
+    showCustomToast("subjects timings updated");
+    Get.offAll(() => const ShowInstructorDetailsScreen());
+  } catch (e) {
+    showCustomToast(e.toString());
+  }
+}
+
+
+
+ // update method for instructor fees charges  
+
+  Future<void> updateInstrcutorFeesCharges(
+      {required String feesPerHour}) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      await FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(uid)
+          .update({
+             "feesPerHour":feesPerHour
+          });
+          showCustomToast("charges updated");
+          Get.offAll(()=> const ShowInstructorDetailsScreen());
+
+    } catch (e) {
+       showCustomToast(e.toString());
+    }
+  }
+ // update method for instructor Qualification
+
+  Future<void> updateInstrcutorQualification(
+      {required String qualification}) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      await FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(uid)
+          .update({
+             "qualification":qualification
+          });
+          showCustomToast("qualification updated ");
+          Get.offAll(()=> const ShowInstructorDetailsScreen());
+
+    } catch (e) {
+       showCustomToast(e.toString());
+    }
+  }
+ 
+
+
+
+
+
 }

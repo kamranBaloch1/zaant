@@ -128,7 +128,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
                   icon: Icons.location_on,
-                  title: "Location",
+                  title: "Address",
                   content: widget.instructorModel.address,
                 ),
                 SizedBox(height: 16.h),
@@ -166,7 +166,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   title: "Gender",
                   content: widget.instructorModel.gender,
                 ),
-                SizedBox(height: 16.h),
+               
                 SizedBox(height: 20.h),
                 BuildInfoCardWidget(
                   icon: Icons.subject,
@@ -180,6 +180,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   daysForSubjects:
                       widget.instructorModel.selectedDaysForSubjects,
                 ),
+                 SizedBox(height: 20.h),
                 ShowTimingWidget(
                   selectedTimings:
                       widget.instructorModel.selectedTimingsForSubjects,

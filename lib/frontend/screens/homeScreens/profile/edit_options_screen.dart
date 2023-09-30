@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/show_intstructor_details.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/edit_profile_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
@@ -39,11 +40,10 @@ class _ProfileEditOptionsScreenState extends State<ProfileEditOptionsScreen> {
                 Get.to(() => const EditProfileScreen());
               }),
 
-              // Add Phone Number ListTile (only for instructors)
               if (widget.accountType == "instructor")
-                _buildListTile(Icons.phone, 'Add Phone Number', () {
+                _buildListTile(Icons.edit, 'Instrutor details', () {
                   // Implement navigation to the Phone Number Screen here.
-                  // Get.to(() => const PhoneNumberScreen());
+                  Get.to(() => const ShowInstructorDetailsScreen());
                 }),
             ],
           ),
