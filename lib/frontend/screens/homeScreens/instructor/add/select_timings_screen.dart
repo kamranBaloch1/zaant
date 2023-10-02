@@ -59,67 +59,68 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
     });
   }
 
-  Future<void> _sendVerificationCode() async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
+ Future<void> _sendVerificationCode() async {
+  try {
+    setState(() {
+      _isLoading = true;
+    });
 
-      // Check if all subjects have timings selected
-      bool allSubjectsTimed = widget.selectedSubjects.every((subject) {
-        final timings = subjectTimings[subject] ?? {};
-        return timings.containsKey('start') && timings.containsKey('end');
-      });
+    // Check if all subjects have timings selected
+    bool allSubjectsTimed = widget.selectedSubjects.every((subject) {
+      final timings = subjectTimings[subject] ?? {};
+      return timings.containsKey('start') && timings.containsKey('end');
+    });
 
-      if (!allSubjectsTimed) {
-        // Display an error message if any subject is missing timing information
-        showCustomToast("Please select timings for all subjects.");
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
-
-      // Proceed to send the verification code
-
-      // Convert TimeOfDay objects to strings
-      Map<String, Map<String, Map<String, String>>> selectedTimings = {};
-      subjectTimings.forEach((subject, timings) {
-        selectedTimings[subject] = {
-          'Start Time': {
-            'time': "${timings['start']!.hour}:${timings['start']!.minute}",
-          },
-          'End Time': {
-            'time': "${timings['end']!.hour}:${timings['end']!.minute}",
-          },
-        };
-      });
-
-      final instructorProvider =
-          Provider.of<InstructorProviders>(context, listen: false);
-
-      await instructorProvider.addInstructorProvider(
-        phoneNumber: widget.phoneNumber!,
-        qualification: widget.selectedQualification!,
-        subjects: widget.selectedSubjects,
-        feesPerHour: widget.feesPerHour!,
-        selectedTimingsForSubjects: selectedTimings,
-        selectedDaysForSubjects: widget.selectedDaysForSubjects,
-      );
-
+    if (!allSubjectsTimed) {
+      // Display an error message if any subject is missing timing information
+      showCustomToast("Please select timings for all subjects.");
       setState(() {
         _isLoading = false;
       });
-
-      // Show a success message or navigate to the next screen if needed
-      showCustomToast("Verification code sent successfully.");
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      showCustomToast("An error occurred: $e");
+      return;
     }
+
+    // Convert TimeOfDay objects to strings
+
+Map<String, Map<String, Map<String, String>>> selectedTimings = {};
+
+// Populate selectedTimings based on user input
+for (String subject in widget.selectedSubjects) {
+  final timings = subjectTimings[subject] ?? {};
+  selectedTimings[subject] = {
+    'Start Time': {
+      'time': "${timings['start']!.hour}:${timings['start']!.minute}",
+    },
+    'End Time': {
+      'time': "${timings['end']!.hour}:${timings['end']!.minute}",
+    },
+  };
+}
+
+
+
+    final instructorProvider =
+        Provider.of<InstructorProviders>(context, listen: false);
+
+    await instructorProvider.addInstructorProvider(
+      phoneNumber: widget.phoneNumber!,
+      qualification: widget.selectedQualification!,
+      subjects: widget.selectedSubjects,
+      feesPerHour: widget.feesPerHour!,
+      selectedTimingsForSubjects: selectedTimings,
+      selectedDaysForSubjects: widget.selectedDaysForSubjects,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+  } catch (e) {
+    setState(() {
+      _isLoading = false;
+    });
+    showCustomToast("An error occurred: $e");
   }
+}
 
   @override
   Widget build(BuildContext context) {

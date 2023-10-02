@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShowTimingWidget extends StatelessWidget {
   const ShowTimingWidget({
-    super.key,
+    Key? key,
     required this.selectedTimings,
-  });
+  }) : super(key: key);
 
   final Map<String, Map<String, Map<String, String>>> selectedTimings;
 
@@ -59,6 +59,7 @@ class ShowTimingWidget extends StatelessWidget {
                         final timeType = timingEntry.key;
                         final timeData = timingEntry.value;
                         final time = timeData['time'];
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -71,7 +72,7 @@ class ShowTimingWidget extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              time!,
+                              time ?? 'No time available', // Handle null time
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Colors.black,

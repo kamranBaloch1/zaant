@@ -1,21 +1,19 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_time_picker.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
+import 'package:zant/server/home/profile_methods.dart';
 
 class UpdateSubjectsTimingsScreen extends StatefulWidget {
-  final List<String> selectedSubjects;
-  final Map<String, Map<String, Map<String, String>>> selectedDaysForSubjects;
+  final Map<String, Map<String, Map<String, String>>>
+      selectedTimingsForSubjects;
 
   const UpdateSubjectsTimingsScreen({
     Key? key,
-    required this.selectedSubjects,
-    required this.selectedDaysForSubjects,
+    required this.selectedTimingsForSubjects,
   }) : super(key: key);
 
   @override
@@ -25,89 +23,86 @@ class UpdateSubjectsTimingsScreen extends StatefulWidget {
 
 class _UpdateSubjectsTimingsScreenState
     extends State<UpdateSubjectsTimingsScreen> {
-  Map<String, Map<String, TimeOfDay>> subjectTimings = {};
-  bool _isLoading = true;
+  Map<String, Map<String, TimeOfDay?>> subjectTimings = {};
+  bool _isLoading = false;
+  bool _isUpdating = false;
+  String? _subjectToUpdate; // Store the subject that needs to be updated
 
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        _isLoading = false;
-      });
+    // Initialize subjectTimings with the values from selectedTimingsForSubjects
+    widget.selectedTimingsForSubjects.forEach((subject, timings) {
+      final startTime = timings['Start Time']?['time'] ?? '00:00';
+      final endTime = timings['End Time']?['time'] ?? '00:00';
+
+      final startParts = startTime.split(':');
+      final endParts = endTime.split(':');
+
+      final startTimeOfDay = TimeOfDay(
+        hour: int.parse(startParts[0]),
+        minute: int.parse(startParts[1]),
+      );
+
+      final endTimeOfDay = TimeOfDay(
+        hour: int.parse(endParts[0]),
+        minute: int.parse(endParts[1]),
+      );
+
+      subjectTimings[subject] = {
+        'start': startTimeOfDay,
+        'end': endTimeOfDay,
+      };
     });
   }
 
   void _handleSubjectTiming(
     String subject,
     String timeType,
-    TimeOfDay time,
+    TimeOfDay? time,
   ) {
     setState(() {
       if (!subjectTimings.containsKey(subject)) {
         subjectTimings[subject] = {};
       }
       subjectTimings[subject]![timeType] = time;
+      _subjectToUpdate = subject; // Store the subject that needs to be updated
     });
   }
 
-  Future<void> _sendVerificationCode() async {
-    try {
+  Future<void> _updateSubjectTimings() async {
+    if (!_isUpdating && _subjectToUpdate != null) {
+      // Check if an update is not already in progress and a subject is to be updated
       setState(() {
         _isLoading = true;
+        _isUpdating = true; // Set the flag to indicate an update is in progress
       });
 
-      // Check if all subjects have timings selected
-      bool allSubjectsTimed = widget.selectedSubjects.every((subject) {
-        final timings = subjectTimings[subject] ?? {};
-        return timings.containsKey('start') && timings.containsKey('end');
-      });
+      final timings = subjectTimings[_subjectToUpdate!] ?? {};
+      final startTime = timings['start'] ?? TimeOfDay(hour: 0, minute: 0);
+      final endTime = timings['end'] ?? TimeOfDay(hour: 0, minute: 0);
 
-      if (!allSubjectsTimed) {
-        // Display an error message if any subject is missing timing information
-        showCustomToast("Please select timings for all subjects.");
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
+      final newTimings = {
+        'Start Time': {
+          'time': "${startTime.hour}:${startTime.minute}",
+        },
+        'End Time': {
+          'time': "${endTime.hour}:${endTime.minute}",
+        },
+      };
 
-      // Proceed to send the verification code
-
-      // Convert TimeOfDay objects to strings
-      Map<String, Map<String, Map<String, String>>> selectedTimings = {};
-      subjectTimings.forEach((subject, timings) {
-        selectedTimings[subject] = {
-          'Start Time': {
-            'time': "${timings['start']!.hour}:${timings['start']!.minute}",
-          },
-          'End Time': {
-            'time': "${timings['end']!.hour}:${timings['end']!.minute}",
-          },
-        };
-      });
-
-      // final instructorProvider =
-      //     Provider.of<InstructorProviders>(context, listen: false);
-
-      // await instructorProvider.addInstructorProvider(
-      //   phoneNumber: widget.phoneNumber!,
-      //   qualification: widget.selectedQualification!,
-      //   subjects: widget.selectedSubjects,
-      //   feesPerHour: widget.feesPerHour!,
-      //   selectedTimingsForSubjects: selectedTimings,
-      //   selectedDaysForSubjects: widget.selectedDaysForSubjects,
-      // );
+      // Update only the selected subject
+      await ProfileMethods().updateInstrcutorSubjectTiming(
+        subject: _subjectToUpdate!,
+        newTimings: newTimings,
+      );
 
       setState(() {
         _isLoading = false;
+        _isUpdating = false;
+        _subjectToUpdate = null; // Reset the subject to update
       });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      showCustomToast("An error occurred: $e");
     }
   }
 
@@ -124,30 +119,30 @@ class _UpdateSubjectsTimingsScreenState
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: widget.selectedSubjects.length,
+                  itemCount: subjectTimings.length,
                   itemBuilder: (context, index) {
-                    final subject = widget.selectedSubjects[index];
+                    final subject = subjectTimings.keys.toList()[index];
                     final timings = subjectTimings[subject] ?? {};
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 20.h,
+                          height: 20,
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0.w),
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
                             subject,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18.sp,
+                              fontSize: 18,
                               color: Colors.black,
                             ),
                           ),
                         ),
                         SizedBox(
-                          height: 10.h,
+                          height: 10,
                         ),
                         ListTile(
                           title: Row(
@@ -179,21 +174,21 @@ class _UpdateSubjectsTimingsScreenState
                             ],
                           ),
                         ),
-                        const Divider(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 50.h, horizontal: 100.w),
-                          child: CustomButton(
-                            onTap: _isLoading ? null : _sendVerificationCode,
-                            width: 200,
-                            height: 40,
-                            text: "update",
-                            bgColor: Colors.blue,
-                          ),
-                        ),
+                        Divider(),
                       ],
                     );
                   },
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.symmetric(vertical: 50.h, horizontal: 100.w),
+                child: CustomButton(
+                  onTap: _isLoading ? null : _updateSubjectTimings,
+                  width: 200,
+                  height: 40,
+                  text: "Update",
+                  bgColor: Colors.blue,
                 ),
               ),
             ],
@@ -201,7 +196,7 @@ class _UpdateSubjectsTimingsScreenState
         ),
 
         // Showing a loading overlay if _isLoading is true
-        if (_isLoading) const CustomLoadingOverlay()
+        if (_isLoading) CustomLoadingOverlay()
       ],
     );
   }

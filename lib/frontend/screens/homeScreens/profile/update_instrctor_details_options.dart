@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import 'package:zant/frontend/screens/homeScreens/profile/widgets/update_charges_per_hour.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/widgets/update_qualification.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/widgets/update_subjects.dart';
@@ -13,15 +14,17 @@ import 'package:zant/global/colors.dart';
 
 class UpdateInstrctorOptionsScreen extends StatefulWidget {
   final List<String> selectedSubjects;
-  final Map<String, Map<String, Map<String, String>>> selectedDaysForSubjects;
-  final  String feesPerHour;
-  final String Qualification;
+  final Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects;
+  final  int feesPerHour;
+  final String qualification;
+  final Map<String, List<String>> selectedDaysOfSubjects;
   const UpdateInstrctorOptionsScreen({
     Key? key,
     required this.selectedSubjects,
-    required this.selectedDaysForSubjects,
+    required this.selectedTimingsForSubjects,
     required this.feesPerHour,
-    required this.Qualification,
+    required this.qualification,
+    required this.selectedDaysOfSubjects,
   }) : super(key: key);
 
   @override
@@ -52,19 +55,19 @@ class _UpdateInstrctorOptionsScreenState
               }),
               _buildListTile(Icons.calendar_month, 'Change subjects Days', () {
                 Get.to(() => UpdateSubjectDaysScreen(
-                    selectedSubjects: widget.selectedSubjects));
+                    selectedDaysOfSubjects: widget.selectedDaysOfSubjects));
               }),
               _buildListTile(Icons.punch_clock, 'Change subjects Timings', () {
                 Get.to(() => UpdateSubjectsTimingsScreen(
-                      selectedSubjects: widget.selectedSubjects,
-                      selectedDaysForSubjects: widget.selectedDaysForSubjects,
+                      // selectedSubjects: widget.selectedSubjects,
+                      selectedTimingsForSubjects: widget.selectedTimingsForSubjects,
                     ));
               }),
               _buildListTile(Icons.money, 'Change charges per hour', () {
                 Get.to(() =>  UpdateChargesPerHour(feesPerHour: widget.feesPerHour,));
               }),
               _buildListTile(Icons.school, 'Change Qualification', () {
-                Get.to(() =>  UpdateQualificationScreen(selectedQualification: widget.Qualification,));
+                Get.to(() =>  UpdateQualificationScreen(selectedQualification: widget.qualification,));
               }),
             ],
           ),

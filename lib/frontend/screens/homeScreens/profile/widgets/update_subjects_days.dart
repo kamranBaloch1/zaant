@@ -1,18 +1,18 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-
+import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
+import 'package:zant/server/home/profile_methods.dart';
 
 class UpdateSubjectDaysScreen extends StatefulWidget {
-  final List<String> selectedSubjects;
+  final Map<String, List<String>> selectedDaysOfSubjects;
 
   const UpdateSubjectDaysScreen({
     Key? key,
-    required this.selectedSubjects,
+    required this.selectedDaysOfSubjects,
   }) : super(key: key);
 
   @override
@@ -22,20 +22,6 @@ class UpdateSubjectDaysScreen extends StatefulWidget {
 
 class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
   bool _isLoading = false;
-
-  // Create a map to store selected days for each subject
-  Map<String, List<String>> selectedDays = {};
-
- @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +33,12 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
             title: "Update Subject Days",
           ),
           body: ListView.builder(
-            itemCount:
-                widget.selectedSubjects.length + 1, // +1 for the "Next" button
+            itemCount: widget.selectedDaysOfSubjects.length + 1,
             itemBuilder: (context, index) {
-              if (index < widget.selectedSubjects.length) {
-                final subject = widget.selectedSubjects[index];
+              if (index < widget.selectedDaysOfSubjects.length) {
+                final subject =
+                    widget.selectedDaysOfSubjects.keys.elementAt(index);
+                final days = widget.selectedDaysOfSubjects[subject] ?? [];
 
                 return Column(
                   children: [
@@ -91,29 +78,14 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
                                     ),
                                   ),
                                   Checkbox(
-                                    value: (selectedDays[subject] ?? [])
-                                        .contains(day),
+                                    value: days.contains(day),
                                     onChanged: (value) {
                                       setState(() {
                                         if (value != null) {
                                           if (value) {
-                                            selectedDays.update(
-                                              subject,
-                                              (days) {
-                                                days.add(day);
-                                                return days;
-                                              },
-                                              ifAbsent: () => [day],
-                                            );
+                                            days.add(day);
                                           } else {
-                                            selectedDays.update(
-                                              subject,
-                                              (days) {
-                                                days.remove(day);
-                                                return days;
-                                              },
-                                              ifAbsent: () => [],
-                                            );
+                                            days.remove(day);
                                           }
                                         }
                                       });
@@ -128,16 +100,15 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
                   ],
                 );
               } else {
-                // Render the "Next" button
+                // Render the "Update" button
                 return Padding(
                   padding:
                       EdgeInsets.symmetric(vertical: 40.h, horizontal: 80.w),
-                  child: const CustomButton(
-                    // onTap: _isLoading ? null : _navigateToNextScreen,
-
+                  child: CustomButton(
+                    onTap: _isLoading ? null : _updateSelectedDays,
                     width: 200,
                     height: 40,
-                    text: "update",
+                    text: "Update",
                     bgColor: Colors.blue,
                   ),
                 );
@@ -151,4 +122,42 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
       ],
     );
   }
+
+ void _updateSelectedDays() {
+  // Create a copy of the selectedDaysOfSubjects
+  Map<String, List<String>> updatedData = Map.from(widget.selectedDaysOfSubjects);
+
+  // Validate that at least one day is selected for each subject
+  bool isValid = true;
+
+  for (final subject in updatedData.keys) {
+    final days = updatedData[subject] ?? [];
+    if (days.isEmpty) {
+      isValid = false;
+      break;
+    }
+  }
+
+  if (!isValid) {
+    // Show an error message to the user and prevent the update action
+    showCustomToast("Please select at least one day for each subject.");
+    return; // Exit the method without updating
+  }
+
+  setState(() {
+    _isLoading = true; // Show loading overlay while updating
+  });
+
+  // Call your backend update method with the updated data
+  ProfileMethods().updateInstrcutorSubjectsDays(selectedDaysForSubjects: updatedData)
+      .then((_) {
+    // Once the update is complete, set _isLoading to false
+    setState(() {
+      _isLoading = false;
+    });
+  });
+}
+
+
+
 }

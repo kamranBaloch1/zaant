@@ -83,25 +83,30 @@ class InstructorModel {
       reviews: List<String>.from(map['reviews'] as List<dynamic>),
       ratings: map['ratings'] as int,
       subjects: List<String>.from(map['subjects'] as List<dynamic>),
-      selectedTimingsForSubjects: (map['selectedTimingsForSubjects']
-                  as Map<String, dynamic>?)
-              ?.map(
-            (subject, subjectData) {
-              return MapEntry(
-                subject,
-                (subjectData as Map<String, dynamic>).map(
+      
+        
+    selectedTimingsForSubjects: (map['selectedTimingsForSubjects']
+            as Map<String, dynamic>?)
+        ?.map(
+      (subject, subjectData) {
+        return MapEntry(
+          subject,
+          (subjectData is Map<String, dynamic>) // Check the type before casting
+              ? subjectData.map(
                   (day, dayData) {
                     return MapEntry(
                       day,
-                      Map<String, String>.from(dayData as Map<String, dynamic>),
+                      (dayData is Map<String, dynamic>) // Check the type before casting
+                          ? Map<String, String>.from(dayData)
+                          : <String, String>{}, // Handle the case where it's not a map
                     );
                   },
-                ),
-              );
-            },
-          ) ??
-          {},
-
+                )
+              : <String, Map<String, String>>{}, // Handle the case where it's not a map
+        );
+      },
+    ) ??
+    {},  
       accountType: map['accountType'] != null
           ? AccountTypeEnum.values.firstWhere(
               (e) => e.toString() == map['accountType'],

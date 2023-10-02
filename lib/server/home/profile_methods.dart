@@ -128,38 +128,59 @@ class ProfileMethods {
  
  
   // update method for instructor subjects days
-Future<void> updateInstrcutorSubjectsDays(
-    { required Map<String, List<String>> selectedDaysForSubjects,}) async {
+Future<void> updateInstrcutorSubjectsDays({
+  required Map<String, List<String>> selectedDaysForSubjects,
+}) async {
   try {
     String uid = FirebaseAuth.instance.currentUser!.uid;
 
     // Retrieve the current data from Firestore
     final DocumentSnapshot instructorDoc =
         await FirebaseFirestore.instance.collection(instructorsCollections).doc(uid).get();
-  // Retrieve the current data from Firestore and cast it to Map<String, dynamic>?
-final Map<String, dynamic>? existingData = instructorDoc.data() as Map<String, dynamic>?;
 
-// Create a new map for "selectedDaysForSubjects"
-final Map<String, List<String>> selectedDaysData = {
-  ...?existingData?["selectedDaysForSubjects"], // Use the existing data if available
-  ...selectedDaysForSubjects, // Add the new data
-};
+    // Retrieve the current data from Firestore and cast it to Map<String, dynamic>?
+    final Map<String, dynamic>? existingData = instructorDoc.data() as Map<String, dynamic>?;
 
-// Merge the existing data with the new data
-final Map<String, dynamic> mergedData = {
-  ...(existingData ?? {}), // Use the empty map as a fallback if existingData is null
-  "selectedDaysForSubjects": selectedDaysData
-};
+    // Create a new map for "selectedDaysForSubjects"
+    Map<String, List<String>> selectedDaysData = {};
 
+    if (existingData != null && existingData["selectedDaysForSubjects"] != null) {
+      // Convert dynamic to List<String> if the data exists
+      final Map<String, dynamic> existingSelectedDaysData =
+          existingData["selectedDaysForSubjects"] as Map<String, dynamic>;
 
-   
+      existingSelectedDaysData.forEach((subject, days) {
+        if (days is List<dynamic>) {
+          // Cast days to List<String> if needed
+          selectedDaysData[subject] = List<String>.from(days);
+        } else if (days is List<String>) {
+          selectedDaysData[subject] = days;
+        }
+      });
+    }
+
+    // Merge the existing data with the new data
+    selectedDaysForSubjects.forEach((subject, days) {
+      if (selectedDaysData.containsKey(subject)) {
+        // Check if the value is not already in the list before adding
+        days.forEach((day) {
+          if (!selectedDaysData[subject]!.contains(day)) {
+            selectedDaysData[subject]!.add(day);
+          }
+        });
+      } else {
+        // Create a new entry if the subject is new
+        selectedDaysData[subject] = days;
+      }
+    });
+
     // Update the Firestore document with the merged data
     await FirebaseFirestore.instance
         .collection(instructorsCollections)
         .doc(uid)
-        .update(mergedData);
+        .update({"selectedDaysForSubjects": selectedDaysData});
 
-    showCustomToast("subjects days updated");
+    showCustomToast("Subjects days updated");
     Get.offAll(() => const ShowInstructorDetailsScreen());
   } catch (e) {
     showCustomToast(e.toString());
@@ -167,29 +188,32 @@ final Map<String, dynamic> mergedData = {
 }
 
 // update method for instructor subjects timings
-Future<void> updateInstrcutorSubjectsTimings(
-    {required Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects}) async {
+
+Future<void> updateInstrcutorSubjectTiming({
+  required String subject,
+  required Map<String, dynamic> newTimings, 
+}) async {
   try {
     String uid = FirebaseAuth.instance.currentUser!.uid;
 
     // Retrieve the current data from Firestore
     final DocumentSnapshot instructorDoc =
         await FirebaseFirestore.instance.collection(instructorsCollections).doc(uid).get();
-   // Retrieve the current data from Firestore and cast it to Map<String, dynamic>?
-final Map<String, dynamic>? existingData = instructorDoc.data() as Map<String, dynamic>?;
+    
+    // Retrieve the current data from Firestore and cast it to Map<String, dynamic>?
+    final Map<String, dynamic>? existingData = instructorDoc.data() as Map<String, dynamic>?;
 
-// Create a new map for "selectedTimingsForSubjects"
-final Map<String, Map<String, Map<String, String>>> selectedTimingsData = {
-  ...?existingData?["selectedTimingsForSubjects"], // Use the existing data if available
-  ...selectedTimingsForSubjects, // Add the new data
-};
+    // Create a new map for "selectedTimingsForSubjects"
+    final Map<String, Map<String, dynamic>> selectedTimingsData = {
+      ...?existingData?["selectedTimingsForSubjects"], // Use the existing data if available
+      subject: newTimings, // Update the timings for the specified subject
+    };
 
-// Merge the existing data with the new data
-final Map<String, dynamic> mergedData = {
-  ...(existingData ?? {}), // Use the empty map as a fallback if existingData is null
-  "selectedTimingsForSubjects": selectedTimingsData
-};
-
+    // Merge the existing data with the new data
+    final Map<String, dynamic> mergedData = {
+      ...(existingData ?? {}), // Use the empty map as a fallback if existingData is null
+      "selectedTimingsForSubjects": selectedTimingsData
+    };
 
     // Update the Firestore document with the merged data
     await FirebaseFirestore.instance
@@ -197,19 +221,20 @@ final Map<String, dynamic> mergedData = {
         .doc(uid)
         .update(mergedData);
 
-    showCustomToast("subjects timings updated");
+    showCustomToast(" $subject timings updated");
     Get.offAll(() => const ShowInstructorDetailsScreen());
+   
   } catch (e) {
     showCustomToast(e.toString());
+    print(e.toString());
   }
 }
-
 
 
  // update method for instructor fees charges  
 
   Future<void> updateInstrcutorFeesCharges(
-      {required String feesPerHour}) async {
+      {required int feesPerHour}) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 

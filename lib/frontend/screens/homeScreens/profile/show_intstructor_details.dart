@@ -43,6 +43,13 @@ class _ShowInstructorDetailsScreenState
 
     return null; // Return null if no data is found.
   }
+  bool _isDisposed = false; // Flag to track if the widget is disposed
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
 
   Widget _showCurrentInstructorData(InstructorModel instructorModel) {
     return Column(
@@ -101,6 +108,9 @@ class _ShowInstructorDetailsScreenState
         child: FutureBuilder<InstructorModel?>(
           future: getInstructorDetails(),
           builder: (context, snapshot) {
+            if (_isDisposed) {
+              return Container(); // Return an empty container if the widget is disposed
+            }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
                   alignment: Alignment.bottomCenter,
@@ -127,10 +137,11 @@ class _ShowInstructorDetailsScreenState
                       onTap: () {
                         Get.to(() => UpdateInstrctorOptionsScreen(
                               selectedSubjects: instructor.subjects,
-                              selectedDaysForSubjects:
+                              selectedTimingsForSubjects:
                                   instructor.selectedTimingsForSubjects,
-                              Qualification: instructor.qualification,
-                              feesPerHour: instructor.feesPerHour.toString(),
+                              qualification: instructor.qualification,
+                              feesPerHour: instructor.feesPerHour,
+                              selectedDaysOfSubjects: instructor.selectedDaysForSubjects,
                             ));
                       },
                       width: 300,

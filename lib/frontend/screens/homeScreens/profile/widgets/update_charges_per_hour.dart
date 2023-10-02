@@ -9,7 +9,7 @@ import 'package:zant/global/colors.dart';
 import 'package:zant/server/home/profile_methods.dart';
 
 class UpdateChargesPerHour extends StatefulWidget {
-  final String feesPerHour;
+  final int feesPerHour;
   const UpdateChargesPerHour({
     Key? key,
     required this.feesPerHour,
@@ -35,7 +35,7 @@ class _UpdateChargesPerHourState extends State<UpdateChargesPerHour> {
   void initState() {
     // TODO: implement initState
 
-    _feesPerHour = TextEditingController(text: widget.feesPerHour);
+    _feesPerHour = TextEditingController(text: widget.feesPerHour.toString());
 
     super.initState();
   }
@@ -47,7 +47,8 @@ class _UpdateChargesPerHourState extends State<UpdateChargesPerHour> {
 
     String charges = _feesPerHour.text.trim();
     if (charges.isNotEmpty) {
-    await  ProfileMethods().updateInstrcutorFeesCharges(feesPerHour: charges);
+      await ProfileMethods()
+          .updateInstrcutorFeesCharges(feesPerHour: int.parse(charges));
 
       setState(() {
         _isLoading = false;
