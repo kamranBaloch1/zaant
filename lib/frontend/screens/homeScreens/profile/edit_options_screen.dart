@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/show_intstructor_details.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/update/show_intstructor_details.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/edit_profile_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';

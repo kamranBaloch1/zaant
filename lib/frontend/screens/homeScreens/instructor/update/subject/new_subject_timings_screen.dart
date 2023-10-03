@@ -1,17 +1,16 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:zant/frontend/providers/home/instructor_provider.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_time_picker.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
-import 'package:zant/server/home/profile_methods.dart';
 
 class AddNewSubjectTimingsScreen extends StatefulWidget {
   final List<String> selectedSubjects;
-
   final Map<String, List<String>> selectedDaysForSubjects;
 
   const AddNewSubjectTimingsScreen({
@@ -27,24 +26,26 @@ class AddNewSubjectTimingsScreen extends StatefulWidget {
 
 class _AddNewSubjectTimingsScreenState
     extends State<AddNewSubjectTimingsScreen> {
-  Map<String, Map<String, TimeOfDay>> subjectTimings = {};
-  bool _isLoading = true;
+  Map<String, Map<String, TimeOfDay?>> subjectTimings = {};
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    // Initialize subjectTimings with null values for selectedSubjects
+    for (String subject in widget.selectedSubjects) {
+      subjectTimings[subject] = {
+        'start': null,
+        'end': null,
+      };
+    }
   }
 
   void _handleSubjectTiming(
     String subject,
     String timeType,
-    TimeOfDay time,
+    TimeOfDay? time,
   ) {
     setState(() {
       if (!subjectTimings.containsKey(subject)) {
@@ -83,21 +84,25 @@ class _AddNewSubjectTimingsScreenState
         final timings = subjectTimings[subject] ?? {};
         selectedTimings[subject] = {
           'Start Time': {
-            'time': "${_formatTime(timings['start'])}",
+            'time': _formatTime(timings['start']),
           },
           'End Time': {
-            'time': "${_formatTime(timings['end'])}",
+            'time': _formatTime(timings['end']),
           },
         };
       }
 
-      // final instructorProvider =
-      //     Provider.of<InstructorProviders>(context, listen: false);
+      // Call the backend method to add new subjects with timings
 
-      await ProfileMethods().addNewSubjects(
-          newSubjects: widget.selectedSubjects,
-          selectedTimingsForSubjects: selectedTimings,
-          selectedDaysForSubjects: widget.selectedDaysForSubjects);
+      final instructorProvider =
+          Provider.of<InstructorProviders>(context, listen: false);
+
+      await instructorProvider.addNewSubjectsProvider(
+        newSubjects: widget.selectedSubjects,
+        selectedTimingsForSubjects: selectedTimings,
+        selectedDaysForSubjects: widget.selectedDaysForSubjects,
+      );
+
       setState(() {
         _isLoading = false;
       });
@@ -109,7 +114,7 @@ class _AddNewSubjectTimingsScreenState
     }
   }
 
-// Helper function to format TimeOfDay to "hh:mm am/pm" format
+  // Helper function to format TimeOfDay to "hh:mm am/pm" format
   String _formatTime(TimeOfDay? time) {
     if (time == null) return "";
     final hour = time.hourOfPeriod;
@@ -125,7 +130,7 @@ class _AddNewSubjectTimingsScreenState
         Scaffold(
           appBar: CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Select timings for subjects",
+            title: "Select Timings for Subjects",
           ),
           body: Column(
             children: [
@@ -207,7 +212,7 @@ class _AddNewSubjectTimingsScreenState
         ),
 
         // Showing a loading overlay if _isLoading is true
-        if (_isLoading) const CustomLoadingOverlay()
+        if (_isLoading) const CustomLoadingOverlay(),
       ],
     );
   }

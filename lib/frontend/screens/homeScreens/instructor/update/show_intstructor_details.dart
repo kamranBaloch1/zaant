@@ -6,7 +6,7 @@ import 'package:zant/frontend/models/home/instructor_model.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_timings_widget.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/update_instrctor_details_options.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/update/update_instrctor_details_options.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/global/colors.dart';
@@ -43,6 +43,7 @@ class _ShowInstructorDetailsScreenState
 
     return null; // Return null if no data is found.
   }
+
   bool _isDisposed = false; // Flag to track if the widget is disposed
 
   @override
@@ -134,20 +135,22 @@ class _ShowInstructorDetailsScreenState
                     height: 20.h,
                   ),
                   CustomButton(
-                      onTap: () {
-                        Get.to(() => UpdateInstrctorOptionsScreen(
-                              selectedSubjects: instructor.subjects,
-                              selectedTimingsForSubjects:
-                                  instructor.selectedTimingsForSubjects,
-                              qualification: instructor.qualification,
-                              feesPerHour: instructor.feesPerHour,
-                              selectedDaysOfSubjects: instructor.selectedDaysForSubjects,
-                            ));
-                      },
-                      width: 300,
-                      height: 40,
-                      text: "Edit",
-                      bgColor: Colors.blue), 
+                    onTap: () {
+                      Get.to(() => UpdateInstrctorOptionsScreen(
+                            subjectList: instructor.subjects,
+                            selectedTimingsForSubjects:
+                                instructor.selectedTimingsForSubjects,
+                            qualification: instructor.qualification,
+                            feesPerHour: instructor.feesPerHour,
+                            selectedDaysOfSubjects:
+                                instructor.selectedDaysForSubjects,
+                          ));
+                    },
+                    width: 300,
+                    height: 40,
+                    text: "Edit",
+                    bgColor: Colors.blue,
+                  ),
                   SizedBox(
                     height: 20.h,
                   ),

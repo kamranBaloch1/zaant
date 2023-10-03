@@ -1,8 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/screens/subject/new_subject_timings_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/update/subject/new_subject_timings_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
@@ -51,7 +50,6 @@ class _NewSubjectDaysScreenState extends State<NewSubjectDaysScreen> {
 
     if (allSubjectsHaveDaysSelected) {
       // Proceed to the next screen
-
       Get.to(() => AddNewSubjectTimingsScreen(
           selectedSubjects: widget.selectedSubjects,
           selectedDaysForSubjects: selectedDays));

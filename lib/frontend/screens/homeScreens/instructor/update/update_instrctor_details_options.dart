@@ -4,23 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:zant/frontend/screens/homeScreens/profile/screens/update_charges_per_hour.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/screens/update_qualification.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/screens/update_subjects.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/screens/update_subjects_days.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/screens/update_subjects_timings.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/update/update_charges_per_hour.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/update/update_qualification.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/update/update_subjects.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/update/update_subjects_days.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/update/update_subjects_timings.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 
 class UpdateInstrctorOptionsScreen extends StatefulWidget {
-  final List<String> selectedSubjects;
+  final List<String> subjectList;
   final Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects;
-  final  int feesPerHour;
+  final int feesPerHour;
   final String qualification;
   final Map<String, List<String>> selectedDaysOfSubjects;
   const UpdateInstrctorOptionsScreen({
     Key? key,
-    required this.selectedSubjects,
+    required this.subjectList,
     required this.selectedTimingsForSubjects,
     required this.feesPerHour,
     required this.qualification,
@@ -49,9 +49,9 @@ class _UpdateInstrctorOptionsScreenState
                 height: 20.h,
               ),
               // Edit Profile ListTile
-              _buildListTile(Icons.book, 'Change subjects', () {
+              _buildListTile(Icons.book, 'Edit subjects', () {
                 Get.to(() => UpdateSubjectsScreen(
-                    selectedSubjects: widget.selectedSubjects));
+                    subjectList: widget.subjectList));
               }),
               _buildListTile(Icons.calendar_month, 'Change subjects Days', () {
                 Get.to(() => UpdateSubjectDaysScreen(
@@ -59,15 +59,14 @@ class _UpdateInstrctorOptionsScreenState
               }),
               _buildListTile(Icons.punch_clock, 'Change subjects Timings', () {
                 Get.to(() => UpdateSubjectsTimingsScreen(
-                      // selectedSubjects: widget.selectedSubjects,
-                      selectedTimingsForSubjects: widget.selectedTimingsForSubjects,
-                    ));
+                  selectedTimingsForSubjects: widget.selectedTimingsForSubjects,
+                ));
               }),
               _buildListTile(Icons.money, 'Change charges per hour', () {
-                Get.to(() =>  UpdateChargesPerHour(feesPerHour: widget.feesPerHour,));
+                Get.to(() => UpdateChargesPerHour(feesPerHour: widget.feesPerHour));
               }),
               _buildListTile(Icons.school, 'Change Qualification', () {
-                Get.to(() =>  UpdateQualificationScreen(selectedQualification: widget.qualification,));
+                Get.to(() => UpdateQualificationScreen(selectedQualification: widget.qualification));
               }),
             ],
           ),
@@ -82,7 +81,7 @@ class _UpdateInstrctorOptionsScreenState
       leading: Icon(icon),
       title: Text(
         title,
-        style: TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
       ),
       onTap: onTap,
     );
