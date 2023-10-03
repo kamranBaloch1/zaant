@@ -59,68 +59,74 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
     });
   }
 
- Future<void> _sendVerificationCode() async {
-  try {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<void> _sendVerificationCode() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
 
-    // Check if all subjects have timings selected
-    bool allSubjectsTimed = widget.selectedSubjects.every((subject) {
-      final timings = subjectTimings[subject] ?? {};
-      return timings.containsKey('start') && timings.containsKey('end');
-    });
+      // Check if all subjects have timings selected
+      bool allSubjectsTimed = widget.selectedSubjects.every((subject) {
+        final timings = subjectTimings[subject] ?? {};
+        return timings.containsKey('start') && timings.containsKey('end');
+      });
 
-    if (!allSubjectsTimed) {
-      // Display an error message if any subject is missing timing information
-      showCustomToast("Please select timings for all subjects.");
+      if (!allSubjectsTimed) {
+        // Display an error message if any subject is missing timing information
+        showCustomToast("Please select timings for all subjects.");
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
+      // Convert TimeOfDay objects to formatted strings
+      Map<String, Map<String, Map<String, String>>> selectedTimings = {};
+
+      // Populate selectedTimings based on user input
+      for (String subject in widget.selectedSubjects) {
+        final timings = subjectTimings[subject] ?? {};
+        selectedTimings[subject] = {
+          'Start Time': {
+            'time': "${_formatTime(timings['start'])}",
+          },
+          'End Time': {
+            'time': "${_formatTime(timings['end'])}",
+          },
+        };
+      }
+
+      final instructorProvider =
+          Provider.of<InstructorProviders>(context, listen: false);
+
+      await instructorProvider.addInstructorProvider(
+        phoneNumber: widget.phoneNumber!,
+        qualification: widget.selectedQualification!,
+        subjects: widget.selectedSubjects,
+        feesPerHour: widget.feesPerHour!,
+        selectedTimingsForSubjects: selectedTimings,
+        selectedDaysForSubjects: widget.selectedDaysForSubjects,
+      );
+
       setState(() {
         _isLoading = false;
       });
-      return;
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomToast("An error occurred: $e");
     }
-
-    // Convert TimeOfDay objects to strings
-
-Map<String, Map<String, Map<String, String>>> selectedTimings = {};
-
-// Populate selectedTimings based on user input
-for (String subject in widget.selectedSubjects) {
-  final timings = subjectTimings[subject] ?? {};
-  selectedTimings[subject] = {
-    'Start Time': {
-      'time': "${timings['start']!.hour}:${timings['start']!.minute}",
-    },
-    'End Time': {
-      'time': "${timings['end']!.hour}:${timings['end']!.minute}",
-    },
-  };
-}
-
-
-
-    final instructorProvider =
-        Provider.of<InstructorProviders>(context, listen: false);
-
-    await instructorProvider.addInstructorProvider(
-      phoneNumber: widget.phoneNumber!,
-      qualification: widget.selectedQualification!,
-      subjects: widget.selectedSubjects,
-      feesPerHour: widget.feesPerHour!,
-      selectedTimingsForSubjects: selectedTimings,
-      selectedDaysForSubjects: widget.selectedDaysForSubjects,
-    );
-
-    setState(() {
-      _isLoading = false;
-    });
-  } catch (e) {
-    setState(() {
-      _isLoading = false;
-    });
-    showCustomToast("An error occurred: $e");
   }
-}
+
+// Helper function to format TimeOfDay to "hh:mm am/pm" format
+  String _formatTime(TimeOfDay? time) {
+    if (time == null) return "";
+    final hour = time.hourOfPeriod;
+    final minute = time.minute;
+    final period = time.period == DayPeriod.am ? 'am' : 'pm';
+    return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period";
+  }
 
   @override
   Widget build(BuildContext context) {

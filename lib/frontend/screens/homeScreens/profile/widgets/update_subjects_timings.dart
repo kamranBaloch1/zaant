@@ -28,35 +28,55 @@ class _UpdateSubjectsTimingsScreenState
   bool _isUpdating = false;
   String? _subjectToUpdate; // Store the subject that needs to be updated
 
-  @override
   void initState() {
-    super.initState();
+  super.initState();
 
-    // Initialize subjectTimings with the values from selectedTimingsForSubjects
-    widget.selectedTimingsForSubjects.forEach((subject, timings) {
-      final startTime = timings['Start Time']?['time'] ?? '00:00';
-      final endTime = timings['End Time']?['time'] ?? '00:00';
+  // Initialize subjectTimings with the values from selectedTimingsForSubjects
+  widget.selectedTimingsForSubjects.forEach((subject, timings) {
+    final startTime = timings['Start Time']?['time'] ?? '00:00';
+    final endTime = timings['End Time']?['time'] ?? '00:00';
 
-      final startParts = startTime.split(':');
-      final endParts = endTime.split(':');
+    final startParts = startTime.split(' '); // Split by space to separate time and am/pm
+    final endParts = endTime.split(' ');
 
-      final startTimeOfDay = TimeOfDay(
-        hour: int.parse(startParts[0]),
-        minute: int.parse(startParts[1]),
-      );
+    final timeParts = startParts[0].split(':');
+    final startTimeHour = int.parse(timeParts[0]);
+    final startTimeMinute = int.parse(timeParts[1]);
 
-      final endTimeOfDay = TimeOfDay(
-        hour: int.parse(endParts[0]),
-        minute: int.parse(endParts[1]),
-      );
+    final timeParts2 = endParts[0].split(':');
+    final endTimeHour = int.parse(timeParts2[0]);
+    final endTimeMinute = int.parse(timeParts2[1]);
 
-      subjectTimings[subject] = {
-        'start': startTimeOfDay,
-        'end': endTimeOfDay,
-      };
-    });
-  }
+    // Convert "pm" hours to 24-hour format (e.g., 1 pm -> 13, 2 pm -> 14)
+    int adjustedStartTimeHour = startTimeHour;
+    if (startParts[1] == 'pm' && startTimeHour != 12) {
+      adjustedStartTimeHour += 12;
+    }
 
+    int adjustedEndTimeHour = endTimeHour;
+    if (endParts[1] == 'pm' && endTimeHour != 12) {
+      adjustedEndTimeHour += 12;
+    }
+
+    final startTimeOfDay = TimeOfDay(
+      hour: adjustedStartTimeHour,
+      minute: startTimeMinute,
+    );
+
+    final endTimeOfDay = TimeOfDay(
+      hour: adjustedEndTimeHour,
+      minute: endTimeMinute,
+    );
+
+    subjectTimings[subject] = {
+      'start': startTimeOfDay,
+      'end': endTimeOfDay,
+    };
+  });
+}
+
+
+ 
   void _handleSubjectTiming(
     String subject,
     String timeType,
@@ -71,40 +91,52 @@ class _UpdateSubjectsTimingsScreenState
     });
   }
 
-  Future<void> _updateSubjectTimings() async {
-    if (!_isUpdating && _subjectToUpdate != null) {
-      // Check if an update is not already in progress and a subject is to be updated
-      setState(() {
-        _isLoading = true;
-        _isUpdating = true; // Set the flag to indicate an update is in progress
-      });
+Future<void> _updateSubjectTimings() async {
+  if (!_isUpdating && _subjectToUpdate != null) {
+    // Check if an update is not already in progress and a subject is to be updated
+    setState(() {
+      _isLoading = true;
+      _isUpdating = true; // Set the flag to indicate an update is in progress
+    });
 
-      final timings = subjectTimings[_subjectToUpdate!] ?? {};
-      final startTime = timings['start'] ?? TimeOfDay(hour: 0, minute: 0);
-      final endTime = timings['end'] ?? TimeOfDay(hour: 0, minute: 0);
+    final timings = subjectTimings[_subjectToUpdate!] ?? {};
+    final startTime = timings['start'] ?? TimeOfDay(hour: 0, minute: 0);
+    final endTime = timings['end'] ?? TimeOfDay(hour: 0, minute: 0);
 
-      final newTimings = {
-        'Start Time': {
-          'time': "${startTime.hour}:${startTime.minute}",
-        },
-        'End Time': {
-          'time': "${endTime.hour}:${endTime.minute}",
-        },
-      };
+    // Format start and end times to "hh:mm am/pm" format
+    final formattedStartTime = _formatTime(startTime);
+    final formattedEndTime = _formatTime(endTime);
 
-      // Update only the selected subject
-      await ProfileMethods().updateInstrcutorSubjectTiming(
-        subject: _subjectToUpdate!,
-        newTimings: newTimings,
-      );
+    final newTimings = {
+      'Start Time': {
+        'time': formattedStartTime,
+      },
+      'End Time': {
+        'time': formattedEndTime,
+      },
+    };
 
-      setState(() {
-        _isLoading = false;
-        _isUpdating = false;
-        _subjectToUpdate = null; // Reset the subject to update
-      });
-    }
+    // Update only the selected subject
+    await ProfileMethods().updateInstrcutorSubjectTiming(
+      subject: _subjectToUpdate!,
+      newTimings: newTimings,
+    );
+
+    setState(() {
+      _isLoading = false;
+      _isUpdating = false;
+      _subjectToUpdate = null; // Reset the subject to update
+    });
   }
+}
+
+// Helper function to format TimeOfDay to "hh:mm am/pm" format
+String _formatTime(TimeOfDay time) {
+  final hour = time.hourOfPeriod;
+  final minute = time.minute;
+  final period = time.period == DayPeriod.am ? 'am' : 'pm';
+  return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period";
+}
 
   @override
   Widget build(BuildContext context) {
