@@ -2,34 +2,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import 'package:zant/frontend/screens/homeScreens/instructor/add/select_timings_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/screens/subject/new_subject_timings_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
-class SelectSubjectDaysScreen extends StatefulWidget {
+class NewSubjectDaysScreen extends StatefulWidget {
   final List<String> selectedSubjects;
-  final String? selectedQualification;
-  final String? phoneNumber;
-  final int? feesPerHour;
 
-  const SelectSubjectDaysScreen({
+  const NewSubjectDaysScreen({
     Key? key,
     required this.selectedSubjects,
-    required this.selectedQualification,
-    required this.phoneNumber,
-    required this.feesPerHour,
   }) : super(key: key);
 
   @override
-  State<SelectSubjectDaysScreen> createState() =>
-      _SelectSubjectDaysScreenState();
+  State<NewSubjectDaysScreen> createState() => _NewSubjectDaysScreenState();
 }
 
-class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
+class _NewSubjectDaysScreenState extends State<NewSubjectDaysScreen> {
   bool _isLoading = false;
 
   // Create a map to store selected days for each subject
@@ -59,12 +51,10 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
 
     if (allSubjectsHaveDaysSelected) {
       // Proceed to the next screen
-      Get.to(() => SelectTimingsScreen(
-          selectedDaysForSubjects: selectedDays,
+
+      Get.to(() => AddNewSubjectTimingsScreen(
           selectedSubjects: widget.selectedSubjects,
-          selectedQualification: widget.selectedQualification,
-          phoneNumber: widget.phoneNumber,
-          feesPerHour: widget.feesPerHour));
+          selectedDaysForSubjects: selectedDays));
     } else {
       // Show a custom toast message
       showCustomToast("Please select at least one day for each subject.");
@@ -80,9 +70,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
             backgroundColor: appBarColor,
             title: "Select Subject Days",
           ),
-          body:
-          
-           ListView.builder(
+          body: ListView.builder(
             itemCount:
                 widget.selectedSubjects.length + 1, // +1 for the "Next" button
             itemBuilder: (context, index) {
@@ -123,7 +111,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
                                     day,
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 16.0,
+                                      fontSize: 16.sp,
                                     ),
                                   ),
                                   Checkbox(
@@ -179,9 +167,6 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
               }
             },
           ),
-     
-     
-     
         ),
 
         // Show a loading overlay if loading is true

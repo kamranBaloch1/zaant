@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/update_instructor_subjects_widget.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/screens/subject/add_new_subject.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/global/colors.dart';
@@ -31,23 +33,19 @@ class _UpdateSubjectsScreenState extends State<UpdateSubjectsScreen> {
     return Scaffold(
       appBar: CustomAppBar(backgroundColor: appBarColor, title: "Update Subjects"),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 50.h,),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: UpdateInstructorSubjectsWidgets(
-                selectedSubjects: _selectedSubjects,
-                onChanged: (selectedSubjects) {
-                  setState(() {
-                    _selectedSubjects = selectedSubjects;
-                  });
-                },
-              ),
-            ),
-            SizedBox(height: 100.h,),
-            CustomButton(width: 200, height: 40, text:"update", bgColor: Colors.blue)
-          ],
+        child: Center(
+          child: Column(
+           
+           
+            children: [
+              SizedBox(height: 200.h,),
+              const CustomButton(width: 200, height: 40, text:"Remove", bgColor: Colors.blue),
+               SizedBox(height: 20.h,),
+              CustomButton(onTap: (){
+                Get.to(()=> const AddNewSubjectForInstructorScreen());
+              }, width: 200, height: 40, text:"Add", bgColor: Colors.blue)
+            ],
+          ),
         ),
       ),
     );

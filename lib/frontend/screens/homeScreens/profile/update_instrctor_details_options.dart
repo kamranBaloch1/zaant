@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:zant/frontend/screens/homeScreens/profile/widgets/update_charges_per_hour.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/widgets/update_qualification.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/widgets/update_subjects.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/widgets/update_subjects_days.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/widgets/update_subjects_timings.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/screens/update_charges_per_hour.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/screens/update_qualification.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/screens/update_subjects.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/screens/update_subjects_days.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/screens/update_subjects_timings.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 
