@@ -6,6 +6,7 @@ import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_time_picker
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
 class UpdateSubjectsTimingsScreen extends StatefulWidget {
@@ -32,8 +33,14 @@ class _UpdateSubjectsTimingsScreenState
   @override
   void initState() {
     super.initState();
-    // Initialize subjectTimings with the values from selectedTimingsForSubjects
-    _initializeSubjectTimings();
+    try {
+      // Initialize subjectTimings with the values from selectedTimingsForSubjects
+      _initializeSubjectTimings();
+    } catch (error) {
+      // Handle the error here, e.g., print it to the console
+      print("Error during initialization: $error");
+      showCustomToast("Error during initialization: $error");
+    }
   }
 
   // Helper function to initialize subjectTimings
@@ -153,7 +160,7 @@ class _UpdateSubjectsTimingsScreenState
             backgroundColor: appBarColor,
             title: "Update timings for subjects",
           ),
-          body: widget.selectedTimingsForSubjects.isEmpty
+          body:  widget.selectedTimingsForSubjects.isEmpty
               ? Center(
                   child: Text(
                     "You don't have any subjects",
@@ -164,89 +171,84 @@ class _UpdateSubjectsTimingsScreenState
                     ),
                   ),
                 )
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: subjectTimings.length,
-                          itemBuilder: (context, index) {
-                            final subject = subjectTimings.keys.toList()[index];
-                            final timings = subjectTimings[subject] ?? {};
+              :  Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: subjectTimings.length,
+                  itemBuilder: (context, index) {
+                    final subject = subjectTimings.keys.toList()[index];
+                    final timings = subjectTimings[subject] ?? {};
 
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 20.sp,
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 16.w),
-                                  child: Text(
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 20.sp,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: Text(
+                            subject,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.sp,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        ListTile(
+                          title: Row(
+                            children: [
+                              Expanded(
+                                child: CustomTimePicker(
+                                  icon: Icons.access_time,
+                                  labelText: "Start Time",
+                                  selectedTime: timings['start'],
+                                  onTimeChanged: (time) => _handleSubjectTiming(
                                     subject,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.sp,
-                                      color: Colors.black,
-                                    ),
+                                    'start',
+                                    time,
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-                                ListTile(
-                                  title: Row(
-                                    children: [
-                                      Expanded(
-                                        child: CustomTimePicker(
-                                          icon: Icons.access_time,
-                                          labelText: "Start Time",
-                                          selectedTime: timings['start'],
-                                          onTimeChanged: (time) =>
-                                              _handleSubjectTiming(
-                                            subject,
-                                            'start',
-                                            time,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: CustomTimePicker(
-                                          icon: Icons.access_time,
-                                          labelText: "End Time",
-                                          selectedTime: timings['end'],
-                                          onTimeChanged: (time) =>
-                                              _handleSubjectTiming(
-                                            subject,
-                                            'end',
-                                            time,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                              ),
+                              Expanded(
+                                child: CustomTimePicker(
+                                  icon: Icons.access_time,
+                                  labelText: "End Time",
+                                  selectedTime: timings['end'],
+                                  onTimeChanged: (time) => _handleSubjectTiming(
+                                    subject,
+                                    'end',
+                                    time,
                                   ),
                                 ),
-                                const Divider(),
-                              ],
-                            );
-                          },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 50.h, horizontal: 100.w),
-                        child: CustomButton(
-                          onTap: _isLoading ? null : _updateSubjectTimings,
-                          width: 200,
-                          height: 40,
-                          text: "Update",
-                          bgColor: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
+                        const Divider(),
+                      ],
+                    );
+                  },
                 ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.symmetric(vertical: 50.h, horizontal: 100.w),
+                child: CustomButton(
+                  onTap: _isLoading ? null : _updateSubjectTimings,
+                  width: 200,
+                  height: 40,
+                  text: "Update",
+                  bgColor: Colors.blue,
+                ),
+              ),
+            ],
+          ),
         ),
 
         // Showing a loading overlay if _isLoading is true

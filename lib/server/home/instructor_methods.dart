@@ -7,8 +7,10 @@ import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/sharedprefences/userPref.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/phone/phone_number_otp_screen.dart';
 
 class InstructorMethods {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   // Function to add an instructor
   Future<void> addInstructor({
     required String phoneNumber,
@@ -45,7 +47,7 @@ class InstructorMethods {
       final instructorModel = InstructorModel(
         uid: uid,
         phoneNumber: phoneNumber,
-        isPhoneNumberVerified: false,
+        isPhoneNumberVerified: true,
         qualification: qualification,
         feesPerHour: feesPerHour,
         reviews: [],
@@ -63,13 +65,7 @@ class InstructorMethods {
         gender: gender,
       );
 
-      // Add the instructor model to Firestore
-      await FirebaseFirestore.instance
-          .collection(userCollection)
-          .doc(uid)
-          .collection(instructorsCollections)
-          .doc(uid)
-          .set(instructorModel.toMap());
+
 
       // Create an instructor collection
       await FirebaseFirestore.instance
@@ -81,7 +77,7 @@ class InstructorMethods {
       await userDocRef.update({
         "accountType": AccountTypeEnum.instructor.value,
         "phoneNumber": phoneNumber,
-        "isPhoneNumberVerified": false,
+        "isPhoneNumberVerified": true,
       });
 
       // Update SharedPreferences
@@ -96,9 +92,88 @@ class InstructorMethods {
       Get.offAll(() => const HomeScreen());
     } catch (e) {
       // Handle errors gracefully
-      showCustomToast("An error occurred while becoming an instructor. Please try again later.");
+      showCustomToast("An error occurred while becoming an instructor. Please try again later. $e");
     }
   }
+  
+
+  // Step 1: Send OTP for phone number verification
+  Future<void> verifyPhoneNumber({
+    required String? phoneNumber,
+    required String? selectedQualification,
+    required int? feesPerHour,
+  }) async {
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          // Verification is completed automatically (rare scenario)
+          // Implement if needed
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          String errorMessage;
+          if (e.code == 'invalid-phone-number') {
+            errorMessage = 'Invalid phone number';
+          } else if (e.code == 'too-many-requests') {
+            errorMessage = 'Phone number blocked due to too many requests';
+          } else {
+            errorMessage =
+                'Phone Number Verification Failed, please check the number';
+          }
+          showCustomToast(errorMessage);
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          // Navigate to OTP screen when code is sent
+          Get.offAll(() => PhoneNumberOTPScreen(
+                verificationId: verificationId,
+                phoneNumber: phoneNumber,
+                feesPerHour: feesPerHour,
+                selectedQualification: selectedQualification,
+              ));
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          // Timeout for code retrieval
+          showCustomToast('Code retrieval timed out');
+          // Implement additional actions if needed
+        },
+        timeout: const Duration(minutes: 2), // Timeout for the code to be sent
+      );
+    } catch (e) {
+      showCustomToast("Error sending OTP");
+    }
+  }
+
+  // Step 2: Verify the OTP code
+  Future<bool> verifyOTP({
+    required String? phoneNumberVerificationId,
+    required String? otp,
+    required String? phoneNumber,
+  }) async {
+    try {
+      User? currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        showCustomToast("User not signed in.");
+        return false;
+      }
+
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId:
+            phoneNumberVerificationId!, // Ensure you have the correct verificationId here
+        smsCode: otp!,
+      );
+
+      // Verify the OTP code with Firebase using the current user
+      await currentUser.updatePhoneNumber(credential);
+
+      // You can add any additional logic here after successful verification
+
+      return true;
+    } catch (e) {
+      showCustomToast("Error verifying OTP: Invalid OTP or Try again");
+      return false; // Return false if an error occurs during verification
+    }
+  }
+
 
   // Getting the instructor collection to fetch the info in the search screen
   Stream<QuerySnapshot> getInstructorsStream({required String query}) {
@@ -410,4 +485,9 @@ class InstructorMethods {
       }
     }
   }
+
+  
+
+
+
 }

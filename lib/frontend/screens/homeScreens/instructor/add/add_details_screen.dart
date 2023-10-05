@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/add/select_subjects_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/phone/phone_number_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_dropdown.dart';
@@ -19,7 +19,6 @@ class AddDetailsScreen extends StatefulWidget {
 }
 
 class _AddDetailsScreenState extends State<AddDetailsScreen> {
-  final TextEditingController _phoneNumber = TextEditingController();
   final TextEditingController _feesPerHour = TextEditingController();
 
   String? selectedQualification;
@@ -37,7 +36,6 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
   @override
   void dispose() {
     super.dispose();
-    _phoneNumber.dispose();
     _feesPerHour.dispose();
   }
 
@@ -47,11 +45,10 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
     });
 
     // Get input values
-    String phoneNumber = _phoneNumber.text.trim();
+
     String feesPerHour = _feesPerHour.text.trim();
 
-    if (phoneNumber.isNotEmpty &&
-        feesPerHour.isNotEmpty &&
+    if (feesPerHour.isNotEmpty &&
         selectedQualification != null &&
         selectedQualification!.isNotEmpty) {
       // Input validation successful
@@ -60,10 +57,10 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
       });
 
       // Navigate to the next screen with collected data
-      Get.to(() => SelectSubjectsScreen(
-            selectedQualification: selectedQualification,
-            phoneNumber: phoneNumber,
+
+      Get.to(() => PhoneNumberScreen(
             feesPerHour: int.parse(feesPerHour),
+            selectedQualification: selectedQualification,
           ));
     } else {
       // Input validation failed
@@ -88,12 +85,6 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
               children: [
                 SizedBox(
                   height: 50.h,
-                ),
-                homeCustomTextField(
-                  controller: _phoneNumber,
-                  labelText: "Phone Number",
-                  icon: Icons.phone,
-                  keyBoardType: TextInputType.number,
                 ),
                 SizedBox(
                   height: 20.h,

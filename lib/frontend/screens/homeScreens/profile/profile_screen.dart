@@ -23,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? profileUrl;
   String? accountType;
   String? phoneNumber;
+  bool? isPhoneNumberVerified;
   bool _isLoading = true;
   String? error;
   DateTime? dob;
@@ -54,6 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     email = UserPreferences.getEmail();
     profileUrl = UserPreferences.getProfileUrl();
     phoneNumber = UserPreferences.getPhoneNumber();
+    isPhoneNumberVerified =  UserPreferences.getIsPhoneNumberVerified();
     dob = UserPreferences.getDob();
     accountType = UserPreferences.getAccountType();
     formattedDate = DateFormat('yyyy-MM-dd').format(dob!);
@@ -95,12 +97,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 _buildUserInfoRow("Email", email!),
                 _buildUserInfoRow("Date of Birth", formattedDate!),
-                accountType == "instructor"
-                    ? _buildUserInfoRow(
+               _buildUserInfoRow(
                         "Phone Number",
                         phoneNumber != "" ? phoneNumber! : "Empty",
-                      )
-                    : Container(),
+                      ),
+                  
                 SizedBox(height: 50.h),
                 Container(
                   width: 120.w,
@@ -113,6 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () {
                       Get.to(() => ProfileEditOptionsScreen(
                             accountType: accountType,
+                            isPhoneNumberVerified: isPhoneNumberVerified,
                           ));
                     },
                     child: Text(
