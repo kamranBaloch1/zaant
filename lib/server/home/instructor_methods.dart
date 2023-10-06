@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 import 'package:zant/frontend/models/home/instructor_model.dart';
 import 'package:zant/enum/account_type.dart';
+import 'package:zant/frontend/models/home/review_model.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
@@ -17,7 +19,8 @@ class InstructorMethods {
     required String qualification,
     required List<String> subjects,
     required int feesPerHour,
-    required Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects,
+    required Map<String, Map<String, Map<String, String>>>
+        selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
   }) async {
     try {
@@ -35,7 +38,8 @@ class InstructorMethods {
       final address = UserPreferences.getAddress() ?? "";
 
       // Reference to the user document
-      final userDocRef = FirebaseFirestore.instance.collection(userCollection).doc(uid);
+      final userDocRef =
+          FirebaseFirestore.instance.collection(userCollection).doc(uid);
 
       // Check if the user document with the UID exists
       final userDoc = await userDocRef.get();
@@ -50,8 +54,7 @@ class InstructorMethods {
         isPhoneNumberVerified: true,
         qualification: qualification,
         feesPerHour: feesPerHour,
-        reviews: [],
-        ratings: 0,
+        ratings: 1,
         subjects: subjects,
         selectedTimingsForSubjects: selectedTimingsForSubjects,
         accountType: AccountTypeEnum.instructor,
@@ -64,8 +67,6 @@ class InstructorMethods {
         profilePicUrl: profilePicUrl,
         gender: gender,
       );
-
-
 
       // Create an instructor collection
       await FirebaseFirestore.instance
@@ -81,7 +82,8 @@ class InstructorMethods {
       });
 
       // Update SharedPreferences
-      await UserPreferences.setAccountType(AccountTypeEnum.instructor.toString().split('.').last);
+      await UserPreferences.setAccountType(
+          AccountTypeEnum.instructor.toString().split('.').last);
       await UserPreferences.setPhoneNumber(phoneNumber);
       await UserPreferences.setIsPhoneNumberVerified(true);
 
@@ -92,10 +94,10 @@ class InstructorMethods {
       Get.offAll(() => const HomeScreen());
     } catch (e) {
       // Handle errors gracefully
-      showCustomToast("An error occurred while becoming an instructor. Please try again later. $e");
+      showCustomToast(
+          "An error occurred while becoming an instructor. Please try again later. $e");
     }
   }
-  
 
   // Step 1: Send OTP for phone number verification
   Future<void> verifyPhoneNumber({
@@ -173,7 +175,6 @@ class InstructorMethods {
       return false; // Return false if an error occurs during verification
     }
   }
-
 
   // Getting the instructor collection to fetch the info in the search screen
   Stream<QuerySnapshot> getInstructorsStream({required String query}) {
@@ -279,7 +280,7 @@ class InstructorMethods {
       // Create a new map for "selectedTimingsForSubjects"
       final Map<String, Map<String, dynamic>> selectedTimingsData = {
         ...?existingData?[
-          "selectedTimingsForSubjects"], // Use the existing data if available
+            "selectedTimingsForSubjects"], // Use the existing data if available
         subject: newTimings, // Update the timings for the specified subject
       };
 
@@ -340,7 +341,8 @@ class InstructorMethods {
   // Function to add new subjects
   Future<void> addNewSubjects({
     required List<String> newSubjects,
-    required Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects,
+    required Map<String, Map<String, Map<String, String>>>
+        selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
   }) async {
     try {
@@ -353,18 +355,20 @@ class InstructorMethods {
       final uid = user.uid;
 
       // Reference to the instructor document
-      final instructorDocRef =
-          FirebaseFirestore.instance.collection(instructorsCollections).doc(uid);
+      final instructorDocRef = FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(uid);
 
       // Fetch the existing subjects, timings, and days from the instructor document
       final instructorDoc = await instructorDocRef.get();
-      final existingSubjects = (instructorDoc.data()?['subjects'] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList();
+      final existingSubjects =
+          (instructorDoc.data()?['subjects'] as List<dynamic>)
+              .map((e) => e.toString())
+              .toList();
 
       // Fetch the existing selectedTimingsForSubjects and selectedDaysForSubjects
-      final existingTimings = instructorDoc.data()?['selectedTimingsForSubjects']
-          as Map<String, dynamic>;
+      final existingTimings = instructorDoc
+          .data()?['selectedTimingsForSubjects'] as Map<String, dynamic>;
       final existingDays = instructorDoc.data()?['selectedDaysForSubjects']
           as Map<String, dynamic>;
 
@@ -410,7 +414,8 @@ class InstructorMethods {
     } catch (e) {
       // Handle errors gracefully
       if (e.toString().contains("Subject")) {
-        showCustomToast("One or more subjects already exist. Please choose different subjects.");
+        showCustomToast(
+            "One or more subjects already exist. Please choose different subjects.");
       } else {
         showCustomToast(
             "An error occurred while adding a new subject. Please try again later.");
@@ -432,14 +437,16 @@ class InstructorMethods {
       final uid = user.uid;
 
       // Reference to the instructor document
-      final instructorDocRef =
-          FirebaseFirestore.instance.collection(instructorsCollections).doc(uid);
+      final instructorDocRef = FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(uid);
 
       // Fetch the existing instructor document data
       final instructorDoc = await instructorDocRef.get();
-      final existingSubjects = (instructorDoc.data()?['subjects'] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList();
+      final existingSubjects =
+          (instructorDoc.data()?['subjects'] as List<dynamic>)
+              .map((e) => e.toString())
+              .toList();
 
       // Check if any subject in subjectsToRemove is not present in the existingSubjects
       final subjectsNotInCollection = subjectsToRemove
@@ -447,7 +454,8 @@ class InstructorMethods {
           .toList();
 
       if (subjectsNotInCollection.isNotEmpty) {
-        throw Exception("Subjects not found: ${subjectsNotInCollection.join(', ')}");
+        throw Exception(
+            "Subjects not found: ${subjectsNotInCollection.join(', ')}");
       }
 
       // Remove the subjects from existingSubjects
@@ -456,10 +464,10 @@ class InstructorMethods {
           .toList();
 
       // Remove the subjects from selectedTimingsForSubjects and selectedDaysForSubjects
-      final Map<String, dynamic> existingTimings =
-          instructorDoc.data()?['selectedTimingsForSubjects'] as Map<String, dynamic>;
-      final Map<String, dynamic> existingDays =
-          instructorDoc.data()?['selectedDaysForSubjects'] as Map<String, dynamic>;
+      final Map<String, dynamic> existingTimings = instructorDoc
+          .data()?['selectedTimingsForSubjects'] as Map<String, dynamic>;
+      final Map<String, dynamic> existingDays = instructorDoc
+          .data()?['selectedDaysForSubjects'] as Map<String, dynamic>;
 
       for (final subjectToRemove in subjectsToRemove) {
         existingTimings.remove(subjectToRemove);
@@ -481,13 +489,62 @@ class InstructorMethods {
       if (e.toString().contains("Subjects not found")) {
         showCustomToast("$e. Please choose existing subjects.");
       } else {
-        showCustomToast("An error occurred while removing subjects. Please try again later.");
+        showCustomToast(
+            "An error occurred while removing subjects. Please try again later.");
       }
     }
   }
 
-  
+  Future<void> addInstructorRating(
+      {required String instructorUid,
+      required double ratings,
+      required String content}) async {
+    try {
+      String userId = FirebaseAuth.instance.currentUser!.uid;
+      String reviewId = const Uuid().v4();
 
+      ReviewModel reviewModel = ReviewModel(
+          userId: userId,
+          reviewId: reviewId,
+          content: content,
+          ratings: ratings,
+          date: Timestamp.fromDate(DateTime.now()));
+
+      final instructorDoc = FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(instructorUid);
+
+      final ratingsQuery = await instructorDoc.get();
+
+      if (ratingsQuery.exists) {
+        final totalRatings = ratingsQuery['ratings'] as double;
+
+        // You should have some logic here to get the new rating value.
+        // For example, newRating can be a parameter to this method.
+        final newRating = ratings;
+
+        final updatedTotalRatings = totalRatings + newRating;
+
+        // Calculate the new average rating and update the 'ratings' field.
+     final averageRating = updatedTotalRatings / (totalRatings + 1);
+final clampedAverageRating = averageRating.clamp(1.0, 5.0); // Ensure the rating is between 1 and 5
+
+
+
+        await instructorDoc.update({'ratings': clampedAverageRating});
+
+        await FirebaseFirestore.instance
+            .collection(instructorsCollections)
+            .doc(instructorUid)
+            .collection(reviewsCollection)
+            .doc(reviewId)
+            .set(reviewModel.toMap());
+            showCustomToast("review added");
+      }
+    } catch (e) {
+      showCustomToast(e.toString());
+    }
+  }
 
 
 }

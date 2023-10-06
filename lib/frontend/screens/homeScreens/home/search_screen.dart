@@ -122,7 +122,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final String instructorLocation = instructorData['address'];
     final String instructorProfilePicUrl = instructorData['profilePicUrl'];
     final String city = instructorData['city'];
-    final int instructorRating =
+    final double instructorRating =
         instructorData['ratings'] ?? 0.0; // Get the instructor's rating
 
     return GestureDetector(

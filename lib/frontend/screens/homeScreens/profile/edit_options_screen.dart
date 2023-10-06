@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import 'package:zant/frontend/screens/homeScreens/instructor/update/show_intstructor_details.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/add_phone_number.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/edit_profile_screen.dart';
@@ -11,11 +12,13 @@ import 'package:zant/global/colors.dart';
 class ProfileEditOptionsScreen extends StatefulWidget {
   final String? accountType;
   final bool? isPhoneNumberVerified;
+  final String? phoneNumber;
 
   const ProfileEditOptionsScreen({
     Key? key,
     required this.accountType,
     required this.isPhoneNumberVerified,
+   required this.phoneNumber,
   }) : super(key: key);
 
   @override
@@ -55,7 +58,7 @@ class _ProfileEditOptionsScreenState extends State<ProfileEditOptionsScreen> {
                       ? 'Change Phone Number'
                       : 'Add Phone Number', () {
                 // Implement navigation to the Phone Number Screen here.
-                Get.to(() => const AddPhoneNumberScreen());
+                Get.to(() =>  AddPhoneNumberScreen(phoneNumber:widget.phoneNumber ,));
               }),
             ],
           ),

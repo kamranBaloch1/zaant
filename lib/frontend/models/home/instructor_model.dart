@@ -11,8 +11,7 @@ class InstructorModel {
   bool isPhoneNumberVerified;
   String qualification;
   int feesPerHour;
-  List<String> reviews;
-  int ratings;
+  double ratings;
   List<String> subjects;
   Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects;
   AccountTypeEnum? accountType; // Make the accountType field nullable
@@ -25,26 +24,25 @@ class InstructorModel {
   String city;
   String gender;
 
-  InstructorModel(
-      {required this.uid,
-      required this.phoneNumber,
-      required this.isPhoneNumberVerified,
-      required this.qualification,
-      required this.feesPerHour,
-      required this.reviews,
-      required this.ratings,
-      required this.subjects,
-      required this.selectedTimingsForSubjects,
-      this.accountType,
-      required this.createdOn,
-      required this.selectedDaysForSubjects,
-      required this.enrollments,
-      required this.address,
-      required this.city,
-      required this.name,
-      required this.profilePicUrl,
-      required this.gender,
-      });
+  InstructorModel({
+    required this.uid,
+    required this.phoneNumber,
+    required this.isPhoneNumberVerified,
+    required this.qualification,
+    required this.feesPerHour,
+    required this.ratings,
+    required this.subjects,
+    required this.selectedTimingsForSubjects,
+    this.accountType,
+    required this.createdOn,
+    required this.selectedDaysForSubjects,
+    required this.enrollments,
+    required this.address,
+    required this.city,
+    required this.name,
+    required this.profilePicUrl,
+    required this.gender,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -54,7 +52,7 @@ class InstructorModel {
       'qualification': qualification,
 
       'feesPerHour': feesPerHour,
-      'reviews': reviews,
+
       'ratings': ratings,
       'subjects': subjects,
       'selectedTimingsForSubjects': selectedTimingsForSubjects,
@@ -80,33 +78,36 @@ class InstructorModel {
       isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,
       qualification: map['qualification'] as String,
       feesPerHour: map['feesPerHour'] as int,
-      reviews: List<String>.from(map['reviews'] as List<dynamic>),
-      ratings: map['ratings'] as int,
+
+      ratings: map['ratings'] as double,
       subjects: List<String>.from(map['subjects'] as List<dynamic>),
-      
-        
-    selectedTimingsForSubjects: (map['selectedTimingsForSubjects']
-            as Map<String, dynamic>?)
-        ?.map(
-      (subject, subjectData) {
-        return MapEntry(
-          subject,
-          (subjectData is Map<String, dynamic>) // Check the type before casting
-              ? subjectData.map(
-                  (day, dayData) {
-                    return MapEntry(
-                      day,
-                      (dayData is Map<String, dynamic>) // Check the type before casting
-                          ? Map<String, String>.from(dayData)
-                          : <String, String>{}, // Handle the case where it's not a map
-                    );
-                  },
-                )
-              : <String, Map<String, String>>{}, // Handle the case where it's not a map
-        );
-      },
-    ) ??
-    {},  
+
+      selectedTimingsForSubjects:
+          (map['selectedTimingsForSubjects'] as Map<String, dynamic>?)?.map(
+                (subject, subjectData) {
+                  return MapEntry(
+                    subject,
+                    (subjectData is Map<String,
+                            dynamic>) // Check the type before casting
+                        ? subjectData.map(
+                            (day, dayData) {
+                              return MapEntry(
+                                day,
+                                (dayData is Map<String,
+                                        dynamic>) // Check the type before casting
+                                    ? Map<String, String>.from(dayData)
+                                    : <String,
+                                        String>{}, // Handle the case where it's not a map
+                              );
+                            },
+                          )
+                        : <String,
+                            Map<String,
+                                String>>{}, // Handle the case where it's not a map
+                  );
+                },
+              ) ??
+              {},
       accountType: map['accountType'] != null
           ? AccountTypeEnum.values.firstWhere(
               (e) => e.toString() == map['accountType'],
@@ -119,7 +120,6 @@ class InstructorModel {
           (map['selectedDaysForSubjects'] as Map<String, dynamic>).map(
         (key, value) => MapEntry(key, (value as List<dynamic>).cast<String>()),
       ),
-
 
       enrollments: (map['enrollments'] as List<dynamic>).map((enrollmentData) {
         final Map<String, dynamic> enrollmentMap =

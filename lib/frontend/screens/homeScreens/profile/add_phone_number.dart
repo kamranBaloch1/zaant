@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:zant/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
@@ -9,8 +10,10 @@ import 'package:zant/global/colors.dart';
 import 'package:zant/server/home/profile_methods.dart';
 
 class AddPhoneNumberScreen extends StatefulWidget {
+  final String? phoneNumber;
   const AddPhoneNumberScreen({
     Key? key,
+   required this.phoneNumber,
   }) : super(key: key);
 
   @override
@@ -18,9 +21,19 @@ class AddPhoneNumberScreen extends StatefulWidget {
 }
 
 class _AddPhoneNumberScreenState extends State<AddPhoneNumberScreen> {
-  final TextEditingController _phoneController = TextEditingController();
+  late final TextEditingController _phoneController ;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+     _phoneController =  TextEditingController(text:widget.phoneNumber );
+
+
+    super.initState();
+  }
 
   @override
   void dispose() {

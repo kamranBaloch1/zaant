@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,9 @@ import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/sho
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
+import 'package:zant/server/home/instructor_methods.dart';
 
 class InstructorDetailScreen extends StatefulWidget {
   final InstructorModel instructorModel;
@@ -28,7 +31,38 @@ class InstructorDetailScreen extends StatefulWidget {
 
 class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
   bool isEnrolled = false;
-  bool isLoading = false;
+  bool _isLoading = false;
+  double rating = 0;
+
+  final TextEditingController _reviewContent = TextEditingController();
+
+  void _addReview() {
+    String reviewContent = _reviewContent.text.trim();
+
+    if (rating > 0) {
+      if (reviewContent.isNotEmpty) {
+        setState(() {
+          _isLoading = true;
+        });
+          Navigator.pop(context);
+        InstructorMethods()
+            .addInstructorRating(
+                instructorUid: widget.instructorModel.uid,
+                ratings: rating,
+                content: reviewContent)
+            .then((value) {
+              _reviewContent.clear();
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      } else {
+        showCustomToast("please write a review");
+      }
+    } else {
+      showCustomToast("please give a rating");
+    }
+  }
 
   @override
   void initState() {
@@ -38,36 +72,36 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
   }
 
   Future<void> checkEnrollmentStatus() async {
-     final enrollmnetsProvider =
+    final enrollmnetsProvider =
         Provider.of<EnrollmentsProvider>(context, listen: false);
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
     bool userEnrolled = await enrollmnetsProvider.checkEnrollmentStatusProvider(
         instructorId: widget.instructorModel.uid);
     setState(() {
       isEnrolled = userEnrolled;
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
   Future<void> enrollUser() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
-   final enrollmnetsProvider =
+    final enrollmnetsProvider =
         Provider.of<EnrollmentsProvider>(context, listen: false);
     await enrollmnetsProvider.enrollUserToInstructorProvider(
         instructorId: widget.instructorModel.uid);
     setState(() {
       isEnrolled = true;
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
   Future<void> unenrollTheUser() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
     final enrollmnetsProvider =
         Provider.of<EnrollmentsProvider>(context, listen: false);
@@ -75,8 +109,61 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
         instructorId: widget.instructorModel.uid);
 
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
+  }
+
+  void _showRatingDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Rate Instructor',
+            style: TextStyle(color: Colors.black),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RatingBar.builder(
+                initialRating: rating,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemSize: 40.0,
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (newRating) {
+                  rating = newRating;
+                },
+              ),
+              TextField(
+                style: const TextStyle(color:Colors.black),
+                controller: _reviewContent,
+                decoration: const InputDecoration(
+                  labelText: 'Write your review',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: _addReview,
+              child: const Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -166,7 +253,6 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   title: "Gender",
                   content: widget.instructorModel.gender,
                 ),
-               
                 SizedBox(height: 20.h),
                 BuildInfoCardWidget(
                   icon: Icons.subject,
@@ -180,7 +266,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   daysForSubjects:
                       widget.instructorModel.selectedDaysForSubjects,
                 ),
-                 SizedBox(height: 20.h),
+                SizedBox(height: 20.h),
                 ShowTimingWidget(
                   selectedTimings:
                       widget.instructorModel.selectedTimingsForSubjects,
@@ -190,14 +276,22 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   rating: widget.instructorModel.ratings.toDouble(),
                 ),
                 SizedBox(height: 16.h),
-                BuildInfoCardWidget(
-                  icon: Icons.chat_bubble,
-                  title: "Reviews",
-                  content: widget.instructorModel.reviews.isEmpty
-                      ? "No reviews yet."
-                      : widget.instructorModel.reviews.join("\n"),
-                ),
+                // BuildInfoCardWidget(
+                //   icon: Icons.chat_bubble,
+                //   title: "Reviews",
+                //   content: widget.instructorModel.reviews.isEmpty
+                //       ? "No reviews yet."
+                //       : widget.instructorModel.reviews.join("\n"),
+                // ),
                 SizedBox(height: 30.h),
+                isEnrolled
+                    ? ElevatedButton(
+                        onPressed: () {
+                          _showRatingDialog();
+                        },
+                        child: const Text('Rate Instructor'),
+                      )
+                    : Container(),
                 isEnrolled
                     ? Align(
                         alignment: Alignment.bottomLeft,
@@ -233,7 +327,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
             ),
           ),
         ),
-        if (isLoading) const CustomLoadingOverlay(),
+        if (_isLoading) const CustomLoadingOverlay(),
       ],
     );
   }

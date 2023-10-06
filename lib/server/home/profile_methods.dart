@@ -123,7 +123,7 @@ class ProfileMethods {
             errorMessage = 'Phone number blocked due to too many requests';
           } else {
             errorMessage =
-                'Phone Number Verification Failed, please check the number';
+                'Phone Number Verification Failed, please check the number ${e.message}';
           }
           showCustomToast(errorMessage);
         },

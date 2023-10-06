@@ -115,6 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Get.to(() => ProfileEditOptionsScreen(
                             accountType: accountType,
                             isPhoneNumberVerified: isPhoneNumberVerified,
+                            phoneNumber: phoneNumber,
                           ));
                     },
                     child: Text(
