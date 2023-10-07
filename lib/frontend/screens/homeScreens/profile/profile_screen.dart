@@ -28,6 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? error;
   DateTime? dob;
   String? formattedDate;
+  String? uid;
 
   @override
   void initState() {
@@ -59,6 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     dob = UserPreferences.getDob();
     accountType = UserPreferences.getAccountType();
     formattedDate = DateFormat('yyyy-MM-dd').format(dob!);
+    uid  = UserPreferences.getUid();
   }
 
   @override
@@ -116,6 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             accountType: accountType,
                             isPhoneNumberVerified: isPhoneNumberVerified,
                             phoneNumber: phoneNumber,
+                            uid: uid,
                           ));
                     },
                     child: Text(

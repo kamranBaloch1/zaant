@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
 import 'package:zant/frontend/models/home/instructor_model.dart';
 import 'package:zant/enum/account_type.dart';
 import 'package:zant/frontend/models/home/review_model.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
-import 'package:zant/sharedprefences/userPref.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/phone/phone_number_otp_screen.dart';
+import 'package:zant/sharedprefences/userPref.dart';
 
 class InstructorMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  // Function to add an instructor
-  Future<void> addInstructor({
+
+  Future<void> addNewInstructor({
     required String phoneNumber,
     required String qualification,
     required List<String> subjects,
@@ -24,7 +24,6 @@ class InstructorMethods {
     required Map<String, List<String>> selectedDaysForSubjects,
   }) async {
     try {
-      // Get the current user's information
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         throw Exception("User not authenticated.");
@@ -37,17 +36,14 @@ class InstructorMethods {
       final gender = UserPreferences.getGender() ?? "";
       final address = UserPreferences.getAddress() ?? "";
 
-      // Reference to the user document
       final userDocRef =
           FirebaseFirestore.instance.collection(userCollection).doc(uid);
 
-      // Check if the user document with the UID exists
       final userDoc = await userDocRef.get();
       if (!userDoc.exists) {
         throw Exception("User document not found.");
       }
 
-      // Create an InstructorModel instance
       final instructorModel = InstructorModel(
         uid: uid,
         phoneNumber: phoneNumber,
@@ -68,50 +64,52 @@ class InstructorMethods {
         gender: gender,
       );
 
-      // Create an instructor collection
       await FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(uid)
           .set(instructorModel.toMap());
 
-      // Update user document with instructor information
       await userDocRef.update({
         "accountType": AccountTypeEnum.instructor.value,
         "phoneNumber": phoneNumber,
         "isPhoneNumberVerified": true,
       });
 
-      // Update SharedPreferences
       await UserPreferences.setAccountType(
           AccountTypeEnum.instructor.toString().split('.').last);
       await UserPreferences.setPhoneNumber(phoneNumber);
       await UserPreferences.setIsPhoneNumberVerified(true);
 
-      // Display a success message
       showCustomToast("You have successfully become an instructor");
 
-      // Navigate to the HomeScreen
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      // Handle errors gracefully
       showCustomToast(
           "An error occurred while becoming an instructor. Please try again later. $e");
     }
   }
 
-  // Step 1: Send OTP for phone number verification
   Future<void> verifyPhoneNumber({
     required String? phoneNumber,
     required String? selectedQualification,
     required int? feesPerHour,
   }) async {
     try {
+      // Check if the phone number is already associated with a user
+      QuerySnapshot<Map<String, dynamic>> usersWithPhoneNumber =
+          await FirebaseFirestore.instance
+              .collection(userCollection)
+              .where("phoneNumber", isEqualTo: phoneNumber)
+              .get();
+
+      if (usersWithPhoneNumber.docs.isNotEmpty) {
+        // The phone number is already associated with a user
+        showCustomToast('This phone number is already in use by another user.');
+        return;
+      }
       await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          // Verification is completed automatically (rare scenario)
-          // Implement if needed
-        },
+        phoneNumber: phoneNumber!,
+        verificationCompleted: (PhoneAuthCredential credential) async {},
         verificationFailed: (FirebaseAuthException e) {
           String errorMessage;
           if (e.code == 'invalid-phone-number') {
@@ -125,7 +123,6 @@ class InstructorMethods {
           showCustomToast(errorMessage);
         },
         codeSent: (String verificationId, int? resendToken) {
-          // Navigate to OTP screen when code is sent
           Get.offAll(() => PhoneNumberOTPScreen(
                 verificationId: verificationId,
                 phoneNumber: phoneNumber,
@@ -134,18 +131,15 @@ class InstructorMethods {
               ));
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          // Timeout for code retrieval
           showCustomToast('Code retrieval timed out');
-          // Implement additional actions if needed
         },
-        timeout: const Duration(minutes: 2), // Timeout for the code to be sent
+        timeout: const Duration(minutes: 2),
       );
     } catch (e) {
       showCustomToast("Error sending OTP");
     }
   }
 
-  // Step 2: Verify the OTP code
   Future<bool> verifyOTP({
     required String? phoneNumberVerificationId,
     required String? otp,
@@ -159,27 +153,36 @@ class InstructorMethods {
       }
 
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId:
-            phoneNumberVerificationId!, // Ensure you have the correct verificationId here
+        verificationId: phoneNumberVerificationId!,
         smsCode: otp!,
       );
 
-      // Verify the OTP code with Firebase using the current user
       await currentUser.updatePhoneNumber(credential);
-
-      // You can add any additional logic here after successful verification
 
       return true;
     } catch (e) {
-      showCustomToast("Error verifying OTP: Invalid OTP or Try again");
+      // Check for specific error conditions and display appropriate error messages
+      if (e is FirebaseAuthException) {
+        if (e.code == 'invalid-verification-code') {
+          showCustomToast("Invalid OTP code. Please try again.");
+        } else if (e.code == 'expired-action-code') {
+          showCustomToast(
+              "The OTP code has expired. Please request a new one.");
+        } else if (e.code == 'provider-already-linked') {
+          showCustomToast(
+              "This phone number is already linked to another account.");
+        } else {
+          showCustomToast("Error verifying OTP: ${e.message}");
+        }
+      } else {
+        showCustomToast("An unexpected error occurred: $e");
+      }
       return false; // Return false if an error occurs during verification
     }
   }
 
-  // Getting the instructor collection to fetch the info in the search screen
   Stream<QuerySnapshot> getInstructorsStream({required String query}) {
     try {
-      // Create a Firestore query based on the location query
       final queryText = query.toLowerCase();
       final queryRef = FirebaseFirestore.instance
           .collection(instructorsCollections)
@@ -188,42 +191,35 @@ class InstructorMethods {
 
       return queryRef.snapshots();
     } catch (e) {
-      // Handle the error and return an empty stream or handle the error as needed
       print('Error in getInstructorsStream: $e');
       showCustomToast(e.toString());
       return const Stream.empty();
     }
   }
 
-  // Update method for instructor subjects days
-  Future<void> updateInstrcutorSubjectsDays({
+  Future<void> updateInstructorSubjectsDays({
     required Map<String, List<String>> selectedDaysForSubjects,
   }) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
-      // Retrieve the current data from Firestore
       final DocumentSnapshot instructorDoc = await FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(uid)
           .get();
 
-      // Retrieve the current data from Firestore and cast it to Map<String, dynamic>?
       final Map<String, dynamic>? existingData =
           instructorDoc.data() as Map<String, dynamic>?;
 
-      // Create a new map for "selectedDaysForSubjects"
       Map<String, List<String>> selectedDaysData = {};
 
       if (existingData != null &&
           existingData["selectedDaysForSubjects"] != null) {
-        // Convert dynamic to List<String> if the data exists
         final Map<String, dynamic> existingSelectedDaysData =
             existingData["selectedDaysForSubjects"] as Map<String, dynamic>;
 
         existingSelectedDaysData.forEach((subject, days) {
           if (days is List<dynamic>) {
-            // Cast days to List<String> if needed
             selectedDaysData[subject] = List<String>.from(days);
           } else if (days is List<String>) {
             selectedDaysData[subject] = days;
@@ -231,22 +227,18 @@ class InstructorMethods {
         });
       }
 
-      // Merge the existing data with the new data
       selectedDaysForSubjects.forEach((subject, days) {
         if (selectedDaysData.containsKey(subject)) {
-          // Check if the value is not already in the list before adding
           days.forEach((day) {
             if (!selectedDaysData[subject]!.contains(day)) {
               selectedDaysData[subject]!.add(day);
             }
           });
         } else {
-          // Create a new entry if the subject is new
           selectedDaysData[subject] = days;
         }
       });
 
-      // Update the Firestore document with the merged data
       await FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(uid)
@@ -259,39 +251,31 @@ class InstructorMethods {
     }
   }
 
-  // Update method for instructor subjects timings
-  Future<void> updateInstrcutorSubjectTiming({
+  Future<void> updateInstructorSubjectTiming({
     required String subject,
     required Map<String, dynamic> newTimings,
   }) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
-      // Retrieve the current data from Firestore
       final DocumentSnapshot instructorDoc = await FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(uid)
           .get();
 
-      // Retrieve the current data from Firestore and cast it to Map<String, dynamic>?
       final Map<String, dynamic>? existingData =
           instructorDoc.data() as Map<String, dynamic>?;
 
-      // Create a new map for "selectedTimingsForSubjects"
       final Map<String, Map<String, dynamic>> selectedTimingsData = {
-        ...?existingData?[
-            "selectedTimingsForSubjects"], // Use the existing data if available
-        subject: newTimings, // Update the timings for the specified subject
+        ...?existingData?["selectedTimingsForSubjects"],
+        subject: newTimings,
       };
 
-      // Merge the existing data with the new data
       final Map<String, dynamic> mergedData = {
-        ...(existingData ??
-            {}), // Use the empty map as a fallback if existingData is null
+        ...(existingData ?? {}),
         "selectedTimingsForSubjects": selectedTimingsData
       };
 
-      // Update the Firestore document with the merged data
       await FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(uid)
@@ -305,8 +289,7 @@ class InstructorMethods {
     }
   }
 
-  // Update method for instructor fees charges
-  Future<void> updateInstrcutorFeesCharges({required int feesPerHour}) async {
+  Future<void> updateInstructorFeesCharges({required int feesPerHour}) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
@@ -321,8 +304,7 @@ class InstructorMethods {
     }
   }
 
-  // Update method for instructor Qualification
-  Future<void> updateInstrcutorQualification(
+  Future<void> updateInstructorQualification(
       {required String qualification}) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
@@ -338,7 +320,6 @@ class InstructorMethods {
     }
   }
 
-  // Function to add new subjects
   Future<void> addNewSubjects({
     required List<String> newSubjects,
     required Map<String, Map<String, Map<String, String>>>
@@ -346,7 +327,6 @@ class InstructorMethods {
     required Map<String, List<String>> selectedDaysForSubjects,
   }) async {
     try {
-      // Get the current user's information
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         throw Exception("User not authenticated.");
@@ -354,35 +334,29 @@ class InstructorMethods {
 
       final uid = user.uid;
 
-      // Reference to the instructor document
       final instructorDocRef = FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(uid);
 
-      // Fetch the existing subjects, timings, and days from the instructor document
       final instructorDoc = await instructorDocRef.get();
       final existingSubjects =
           (instructorDoc.data()?['subjects'] as List<dynamic>)
               .map((e) => e.toString())
               .toList();
 
-      // Fetch the existing selectedTimingsForSubjects and selectedDaysForSubjects
       final existingTimings = instructorDoc
           .data()?['selectedTimingsForSubjects'] as Map<String, dynamic>;
       final existingDays = instructorDoc.data()?['selectedDaysForSubjects']
           as Map<String, dynamic>;
 
-      // Check if any of the new subjects already exist in the existing subjects list
       for (final newSubject in newSubjects) {
         if (existingSubjects.contains(newSubject)) {
           throw Exception("Subject '$newSubject' already exists.");
         }
       }
 
-      // Combine the new subjects with the existing subjects
       final allSubjects = [...existingSubjects, ...newSubjects];
 
-      // Merge the new selectedTimingsForSubjects and selectedDaysForSubjects
       final mergedTimings = {
         ...existingTimings,
         for (final subjectId in selectedTimingsForSubjects.keys)
@@ -401,18 +375,15 @@ class InstructorMethods {
           ],
       };
 
-      // Update the instructor document with the combined data
       await instructorDocRef.update({
         "subjects": allSubjects,
         "selectedTimingsForSubjects": mergedTimings,
         "selectedDaysForSubjects": mergedDays,
       });
 
-      // Display a success message
       showCustomToast("New subjects added successfully");
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      // Handle errors gracefully
       if (e.toString().contains("Subject")) {
         showCustomToast(
             "One or more subjects already exist. Please choose different subjects.");
@@ -423,12 +394,10 @@ class InstructorMethods {
     }
   }
 
-  // Function to remove subjects
   Future<void> removeSubjects({
     required List<String> subjectsToRemove,
   }) async {
     try {
-      // Get the current user's information
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         throw Exception("User not authenticated.");
@@ -436,19 +405,16 @@ class InstructorMethods {
 
       final uid = user.uid;
 
-      // Reference to the instructor document
       final instructorDocRef = FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(uid);
 
-      // Fetch the existing instructor document data
       final instructorDoc = await instructorDocRef.get();
       final existingSubjects =
           (instructorDoc.data()?['subjects'] as List<dynamic>)
               .map((e) => e.toString())
               .toList();
 
-      // Check if any subject in subjectsToRemove is not present in the existingSubjects
       final subjectsNotInCollection = subjectsToRemove
           .where((subject) => !existingSubjects.contains(subject))
           .toList();
@@ -458,12 +424,10 @@ class InstructorMethods {
             "Subjects not found: ${subjectsNotInCollection.join(', ')}");
       }
 
-      // Remove the subjects from existingSubjects
       final updatedSubjects = existingSubjects
           .where((subject) => !subjectsToRemove.contains(subject))
           .toList();
 
-      // Remove the subjects from selectedTimingsForSubjects and selectedDaysForSubjects
       final Map<String, dynamic> existingTimings = instructorDoc
           .data()?['selectedTimingsForSubjects'] as Map<String, dynamic>;
       final Map<String, dynamic> existingDays = instructorDoc
@@ -474,18 +438,15 @@ class InstructorMethods {
         existingDays.remove(subjectToRemove);
       }
 
-      // Update the instructor document with the updated data
       await instructorDocRef.update({
         "subjects": updatedSubjects,
         "selectedTimingsForSubjects": existingTimings,
         "selectedDaysForSubjects": existingDays,
       });
 
-      // Display a success message
       showCustomToast("Subjects removed successfully");
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      // Handle errors gracefully
       if (e.toString().contains("Subjects not found")) {
         showCustomToast("$e. Please choose existing subjects.");
       } else {
@@ -495,56 +456,90 @@ class InstructorMethods {
     }
   }
 
-  Future<void> addInstructorRating(
-      {required String instructorUid,
-      required double ratings,
-      required String content}) async {
+  Future<void> addInstructorReview({
+    required String instructorUid,
+    required double ratings,
+    required String content,
+  }) async {
     try {
       String userId = FirebaseAuth.instance.currentUser!.uid;
-      String reviewId = const Uuid().v4();
-
-      ReviewModel reviewModel = ReviewModel(
-          userId: userId,
-          reviewId: reviewId,
-          content: content,
-          ratings: ratings,
-          date: Timestamp.fromDate(DateTime.now()));
 
       final instructorDoc = FirebaseFirestore.instance
           .collection(instructorsCollections)
           .doc(instructorUid);
 
-      final ratingsQuery = await instructorDoc.get();
+      final reviewsCollectionRef = instructorDoc.collection(reviewsCollection);
 
-      if (ratingsQuery.exists) {
-        final totalRatings = ratingsQuery['ratings'] as double;
+      final existingReviewDoc = await reviewsCollectionRef.doc(userId).get();
 
-        // You should have some logic here to get the new rating value.
-        // For example, newRating can be a parameter to this method.
-        final newRating = ratings;
+      if (existingReviewDoc.exists) {
+        showCustomToast("You have already reviewed this instructor.");
+      } else {
+        ReviewModel reviewModel = ReviewModel(
+          userId: userId,
+          reviewId: userId,
+          content: content,
+          ratings: ratings,
+          date: Timestamp.fromDate(DateTime.now()),
+        );
 
-        final updatedTotalRatings = totalRatings + newRating;
+        final ratingsQuery = await instructorDoc.get();
 
-        // Calculate the new average rating and update the 'ratings' field.
-     final averageRating = updatedTotalRatings / (totalRatings + 1);
-final clampedAverageRating = averageRating.clamp(1.0, 5.0); // Ensure the rating is between 1 and 5
+        if (ratingsQuery.exists) {
+          final totalRatings = ratingsQuery['ratings'] as double;
 
+          final updatedTotalRatings = totalRatings + ratings;
 
+          final averageRating = updatedTotalRatings / (totalRatings + 1);
+          final clampedAverageRating = averageRating.clamp(1.0, 5.0);
 
-        await instructorDoc.update({'ratings': clampedAverageRating});
+          await instructorDoc.update({'ratings': clampedAverageRating});
 
-        await FirebaseFirestore.instance
-            .collection(instructorsCollections)
-            .doc(instructorUid)
-            .collection(reviewsCollection)
-            .doc(reviewId)
-            .set(reviewModel.toMap());
-            showCustomToast("review added");
+          await reviewsCollectionRef.doc(userId).set(reviewModel.toMap());
+
+          showCustomToast("Review added");
+          Get.to(
+              () => ShowInstructorReviewsScreen(instructorId: instructorUid));
+        }
       }
     } catch (e) {
       showCustomToast(e.toString());
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchReviewsOfInstructor(
+      {required String instructorUid}) async {
+    try {
+      final reviewsRef = FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(instructorUid)
+          .collection(reviewsCollection);
 
+      final reviewsQuerySnapshot =
+          await reviewsRef.orderBy('date', descending: true).get();
+
+      final reviewsData = <Map<String, dynamic>>[];
+
+      for (final reviewDoc in reviewsQuerySnapshot.docs) {
+        final reviewData = reviewDoc.data() as Map<String, dynamic>;
+        final userId = reviewData['userId'] as String;
+
+        final userDoc = await FirebaseFirestore.instance
+            .collection(userCollection)
+            .doc(userId)
+            .get();
+        final userData = userDoc.data() as Map<String, dynamic>;
+
+        reviewData['name'] = userData['name'];
+        reviewData['profilePicUrl'] = userData['profilePicUrl'];
+
+        reviewsData.add(reviewData);
+      }
+
+      return reviewsData;
+    } catch (e) {
+      showCustomToast("Error fetching reviews with user details: $e");
+      return [];
+    }
+  }
 }

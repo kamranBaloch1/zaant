@@ -99,7 +99,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
       final instructorProvider =
           Provider.of<InstructorProviders>(context, listen: false);
 
-      await instructorProvider.addInstructorProvider(
+      await instructorProvider.addNewInstructorProvider(
         phoneNumber: widget.phoneNumber!,
         qualification: widget.selectedQualification!,
         subjects: widget.selectedSubjects,

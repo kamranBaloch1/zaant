@@ -1,12 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:zant/frontend/providers/home/instructor_provider.dart';
 import 'package:zant/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/global/colors.dart';
-import 'package:zant/server/home/instructor_methods.dart';
+
 
 
 class PhoneNumberScreen extends StatefulWidget {
@@ -33,7 +35,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
     _phoneController.dispose();
   }
 
-  Future<void> _sendVerificationOtpCode() async {
+  void _sendVerificationOtpCode() async {
     setState(() {
       _isLoading = true;
     });
@@ -41,7 +43,10 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
     String phoneNumber = _phoneController.text.trim();
     String formattedNumber = "+92$phoneNumber";
 
-    await InstructorMethods().verifyPhoneNumber(
+
+final instructorProvider = Provider.of<InstructorProviders>(context,listen: false);
+
+    await instructorProvider.verifyPhoneNumberProvider(
         phoneNumber: formattedNumber,
         selectedQualification: widget.selectedQualification,
         feesPerHour: widget.feesPerHour);

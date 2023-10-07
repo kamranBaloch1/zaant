@@ -51,7 +51,7 @@ class _UpdateQualificationScreenState extends State<UpdateQualificationScreen> {
       // Call the backend method to update the qualification
       final instructorProvider =
           Provider.of<InstructorProviders>(context, listen: false);
-      await instructorProvider.updateInstrcutorQualificationProvider(
+      await instructorProvider.updateInstructorQualificationProvider(
           qualification: selectedQualification!);
 
       setState(() {

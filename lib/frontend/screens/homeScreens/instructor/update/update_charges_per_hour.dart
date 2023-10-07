@@ -50,7 +50,7 @@ class _UpdateChargesPerHourState extends State<UpdateChargesPerHour> {
       // Call the backend method to update the fees per hour
       final instructorProvider =
           Provider.of<InstructorProviders>(context, listen: false);
-      await instructorProvider.updateInstrcutorFeesChargesProvider(
+      await instructorProvider.updateInstructorFeesChargesProvider(
         feesPerHour: int.parse(charges),
       );
 

@@ -2,11 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:zant/frontend/providers/home/instructor_provider.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/add/select_subjects_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/global/colors.dart';
-import 'package:zant/server/home/instructor_methods.dart';
 
 
 class PhoneNumberOTPScreen extends StatefulWidget {
@@ -49,27 +50,28 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
     super.dispose();
   }
 
-  Future<void> verifyingTheOtp(String otp) async {
-      setState(() {
+  void verifyingTheOtp(String otp) async {
+    setState(() {
       _isLoading = true;
     });
-    await InstructorMethods()
-        .verifyOTP(
+    final instructorProvider = Provider.of<InstructorProviders>(context,listen: false);
+    await instructorProvider
+        .verifyOTPProvider(
             phoneNumberVerificationId: widget.verificationId,
             otp: otp,
             phoneNumber: widget.phoneNumber)
         .then((isVerified) {
       if (isVerified) {
         // Navigate to the next screen after successful OTP verification
-         
+
         Get.offAll(() => SelectSubjectsScreen(
             selectedQualification: widget.selectedQualification,
             phoneNumber: widget.phoneNumber,
             feesPerHour: widget.feesPerHour));
       }
-       setState(() {
-      _isLoading = false;
-    });
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
 
@@ -81,7 +83,7 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
           appBar: CustomAppBar(
               backgroundColor: appBarColor, title: "Enter OTP Code"),
           body: Padding(
-            padding:  EdgeInsets.all(16.w),
+            padding: EdgeInsets.all(16.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

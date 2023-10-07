@@ -6,18 +6,19 @@ import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/models/home/instructor_model.dart';
 import 'package:zant/frontend/providers/home/enrollmens_provider.dart';
+import 'package:zant/frontend/providers/home/instructor_provider.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/chat_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/rating_card_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
+import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_timings_widget.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
-import 'package:zant/server/home/instructor_methods.dart';
 
 class InstructorDetailScreen extends StatefulWidget {
   final InstructorModel instructorModel;
@@ -36,7 +37,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
 
   final TextEditingController _reviewContent = TextEditingController();
 
-  void _addReview() {
+  void _addReview() async {
     String reviewContent = _reviewContent.text.trim();
 
     if (rating > 0) {
@@ -44,16 +45,21 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
         setState(() {
           _isLoading = true;
         });
-          Navigator.pop(context);
-        InstructorMethods()
-            .addInstructorRating(
+        Navigator.pop(context);
+
+        final instructorProvider =
+            Provider.of<InstructorProviders>(context, listen: false);
+
+        await instructorProvider
+            .addInstructorReviewProvider(
                 instructorUid: widget.instructorModel.uid,
                 ratings: rating,
                 content: reviewContent)
             .then((value) {
-              _reviewContent.clear();
+          _reviewContent.clear();
           setState(() {
             _isLoading = false;
+            rating=0;
           });
         });
       } else {
@@ -141,7 +147,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 },
               ),
               TextField(
-                style: const TextStyle(color:Colors.black),
+                style: const TextStyle(color: Colors.black),
                 controller: _reviewContent,
                 decoration: const InputDecoration(
                   labelText: 'Write your review',
@@ -275,15 +281,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 RatingCardWidget(
                   rating: widget.instructorModel.ratings.toDouble(),
                 ),
-                SizedBox(height: 16.h),
-                // BuildInfoCardWidget(
-                //   icon: Icons.chat_bubble,
-                //   title: "Reviews",
-                //   content: widget.instructorModel.reviews.isEmpty
-                //       ? "No reviews yet."
-                //       : widget.instructorModel.reviews.join("\n"),
-                // ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 10.h),
                 isEnrolled
                     ? ElevatedButton(
                         onPressed: () {
@@ -292,6 +290,16 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                         child: const Text('Rate Instructor'),
                       )
                     : Container(),
+                SizedBox(height: 10.h),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => ShowInstructorReviewsScreen(
+                          instructorId: widget.instructorModel.uid,
+                        ));
+                  },
+                  child: const Text('Reviews'),
+                ),
+                SizedBox(height: 30.h),
                 isEnrolled
                     ? Align(
                         alignment: Alignment.bottomLeft,

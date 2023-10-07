@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/update/show_intstructor_details.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/add_phone_number.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/edit_profile_screen.dart';
@@ -13,12 +14,14 @@ class ProfileEditOptionsScreen extends StatefulWidget {
   final String? accountType;
   final bool? isPhoneNumberVerified;
   final String? phoneNumber;
+  final String? uid;
 
   const ProfileEditOptionsScreen({
     Key? key,
     required this.accountType,
     required this.isPhoneNumberVerified,
-   required this.phoneNumber,
+    required this.phoneNumber,
+   required this.uid,
   }) : super(key: key);
 
   @override
@@ -60,6 +63,11 @@ class _ProfileEditOptionsScreenState extends State<ProfileEditOptionsScreen> {
                 // Implement navigation to the Phone Number Screen here.
                 Get.to(() =>  AddPhoneNumberScreen(phoneNumber:widget.phoneNumber ,));
               }),
+                if (widget.accountType == "instructor")
+                _buildListTile(Icons.reviews, 'Reviews', () {
+                  // Implement navigation to the Phone Number Screen here.
+                  Get.to(() =>  ShowInstructorReviewsScreen(instructorId:widget.uid! ,));
+                }),
             ],
           ),
         ),
@@ -73,7 +81,7 @@ class _ProfileEditOptionsScreenState extends State<ProfileEditOptionsScreen> {
       leading: Icon(icon),
       title: Text(
         title,
-        style: TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
       ),
       onTap: onTap,
     );

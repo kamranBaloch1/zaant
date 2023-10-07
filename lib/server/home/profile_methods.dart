@@ -107,46 +107,57 @@ class ProfileMethods {
   }
 
   // Step 1: Send OTP for phone number verification
-  Future<void> verifyPhoneNumber({required String? phoneNumber}) async {
-    try {
-      await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          // Verification is completed automatically (rare scenario)
-          // Implement if needed
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          String errorMessage;
-          if (e.code == 'invalid-phone-number') {
-            errorMessage = 'Invalid phone number';
-          } else if (e.code == 'too-many-requests') {
-            errorMessage = 'Phone number blocked due to too many requests';
-          } else {
-            errorMessage =
-                'Phone Number Verification Failed, please check the number ${e.message}';
-          }
-          showCustomToast(errorMessage);
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          // Navigate to OTP screen when code is sent
-          Get.offAll(() => NumberOtpVerifyScreen(
-                verificationId: verificationId,
-                phoneNumber: phoneNumber,
-              ));
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          // Timeout for code retrieval
-          showCustomToast('Code retrieval timed out');
-          // Implement additional actions if needed
-        },
-        timeout: const Duration(minutes: 2), // Timeout for the code to be sent
-      );
-    } catch (e) {
-      showCustomToast("Error sending OTP");
-    }
-  }
+Future<void> verifyPhoneNumber({required String? phoneNumber}) async {
+  try {
+    // Check if the phone number is already associated with a user
+    QuerySnapshot<Map<String, dynamic>> usersWithPhoneNumber = await FirebaseFirestore.instance
+        .collection(userCollection)
+        .where("phoneNumber", isEqualTo: phoneNumber)
+        .get();
 
-  // Step 2: Verify the OTP code
+    if (usersWithPhoneNumber.docs.isNotEmpty) {
+      // The phone number is already associated with a user
+      showCustomToast('This phone number is already in use by another user.');
+      return;
+    }
+
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        // Verification is completed automatically (rare scenario)
+        // Implement if needed
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        String errorMessage;
+        if (e.code == 'invalid-phone-number') {
+          errorMessage = 'Invalid phone number';
+        } else if (e.code == 'too-many-requests') {
+          errorMessage = 'Phone number blocked due to too many requests';
+        } else {
+          errorMessage = 'Phone Number Verification Failed, please check the number ${e.message}';
+        }
+        showCustomToast(errorMessage);
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        // Navigate to OTP screen when code is sent
+        Get.offAll(() => NumberOtpVerifyScreen(
+              verificationId: verificationId,
+              phoneNumber: phoneNumber,
+            ));
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        // Timeout for code retrieval
+        showCustomToast('Code retrieval timed out');
+        // Implement additional actions if needed
+      },
+      timeout: const Duration(minutes: 2), // Timeout for the code to be sent
+    );
+  } catch (e) {
+    showCustomToast("Error sending OTP");
+  }
+}
+
+ // Step 2: Verify the OTP code
 Future<bool> verifyOTP({
   required String? phoneNumberVerificationId,
   required String? otp,
@@ -195,7 +206,20 @@ Future<bool> verifyOTP({
 
     return true;
   } catch (e) {
-    showCustomToast("Error verifying OTP: Invalid OTP or Try again");
+    // Check for specific error conditions and display appropriate error messages
+    if (e is FirebaseAuthException) {
+      if (e.code == 'invalid-verification-code') {
+        showCustomToast("Invalid OTP code. Please try again.");
+      } else if (e.code == 'expired-action-code') {
+        showCustomToast("The OTP code has expired. Please request a new one.");
+      } else if (e.code == 'provider-already-linked') {
+        showCustomToast("This phone number is already linked to another account.");
+      } else {
+        showCustomToast("Error verifying OTP: ${e.message}");
+      }
+    } else {
+      showCustomToast("An unexpected error occurred: $e");
+    }
     return false; // Return false if an error occurs during verification
   }
 }

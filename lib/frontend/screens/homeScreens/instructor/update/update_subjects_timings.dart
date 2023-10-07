@@ -130,7 +130,7 @@ class _UpdateSubjectsTimingsScreenState
       final instructorProvider =
           Provider.of<InstructorProviders>(context, listen: false);
 
-      await instructorProvider.updateInstrcutorSubjectTimingProvider(
+      await instructorProvider.updateInstructorSubjectTimingProvider(
         subject: _subjectToUpdate!,
         newTimings: newTimings,
       );

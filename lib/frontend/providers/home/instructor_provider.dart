@@ -7,7 +7,7 @@ class InstructorProviders extends ChangeNotifier {
   final InstructorMethods _instructorMethods = InstructorMethods();
 
   // Add an instructor
-  Future<void> addInstructorProvider({
+  Future<void> addNewInstructorProvider({
     required String phoneNumber,
     required String qualification,
     required List<String> subjects,
@@ -17,7 +17,7 @@ class InstructorProviders extends ChangeNotifier {
     required Map<String, List<String>> selectedDaysForSubjects,
   }) async {
     try {
-      await _instructorMethods.addInstructor(
+      await _instructorMethods.addNewInstructor(
         phoneNumber: phoneNumber,
         qualification: qualification,
         subjects: subjects,
@@ -25,10 +25,10 @@ class InstructorProviders extends ChangeNotifier {
         selectedTimingsForSubjects: selectedTimingsForSubjects,
         selectedDaysForSubjects: selectedDaysForSubjects,
       );
-      // Notify listeners to update UI
+      // Notify listeners to update the UI
       notifyListeners();
     } catch (e) {
-      // Handle error gracefully and show a custom toast
+      // Handle errors gracefully and show a custom toast
       showCustomToast("An error occurred while adding the instructor.");
     }
   }
@@ -38,18 +38,18 @@ class InstructorProviders extends ChangeNotifier {
     try {
       return _instructorMethods.getInstructorsStream(query: query);
     } catch (e) {
-      // Handle error gracefully and show a custom toast
+      // Handle errors gracefully and show a custom toast
       showCustomToast("An error occurred.");
       return const Stream.empty();
     }
   }
 
-  // Update instructor subjects days
-  Future<void> updateInstrcutorSubjectsDaysProvider({
+  // Update instructor subjects' days
+  Future<void> updateInstructorSubjectsDaysProvider({
     required Map<String, List<String>> selectedDaysForSubjects,
   }) async {
     try {
-      await _instructorMethods.updateInstrcutorSubjectsDays(
+      await _instructorMethods.updateInstructorSubjectsDays(
           selectedDaysForSubjects: selectedDaysForSubjects);
       notifyListeners();
     } catch (e) {
@@ -58,12 +58,12 @@ class InstructorProviders extends ChangeNotifier {
   }
 
   // Update instructor subject timing
-  Future<void> updateInstrcutorSubjectTimingProvider({
+  Future<void> updateInstructorSubjectTimingProvider({
     required String subject,
     required Map<String, dynamic> newTimings,
   }) async {
     try {
-      await _instructorMethods.updateInstrcutorSubjectTiming(
+      await _instructorMethods.updateInstructorSubjectTiming(
           subject: subject, newTimings: newTimings);
       notifyListeners();
     } catch (e) {
@@ -72,9 +72,10 @@ class InstructorProviders extends ChangeNotifier {
   }
 
   // Update instructor fees charges
-  Future<void> updateInstrcutorFeesChargesProvider({required int feesPerHour}) async {
+  Future<void> updateInstructorFeesChargesProvider(
+      {required int feesPerHour}) async {
     try {
-      await _instructorMethods.updateInstrcutorFeesCharges(
+      await _instructorMethods.updateInstructorFeesCharges(
           feesPerHour: feesPerHour);
       notifyListeners();
     } catch (e) {
@@ -83,10 +84,10 @@ class InstructorProviders extends ChangeNotifier {
   }
 
   // Update instructor qualification
-  Future<void> updateInstrcutorQualificationProvider(
+  Future<void> updateInstructorQualificationProvider(
       {required String qualification}) async {
     try {
-      await _instructorMethods.updateInstrcutorQualification(
+      await _instructorMethods.updateInstructorQualification(
           qualification: qualification);
       notifyListeners();
     } catch (e) {
@@ -117,40 +118,90 @@ class InstructorProviders extends ChangeNotifier {
     required List<String> subjectsToRemove,
   }) async {
     try {
-      await _instructorMethods.removeSubjects(subjectsToRemove: subjectsToRemove);
+      await _instructorMethods.removeSubjects(
+          subjectsToRemove: subjectsToRemove);
       notifyListeners();
     } catch (e) {
       showCustomToast("An error occurred while removing subjects.");
     }
   }
+
+  // Add instructor review
+  Future<void> addInstructorReviewProvider({
+    required String instructorUid,
+    required double ratings,
+    required String content,
+  }) async {
+    try {
+      await _instructorMethods.addInstructorReview(
+          instructorUid: instructorUid, ratings: ratings, content: content);
+      notifyListeners();
+    } catch (e) {
+      showCustomToast("An error occurred while adding the review.");
+    }
+  }
+
+  // Fetch reviews of an instructor
+  Future<List<Map<String, dynamic>>> fetchReviewsOfInstructorProvider(
+      {required String instructorUid}) async {
+    try {
+      final reviewsData = await _instructorMethods.fetchReviewsOfInstructor(
+        instructorUid: instructorUid,
+      );
+
+      return reviewsData;
+    } catch (e) {
+      // Handle errors gracefully and show a custom toast
+      showCustomToast(
+          "An error occurred while fetching reviews with user details: $e");
+      return [];
+    }
+  }
+
+
+// provider to verfiy the phone number method
+
+  Future<void> verifyPhoneNumberProvider({
+    required String? phoneNumber,
+    required String? selectedQualification,
+    required int? feesPerHour,
+  }) async {
+    try {
+      await _instructorMethods.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          selectedQualification: selectedQualification,
+          feesPerHour: feesPerHour);
+
+      // Notify listeners to update the UI
+      notifyListeners();
+    } catch (e) {
+      // Handle errors gracefully and show a custom toast
+      showCustomToast("An error occurred during phone number verification.");
+    }
+  }
+
+  // provider to verfiy the phone number otp code method
+
+  Future<bool> verifyOTPProvider({
+    required String? phoneNumberVerificationId,
+    required String? otp,
+    required String? phoneNumber,
+  }) async {
+    try {
+      bool isVerified = await _instructorMethods.verifyOTP(
+        phoneNumberVerificationId: phoneNumberVerificationId,
+        otp: otp,
+        phoneNumber: phoneNumber,
+      );
+
+      // Notify listeners to update the UI
+      notifyListeners();
+
+      return isVerified;
+    } catch (e) {
+      // Handle errors gracefully and show a custom toast
+      showCustomToast("An error occurred during OTP verification.");
+      return false;
+    }
+  }
 }
-
-
-
-
-
- // Future<void> sendVerificationCodeProvider({
-  //   required  phoneNumber,
-  //   required String qualification,
-  //   // required String location,
-  //   required List<String> subjects,
-  //   required int feesPerHour,
-  //   required Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects,
-  //   required  Map<String, List<String>> selectedDaysForSubjects
-
-  // }) async{
-  //   try {
-  //   await  _instructorMethods.sendVerificationCode(
-  //         phoneNumber: phoneNumber,
-  //         qualification: qualification,
-  //         subjects: subjects,
-  //         feesPerHour: feesPerHour,
-  //         selectedTimingsForSubjects: selectedTimingsForSubjects,
-  //        selectedDaysForSubjects:selectedDaysForSubjects 
-  //        );
-
-  //     notifyListeners();
-  //   } catch (e) {
-  //     showCustomToast("error accoured");
-  //   }
-  // }

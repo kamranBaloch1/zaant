@@ -166,7 +166,7 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
     final instructorProvider =
         Provider.of<InstructorProviders>(context, listen: false);
     instructorProvider
-        .updateInstrcutorSubjectsDaysProvider(
+        .updateInstructorSubjectsDaysProvider(
             selectedDaysForSubjects: updatedData)
         .then((_) {
       // Once the update is complete, set _isLoading to false
