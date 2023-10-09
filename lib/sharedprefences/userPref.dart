@@ -125,6 +125,23 @@ class UserPreferences {
     return _prefs!.getString('city');
   }
 
+ // Add this method to clear all user-related data from SharedPreferences
+  static Future<void> clearUserData() async {
+    await _prefs!.remove('uid');
+    await _prefs!.remove('name');
+    await _prefs!.remove('email');
+    await _prefs!.remove('dob');
+    await _prefs!.remove('profileUrl');
+    await _prefs!.remove('gender');
+    await _prefs!.remove('address');
+    await _prefs!.remove('isEmailVerified');
+    await _prefs!.remove('phoneNumber');
+    await _prefs!.remove('isPhoneNumberVerified');
+    await _prefs!.remove('createdOn');
+    await _prefs!.remove('accountStatus');
+    await _prefs!.remove('accountType');
+    await _prefs!.remove('city');
+  }
 
 
 }

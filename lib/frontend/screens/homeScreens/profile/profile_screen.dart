@@ -122,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ));
                     },
                     child: Text(
-                      "Edit",
+                      "Settings",
                       style: TextStyle(color: Colors.black, fontSize: 18.sp),
                     ),
                   ),

@@ -20,19 +20,19 @@ class StarRating extends StatelessWidget {
           return Icon(
             Icons.star,
             size: starSize,
-            color: Colors.yellow,
+            color: Colors.amber,
           );
         } else if (index == fullStars && halfStar > 0) {
           return Icon(
             Icons.star_half,
             size: starSize,
-            color: Colors.yellow,
+            color: Colors.amber,
           );
         } else {
           return Icon(
             Icons.star_border,
             size: starSize,
-            color: Colors.yellow,
+            color: Colors.amber,
           );
         }
       }),

@@ -16,6 +16,7 @@ import 'package:zant/frontend/screens/authSceens/login/onBoarding_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
+import 'package:zant/server/auth/logout.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 // Entry point for the application
@@ -111,17 +112,18 @@ Future<Widget> _buildHomeScreen() async {
         await _deleteUserData(user);
         return const StartScreen();
       } else if (!accountStatus) {
-        FirebaseAuth.instance.signOut();
+        // Call the logout method
+        await LogoutMethod().logoutUser();
         return const StartScreen();
       } else {
         return const HomeScreen();
       }
     } else {
-      await FirebaseAuth.instance.signOut();
+      // Call the logout method
+      await LogoutMethod().logoutUser();
       return const StartScreen();
     }
   } else {
-  
     return const StartScreen();
   }
 }

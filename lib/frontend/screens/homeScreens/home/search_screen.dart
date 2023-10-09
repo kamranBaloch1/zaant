@@ -11,10 +11,9 @@ import 'package:zant/frontend/screens/homeScreens/instructor/details/instructor_
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({Key? key}): super(key: key);
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -26,7 +25,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _searchController.dispose();
     super.dispose();
   }
@@ -34,8 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          CustomAppBar(backgroundColor: appBarColor, title: "Search Screen"),
+      appBar: CustomAppBar(backgroundColor: appBarColor, title: "Search Screen"),
       drawer: const MyDrawer(),
       body: Column(
         children: [
@@ -61,7 +58,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
                 SizedBox(
-                    height: 16.h), // Add some spacing below the search field
+                  height: 16.h,
+                ), // Add some spacing below the search field
                 ElevatedButton(
                   onPressed: () {
                     // Check if the search field is empty
@@ -116,68 +114,75 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildInstructorTile(Map<String, dynamic> instructorData) {
-    // Extract instructor information
-    final String instructorName = instructorData['name'];
-    final String instructorLocation = instructorData['address'];
-    final String instructorProfilePicUrl = instructorData['profilePicUrl'];
-    final String city = instructorData['city'];
-    final double instructorRating =
-        instructorData['ratings'] ?? 0.0; // Get the instructor's rating
+ Widget _buildInstructorTile(Map<String, dynamic> instructorData) {
+  // Extract instructor information
+  final String instructorName = instructorData['name'];
+  final String instructorLocation = instructorData['address'];
+  final String instructorProfilePicUrl = instructorData['profilePicUrl'];
+  final String city = instructorData['city'];
+  final double instructorRating =
+      instructorData['ratings'] ?? 0.0; // Get the instructor's rating
 
-    return GestureDetector(
-      onTap: (){
-          Get.to(()=>InstructorDetailScreen(instructorModel: InstructorModel.fromMap(instructorData)));
-      },
-      child: ListTile(
-        title: Text(
-          instructorName,
-          style: const TextStyle(color: Colors.black), // Text color in black
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  city,
-                  style: const TextStyle(
-                      color: Colors.black54), // Text color in black
-                ),
-                SizedBox(
-                  width: 10.w,
-                ),
-                Text(
-                  instructorLocation,
-                  style: const TextStyle(
-                      color: Colors.black45), // Text color in black
-                ),
-              ],
-            ),
-            RatingBar.builder(
-              initialRating: instructorRating.toDouble(),
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemSize: 20.0,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-              itemBuilder: (context, _) => const Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              onRatingUpdate: (rating) {
-                // Handle user rating update if needed
-              },
-            ),
-          ],
-        ),
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(
-              instructorProfilePicUrl), // Use the instructor's profile picture
-        ),
-        // Add more widgets to display instructor details as needed
+  return GestureDetector(
+    onTap: () {
+      Get.to(() => InstructorDetailScreen(
+          instructorModel: InstructorModel.fromMap(instructorData)));
+    },
+    child: ListTile(
+      title: Text(
+        instructorName,
+        style: const TextStyle(color: Colors.black), // Text color in black
       ),
-    );
-  }
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                city,
+                style: const TextStyle(
+                    color: Colors.black54), // Text color in black
+              ),
+              SizedBox(
+                width: 10.w,
+              ),
+              Text(
+                instructorLocation,
+                style: const TextStyle(
+                    color: Colors.black45), // Text color in black
+              ),
+            ],
+          ),
+          Row(
+            children: [
+            const  Text(
+                'Rating: ',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Row(
+                children: List.generate(
+                  5,
+                  (index) => Icon(
+                    Icons.star,
+                    color: index < instructorRating ? Colors.amber : Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      leading: CircleAvatar(
+        backgroundImage:
+            NetworkImage(instructorProfilePicUrl), // Use the instructor's profile picture
+      ),
+      // Add more widgets to display instructor details as needed
+    ),
+  );
+}
+
+
 }
