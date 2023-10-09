@@ -8,6 +8,7 @@ class homeCustomTextField extends StatelessWidget {
   final IconData icon;
   final TextInputType keyBoardType;
   final String? Function(String?)? validator;
+  final bool?  enable;
 
 
   const homeCustomTextField({
@@ -17,6 +18,7 @@ class homeCustomTextField extends StatelessWidget {
     required this.icon,
     required this.keyBoardType,
     this.validator,
+    this.enable,
   }) : super(key: key);
 
  
@@ -36,6 +38,7 @@ class homeCustomTextField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        enabled: enable,
         keyboardType: keyBoardType,
          validator: validator,
         controller: controller,

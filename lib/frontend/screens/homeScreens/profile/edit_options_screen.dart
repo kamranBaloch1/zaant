@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/update/show_intstructor_details.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/add_phone_number.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/edit_profile_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/privacy_settings_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/global/colors.dart';
@@ -32,49 +32,49 @@ class ProfileEditOptionsScreen extends StatefulWidget {
 
 class _ProfileEditOptionsScreenState extends State<ProfileEditOptionsScreen> {
   bool _isLoading = false;
-void _showLogoutConfirmationDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Confirm Logout',
-            style: TextStyle(color: Colors.black)),
-        content: const Text('Are you sure you want to logout?',
-            style: TextStyle(color: Colors.black)),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child:
-                const Text('Cancel', style: TextStyle(color: Colors.black)),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop(); // Close the dialog
+  void _showLogoutConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout',
+              style: TextStyle(color: Colors.black)),
+          content: const Text('Are you sure you want to logout?',
+              style: TextStyle(color: Colors.black)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child:
+                  const Text('Cancel', style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close the dialog
 
-              setState(() {
-                _isLoading = true;
-              });
+                setState(() {
+                  _isLoading = true;
+                });
 
-              // Delay the execution of the logout method by 2 seconds
-              await Future.delayed(const Duration(seconds: 2));
+                // Delay the execution of the logout method by 2 seconds
+                await Future.delayed(const Duration(seconds: 2));
 
-              // Call the logout method
-              await LogoutMethod().logoutUser();
+                // Call the logout method
+                await LogoutMethod().logoutUser();
 
-              setState(() {
-                _isLoading = false;
-              });
-            },
-            child:
-                const Text('Logout', style: TextStyle(color: Colors.black)),
-          ),
-        ],
-      );
-    },
-  );
-}
+                setState(() {
+                  _isLoading = false;
+                });
+              },
+              child:
+                  const Text('Logout', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,12 +95,14 @@ void _showLogoutConfirmationDialog() {
                 Get.to(() => const EditProfileScreen());
               }),
 
-              if (widget.accountType == "instructor")
-                _buildListTile(Icons.edit, 'Instrutor details', () {
-                  // Implement navigation to the Phone Number Screen here.
-                  Get.to(() => const ShowInstructorDetailsScreen());
-                }),
-
+              // if (widget.accountType == "instructor")
+              //   _buildListTile(Icons.edit, 'Instrutor details', () {
+              //     // Implement navigation to the Phone Number Screen here.
+              //     Get.to(() => const ShowInstructorDetailsScreen());
+              //   }),
+              _buildListTile(Icons.lock, 'Privacy Settings', () {
+                Get.to(() => const PrivacySettingsScreen());
+              }),
               _buildListTile(
                   Icons.phone,
                   widget.isPhoneNumberVerified!
@@ -123,10 +125,9 @@ void _showLogoutConfirmationDialog() {
             ],
           ),
         ),
-        
+
         // show an loading bar if loading is true
-        if(_isLoading)
-        const CustomLoadingOverlay()
+        if (_isLoading) const CustomLoadingOverlay()
       ],
     );
   }

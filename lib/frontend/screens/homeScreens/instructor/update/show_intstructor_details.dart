@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zant/frontend/models/home/instructor_model.dart';
+import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_timings_widget.dart';
@@ -102,9 +103,10 @@ class _ShowInstructorDetailsScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Edit your details",
+        title: "Your details",
         backgroundColor: appBarColor,
       ),
+      drawer: const MyDrawer(),
       body: SingleChildScrollView(
         child: FutureBuilder<InstructorModel?>(
           future: getInstructorDetails(),

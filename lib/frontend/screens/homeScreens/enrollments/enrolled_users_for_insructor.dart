@@ -8,16 +8,9 @@ import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/server/home/enrollments_methods.dart';
 
-class ShowEnrolledUsersForInstructor extends StatefulWidget {
+class ShowEnrolledUsersForInstructor extends StatelessWidget {
   const ShowEnrolledUsersForInstructor({Key? key}) : super(key: key);
 
-  @override
-  State<ShowEnrolledUsersForInstructor> createState() =>
-      _ShowEnrolledUsersForInstructorState();
-}
-
-class _ShowEnrolledUsersForInstructorState
-    extends State<ShowEnrolledUsersForInstructor> {
   Widget _buildUserItem(UserModel user) {
     return GestureDetector(
       onTap: () {
@@ -96,7 +89,6 @@ class _ShowEnrolledUsersForInstructorState
             );
           } else {
             List<UserModel> users = snapshot.data!;
-
             return _buildUserList(users);
           }
         },

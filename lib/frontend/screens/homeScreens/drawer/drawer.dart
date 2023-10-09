@@ -106,9 +106,9 @@ class _MyDrawerState extends State<MyDrawer> {
             },
           ),
            accountType=="user"?  ListTile(
-            leading: const Icon(Icons.chat),
+            leading: const Icon(Icons.person_outline),
             title: const Text(
-              'Enrollments',
+              'Enrolled Instructors',
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
@@ -116,7 +116,7 @@ class _MyDrawerState extends State<MyDrawer> {
             },
           ):Container(),
         accountType=="user"?  ListTile(
-            leading: const Icon(Icons.person_outline),
+            leading: const Icon(Icons.school),
             title: const Text(
               'Become an instructor',
               style: TextStyle(color: Colors.black),
@@ -127,7 +127,7 @@ class _MyDrawerState extends State<MyDrawer> {
           ):  accountType=="instructor"? ListTile(
             leading: const Icon(Icons.person_outline),
             title: const Text(
-              'Enrollments',
+              'Enrolled users',
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {

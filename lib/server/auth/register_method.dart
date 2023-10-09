@@ -133,4 +133,7 @@ class RegisterMethod {
       showCustomToast("Something went wrong");
     }
   }
+
+
+
 }

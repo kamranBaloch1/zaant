@@ -37,26 +37,29 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loginUser() async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
+    if (mounted) {
+      try {
+        setState(() {
+          _isLoading = true;
+        });
 
-      final loginProvider = Provider.of<LoginProviders>(context, listen: false);
+        final loginProvider =
+            Provider.of<LoginProviders>(context, listen: false);
 
-      String email = _emailController.text.trim();
-      String password = _passwordController.text.trim();
+        String email = _emailController.text.trim();
+        String password = _passwordController.text.trim();
 
-      await loginProvider.loginWithEmailAndPasswordProvider(email, password);
+        await loginProvider.loginWithEmailAndPasswordProvider(email, password);
 
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      showCustomToast("An error occurred. Please try again.");
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        showCustomToast("An error occurred. Please try again.");
+      }
     }
   }
 
@@ -90,9 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _emailController,
                       validator: (value) {
                         return RegExp(
-                                // Regular expression to validate email
-                                r"[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                            .hasMatch(value!)
+                                    // Regular expression to validate email
+                                    r"[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                                .hasMatch(value!)
                             ? null
                             : "Please enter a valid email address";
                       },

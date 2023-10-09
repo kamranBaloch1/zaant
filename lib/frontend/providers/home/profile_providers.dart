@@ -27,4 +27,17 @@ class ProfileProviders extends ChangeNotifier {
       showCustomToast("An error occurred while updating the information");
     }
   }
+
+  // provider for changing the password
+
+  Future<void> changePasswordProvider(
+      {required String currentPassword, required String newPassword}) async {
+    try {
+      await _profileMethods.changePassword(
+          currentPassword: currentPassword, newPassword: newPassword);
+      notifyListeners();
+    } catch (e) {
+      showCustomToast("An error occurred while changing the password");
+    }
+  }
 }

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/email_verify.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/number_otp_verify_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
@@ -107,124 +108,225 @@ class ProfileMethods {
   }
 
   // Step 1: Send OTP for phone number verification
-Future<void> verifyPhoneNumber({required String? phoneNumber}) async {
-  try {
-    // Check if the phone number is already associated with a user
-    QuerySnapshot<Map<String, dynamic>> usersWithPhoneNumber = await FirebaseFirestore.instance
-        .collection(userCollection)
-        .where("phoneNumber", isEqualTo: phoneNumber)
-        .get();
+  Future<void> verifyPhoneNumber({required String? phoneNumber}) async {
+    try {
+      // Check if the phone number is already associated with a user
+      QuerySnapshot<Map<String, dynamic>> usersWithPhoneNumber =
+          await FirebaseFirestore.instance
+              .collection(userCollection)
+              .where("phoneNumber", isEqualTo: phoneNumber)
+              .get();
 
-    if (usersWithPhoneNumber.docs.isNotEmpty) {
-      // The phone number is already associated with a user
-      showCustomToast('This phone number is already in use by another user.');
-      return;
+      if (usersWithPhoneNumber.docs.isNotEmpty) {
+        // The phone number is already associated with a user
+        showCustomToast('This phone number is already in use by another user.');
+        return;
+      }
+
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          // Verification is completed automatically (rare scenario)
+          // Implement if needed
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          String errorMessage;
+          if (e.code == 'invalid-phone-number') {
+            errorMessage = 'Invalid phone number';
+          } else if (e.code == 'too-many-requests') {
+            errorMessage = 'Phone number blocked due to too many requests';
+          } else {
+            errorMessage =
+                'Phone Number Verification Failed, please check the number ${e.message}';
+          }
+          showCustomToast(errorMessage);
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          // Navigate to OTP screen when code is sent
+          Get.offAll(() => NumberOtpVerifyScreen(
+                verificationId: verificationId,
+                phoneNumber: phoneNumber,
+              ));
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          // Timeout for code retrieval
+          showCustomToast('Code retrieval timed out');
+          // Implement additional actions if needed
+        },
+        timeout: const Duration(minutes: 2), // Timeout for the code to be sent
+      );
+    } catch (e) {
+      showCustomToast("Error sending OTP");
     }
-
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        // Verification is completed automatically (rare scenario)
-        // Implement if needed
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        String errorMessage;
-        if (e.code == 'invalid-phone-number') {
-          errorMessage = 'Invalid phone number';
-        } else if (e.code == 'too-many-requests') {
-          errorMessage = 'Phone number blocked due to too many requests';
-        } else {
-          errorMessage = 'Phone Number Verification Failed, please check the number ${e.message}';
-        }
-        showCustomToast(errorMessage);
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        // Navigate to OTP screen when code is sent
-        Get.offAll(() => NumberOtpVerifyScreen(
-              verificationId: verificationId,
-              phoneNumber: phoneNumber,
-            ));
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        // Timeout for code retrieval
-        showCustomToast('Code retrieval timed out');
-        // Implement additional actions if needed
-      },
-      timeout: const Duration(minutes: 2), // Timeout for the code to be sent
-    );
-  } catch (e) {
-    showCustomToast("Error sending OTP");
   }
-}
 
- // Step 2: Verify the OTP code
-Future<bool> verifyOTP({
-  required String? phoneNumberVerificationId,
-  required String? otp,
-  required String? phoneNumber,
-}) async {
-  try {
-    User? currentUser = _auth.currentUser;
-    if (currentUser == null) {
-      showCustomToast("User not signed in.");
-      return false;
-    }
+  // Step 2: Verify the OTP code
+  Future<bool> verifyOTP({
+    required String? phoneNumberVerificationId,
+    required String? otp,
+    required String? phoneNumber,
+  }) async {
+    try {
+      User? currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        showCustomToast("User not signed in.");
+        return false;
+      }
 
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(
-      verificationId:
-          phoneNumberVerificationId!, // Ensure you have the correct verificationId here
-      smsCode: otp!,
-    );
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId:
+            phoneNumberVerificationId!, // Ensure you have the correct verificationId here
+        smsCode: otp!,
+      );
 
-    // Verify the OTP code with Firebase using the current user
-    await currentUser.updatePhoneNumber(credential);
+      // Verify the OTP code with Firebase using the current user
+      await currentUser.updatePhoneNumber(credential);
 
-    // Update the user collection
-    await FirebaseFirestore.instance
-        .collection(userCollection)
-        .doc(_auth.currentUser!.uid)
-        .update({"phoneNumber": phoneNumber, "isPhoneNumberVerified": true});
+      // Update the user collection
+      await FirebaseFirestore.instance
+          .collection(userCollection)
+          .doc(_auth.currentUser!.uid)
+          .update({"phoneNumber": phoneNumber, "isPhoneNumberVerified": true});
 
-    // Check if the instructor collection exists
-    DocumentSnapshot<Map<String, dynamic>> instructorDoc =
+      // Check if the instructor collection exists
+      DocumentSnapshot<Map<String, dynamic>> instructorDoc =
+          await FirebaseFirestore.instance
+              .collection(instructorsCollections)
+              .doc(_auth.currentUser!.uid)
+              .get();
+
+      if (instructorDoc.exists) {
+        // Update the instructor collection
         await FirebaseFirestore.instance
             .collection(instructorsCollections)
             .doc(_auth.currentUser!.uid)
-            .get();
+            .update(
+                {"phoneNumber": phoneNumber, "isPhoneNumberVerified": true});
+      }
 
-    if (instructorDoc.exists) {
-      // Update the instructor collection
-      await FirebaseFirestore.instance
-          .collection(instructorsCollections)
-          .doc(_auth.currentUser!.uid)
-          .update({"phoneNumber": phoneNumber, "isPhoneNumberVerified": true});
-    }
+      await UserPreferences.setPhoneNumber(phoneNumber!);
+      await UserPreferences.setIsPhoneNumberVerified(true);
+      showCustomToast("Phone number has been added successfully");
 
-    await UserPreferences.setPhoneNumber(phoneNumber!);
-    await UserPreferences.setIsPhoneNumberVerified(true);
-    showCustomToast("Phone number has been added successfully");
-
-    return true;
-  } catch (e) {
-    // Check for specific error conditions and display appropriate error messages
-    if (e is FirebaseAuthException) {
-      if (e.code == 'invalid-verification-code') {
-        showCustomToast("Invalid OTP code. Please try again.");
-      } else if (e.code == 'expired-action-code') {
-        showCustomToast("The OTP code has expired. Please request a new one.");
-      } else if (e.code == 'provider-already-linked') {
-        showCustomToast("This phone number is already linked to another account.");
+      return true;
+    } catch (e) {
+      // Check for specific error conditions and display appropriate error messages
+      if (e is FirebaseAuthException) {
+        if (e.code == 'invalid-verification-code') {
+          showCustomToast("Invalid OTP code. Please try again.");
+        } else if (e.code == 'expired-action-code') {
+          showCustomToast(
+              "The OTP code has expired. Please request a new one.");
+        } else if (e.code == 'provider-already-linked') {
+          showCustomToast(
+              "This phone number is already linked to another account.");
+        } else {
+          showCustomToast("Error verifying OTP: ${e.message}");
+        }
       } else {
-        showCustomToast("Error verifying OTP: ${e.message}");
+        showCustomToast("An unexpected error occurred: $e");
+      }
+      return false; // Return false if an error occurs during verification
+    }
+  }
+
+  // Function to change the password
+  Future<void> changePassword(
+      {required String currentPassword, required String newPassword}) async {
+    try {
+      // Get the current user
+      final User? user = _auth.currentUser;
+
+      // Reauthenticate the user before changing the password (for security)
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user!.email!,
+        password: currentPassword,
+      );
+      await user.reauthenticateWithCredential(credential);
+
+      // Check if the new password is the same as the old password
+      if (newPassword == currentPassword) {
+        // Display an error message if the new password is the same as the old password
+        showCustomToast("New password cannot be the same as the old password");
+      } else {
+        // Change the password
+        await user.updatePassword(newPassword);
+
+        // Password changed successfully
+        showCustomToast("Password changed successfully");
+      }
+    } catch (error) {
+      // Handle password change error
+      if (error is FirebaseAuthException) {
+        // FirebaseAuthException provides more specific error information
+        if (error.code == 'wrong-password') {
+          showCustomToast("Error changing password: Wrong password provided");
+        } else {
+          showCustomToast("Error changing password");
+        }
+      } else {
+        // Handle other types of errors
+        showCustomToast("Error changing password");
+      }
+    }
+  }
+
+Future<void> sendChangeEmailVerificationLink({required String newEmail, required String password}) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+
+    // Check if the new email is already in use
+    final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(newEmail);
+
+    if (signInMethods.isEmpty) {
+      // Create a credential for reauthentication
+      final credential = EmailAuthProvider.credential(email: user!.email!, password: password);
+
+      // Reauthenticate the user with their current email and password
+      await user.reauthenticateWithCredential(credential);
+      
+      // Update the user's email to the new email address
+      await user.updateEmail(newEmail);
+      
+      // Send the verification email to the new email address
+      await user.sendEmailVerification();
+      
+      Get.offAll(() => ProfileEmailVerificationScreen(email: newEmail));
+
+      showCustomToast("We have sent an email verification link to this email address");
+    } else {
+      showCustomToast("This email address is already in use. Please choose another email.");
+    }
+  } catch (e) {
+    if (e is FirebaseAuthException) {
+      if (e.code == 'wrong-password') {
+        showCustomToast("Incorrect password. Please try again.");
+      } else {
+        showCustomToast("Error: ${e.message}");
       }
     } else {
-      showCustomToast("An unexpected error occurred: $e");
+      showCustomToast("An error occurred while sending the verification email");
     }
-    return false; // Return false if an error occurs during verification
   }
 }
 
+  // Method to update user email after email verification
+  Future<void> chnageUserEmail({required String newEmail}) async {
+    try {
+      // Get the current user
+      final User? user = _auth.currentUser;
+      await user!.updateEmail(newEmail);
+      await FirebaseFirestore.instance
+          .collection(userCollection)
+          .doc(user.uid)
+          .update({"email": newEmail});
+
+      // Update data in SharedPreferences
+      await UserPreferences.setEmail(newEmail);
+    } catch (e) {
+      showCustomToast("Something went wrong");
+    }
+  }
+
+
 }
-
-
-
