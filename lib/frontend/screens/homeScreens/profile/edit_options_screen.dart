@@ -95,11 +95,7 @@ class _ProfileEditOptionsScreenState extends State<ProfileEditOptionsScreen> {
                 Get.to(() => const EditProfileScreen());
               }),
 
-              // if (widget.accountType == "instructor")
-              //   _buildListTile(Icons.edit, 'Instrutor details', () {
-              //     // Implement navigation to the Phone Number Screen here.
-              //     Get.to(() => const ShowInstructorDetailsScreen());
-              //   }),
+             
               _buildListTile(Icons.lock, 'Privacy Settings', () {
                 Get.to(() => const PrivacySettingsScreen());
               }),

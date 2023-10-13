@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 import 'package:zant/frontend/models/home/instructor_model.dart';
 import 'package:zant/enum/account_type.dart';
 import 'package:zant/frontend/models/home/review_model.dart';
+import 'package:zant/frontend/models/home/review_reply_model.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
@@ -542,4 +544,113 @@ class InstructorMethods {
       return [];
     }
   }
+
+  Future<void> addInstructorReviewReply({
+    required String instructorUid,
+    required String reviewId,
+    required String replyText,
+  }) async {
+    try {
+      final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+      final String replyId = const Uuid().v4();
+
+      ReviewReplyModel reviewReplyModel = ReviewReplyModel(
+          userId: currentUserId,
+          instructorId: instructorUid,
+          reviewId: reviewId,
+          replyText: replyText,
+          date: Timestamp.fromDate(DateTime.now()),
+          replyId: replyId
+          );
+
+      await FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(instructorUid)
+          .collection(reviewsCollection)
+          .doc(reviewId)
+          .collection(reviewsReplyCollection)
+          .doc(replyId)
+          .set(reviewReplyModel.toMap());
+
+      showCustomToast("Reply added ");
+    } catch (e) {
+      showCustomToast(e.toString());
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchRepliesForReview({
+    required String instructorUid,
+    required String reviewId,
+  }) async {
+    try {
+      final reviewsCollectionDoc = FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(instructorUid)
+          .collection(reviewsCollection);
+      final reviewDoc = await reviewsCollectionDoc.doc(reviewId).get();
+
+      if (reviewDoc.exists) {
+        final repliesCollection =
+            reviewDoc.reference.collection(reviewsReplyCollection);
+        final repliesQuery =
+            await repliesCollection.orderBy('date', descending: true).get();
+
+        final replies =
+            await Future.wait(repliesQuery.docs.map((replyDoc) async {
+          final replyData = replyDoc.data() as Map<String, dynamic>;
+          final userId = replyData['userId'] as String;
+
+          // Fetch user data for the reply author
+          final userDoc = await FirebaseFirestore.instance
+              .collection(userCollection)
+              .doc(userId)
+              .get();
+          final userData = userDoc.data() as Map<String, dynamic>;
+
+          // Add user data to the reply
+          replyData['name'] = userData['name'];
+          replyData['profilePicUrl'] = userData['profilePicUrl'];
+
+          return replyData;
+        }).toList());
+
+        return replies;
+      } else {
+        throw 'Review document not found';
+      }
+    } catch (e) {
+      print('Error fetching replies: $e');
+      throw e;
+    }
+  }
+
+Future<void> deleteReviewReply({
+  required String instructorUid,
+  required String reviewId,
+  required String replyId,
+}) async {
+  try {
+    final replyDocRef = FirebaseFirestore.instance
+        .collection(instructorsCollections)
+        .doc(instructorUid)
+        .collection(reviewsCollection)
+        .doc(reviewId)
+        .collection(reviewsReplyCollection)
+        .doc(replyId);
+
+    final replyDoc = await replyDocRef.get();
+
+    if (replyDoc.exists) {
+      // The reply document exists; proceed with deletion
+      await replyDocRef.delete();
+      showCustomToast("Reply deleted");
+    } else {
+      showCustomToast("Reply not found"); // Handle the case where the reply doesn't exist
+    }
+  } catch (e) {
+    showCustomToast("Error occurred while deleting the reply: $e");
+  }
+}
+
+
 }

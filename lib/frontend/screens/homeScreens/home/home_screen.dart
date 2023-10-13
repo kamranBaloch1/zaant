@@ -21,24 +21,26 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     accountType = UserPreferences.getAccountType();
-    print("accunt type is $accountType");
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return accountType == "instructor"? const ShowInstructorDetailsScreen(): Scaffold(
-      appBar: CustomAppBar(backgroundColor: appBarColor, title: "Home Screen"),
+    return Scaffold(
+      appBar: CustomAppBar(backgroundColor: appBarColor, title:  accountType == "instructor"? "Instructor Details": "Home Screen"),
       drawer: const MyDrawer(),
-      body: Column(
-        children: [
-          SizedBox(height: 40.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.w),
-            child: const SearchField(),
-          ),
-        ],
-      ),
+      body: accountType == "instructor"
+          ? ShowInstructorDetailsScreen()
+          : Column(
+              children: [
+                SizedBox(height: 40.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.w),
+                  child: const SearchField(),
+                ),
+              ],
+            ),
     );
   }
 }

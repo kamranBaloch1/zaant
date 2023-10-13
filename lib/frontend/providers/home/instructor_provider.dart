@@ -158,6 +158,57 @@ class InstructorProviders extends ChangeNotifier {
     }
   }
 
+// provider to add reviews reply
+
+  Future<void> addInstructorReviewReplyProvider({
+    required String instructorUid,
+    required String reviewId,
+    required String replyText,
+  }) async {
+   try {
+      await _instructorMethods.addInstructorReviewReply(
+        instructorUid: instructorUid, reviewId: reviewId, replyText: replyText);
+        ChangeNotifier();
+   } catch (e) {
+       print("error accoured while adding reply text");
+   }
+  }
+
+
+// Fetch reviews replies
+  Future<List<Map<String, dynamic>>> fetchReviewsRepliesProvider(
+    { required String instructorUid,
+    required String reviewId}) async {
+    try {
+      final replyData = await _instructorMethods.fetchRepliesForReview(instructorUid: instructorUid, reviewId: reviewId);
+      return replyData;
+    } catch (e) {
+      // Handle errors gracefully and show a custom toast
+      showCustomToast(
+          "An error occurred while fetching reviews: $e");
+      return [];
+    }
+  }
+
+
+
+//  provider to delete reviews reply
+Future<void> deleteReviewReplyProvider({
+  required String instructorUid,
+  required String reviewId,
+  required String replyId,
+})async{
+ try {
+      await _instructorMethods.deleteReviewReply(instructorUid: instructorUid, reviewId: reviewId, replyId: replyId);
+        ChangeNotifier();
+   } catch (e) {
+     print("error accoured while deleting reply text");
+   }
+}
+
+
+
+
 
 // provider to verfiy the phone number method
 

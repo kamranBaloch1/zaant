@@ -68,7 +68,7 @@ class StartScreen extends StatelessWidget {
                 width: 300,
                 text: "Signup",
                 onTap: () {
-                  Get.to(() => const RegisterScreen());
+                  Get.to(() => const  RegisterScreen());
                 },
               ),
             ],

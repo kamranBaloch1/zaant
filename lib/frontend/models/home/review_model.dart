@@ -21,7 +21,7 @@ class ReviewModel {
       'reviewId': reviewId,
       'content': content,
       'ratings': ratings,
-      "date": date
+      'date': date
     };
   }
 

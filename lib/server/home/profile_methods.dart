@@ -285,11 +285,8 @@ Future<void> sendChangeEmailVerificationLink({required String newEmail, required
       // Reauthenticate the user with their current email and password
       await user.reauthenticateWithCredential(credential);
       
-      // Update the user's email to the new email address
-      await user.updateEmail(newEmail);
-      
       // Send the verification email to the new email address
-      await user.sendEmailVerification();
+      await user.verifyBeforeUpdateEmail(newEmail);
       
       Get.offAll(() => ProfileEmailVerificationScreen(email: newEmail));
 
