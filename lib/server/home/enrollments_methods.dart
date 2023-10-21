@@ -35,18 +35,22 @@ class EnrollmentsMethods {
 
         if (userDocSnapshot.exists && instructorDocSnapshot.exists) {
           List<Map<String, dynamic>> userEnrollments =
-              List<Map<String, dynamic>>.from(userDocSnapshot.get('enrollments') ?? []);
+              List<Map<String, dynamic>>.from(
+                  userDocSnapshot.get('enrollments') ?? []);
           List<Map<String, dynamic>> instructorEnrollments =
-              List<Map<String, dynamic>>.from(instructorDocSnapshot.get('enrollments') ?? []);
+              List<Map<String, dynamic>>.from(
+                  instructorDocSnapshot.get('enrollments') ?? []);
 
           // Check if the user is already enrolled
-          bool isUserEnrolled = userEnrollments.any((enrollment) => enrollment.containsValue(instructorId));
-          bool isInstructorEnrolled = instructorEnrollments.any((enrollment) => enrollment.containsValue(currentUserId));
+          bool isUserEnrolled = userEnrollments
+              .any((enrollment) => enrollment.containsValue(instructorId));
+          bool isInstructorEnrolled = instructorEnrollments
+              .any((enrollment) => enrollment.containsValue(currentUserId));
 
           if (!isUserEnrolled && !isInstructorEnrolled) {
             // Create new enrollment maps
             Map<String, dynamic> newEnrollment = {
-               instructorId: currentDate.toDate().toString(),
+              instructorId: currentDate.toDate().toString(),
             };
 
             // Update user's enrollments
@@ -60,10 +64,11 @@ class EnrollmentsMethods {
 
             // Update instructor's enrollments
             instructorEnrollments.add(instructorEnrollment);
-            await instructorCollectionRef.update({'enrollments': instructorEnrollments});
+            await instructorCollectionRef
+                .update({'enrollments': instructorEnrollments});
 
             // Show success message
-            showCustomToast( "Enrolled successfully!");
+            showCustomToast("Enrolled successfully!");
           } else {
             // User is already enrolled
             showCustomToast("You are already enrolled.");
@@ -99,7 +104,8 @@ class EnrollmentsMethods {
 
         if (instructorDoc.exists) {
           List<Map<String, dynamic>> enrollments =
-              List<Map<String, dynamic>>.from(instructorDoc.get('enrollments') ?? []);
+              List<Map<String, dynamic>>.from(
+                  instructorDoc.get('enrollments') ?? []);
 
           // Check if the current user's ID is a key in any of the enrollment maps
           bool userEnrolled = enrollments.any(
@@ -115,7 +121,8 @@ class EnrollmentsMethods {
     } catch (e) {
       // Handle any potential errors here
       print("Error checking enrollment status: $e");
-      showCustomToast("Error checking enrollment status. Please try again later.");
+      showCustomToast(
+          "Error checking enrollment status. Please try again later.");
     }
 
     // Return false if an error occurred or the user is not enrolled
@@ -188,8 +195,10 @@ class EnrollmentsMethods {
   Future<List<String>> getEnrollmentUsersIDsForInstructors() async {
     String instructorId = FirebaseAuth.instance.currentUser!.uid;
     try {
-      final DocumentSnapshot instructorSnapshot =
-          await _firestore.collection(instructorsCollections).doc(instructorId).get();
+      final DocumentSnapshot instructorSnapshot = await _firestore
+          .collection(instructorsCollections)
+          .doc(instructorId)
+          .get();
       final Map<String, dynamic>? instructorData =
           instructorSnapshot.data() as Map<String, dynamic>?;
 
@@ -338,10 +347,10 @@ class EnrollmentsMethods {
               .any((enrollment) => enrollment.containsKey(userId));
 
           if (isUserEnrolled && isInstructorEnrolled) {
-            userEnrollments
-                .removeWhere((enrollment) => enrollment.containsKey(currentUserId));
-            instructorEnrollments.removeWhere(
-                (enrollment) => enrollment.containsKey(userId));
+            userEnrollments.removeWhere(
+                (enrollment) => enrollment.containsKey(currentUserId));
+            instructorEnrollments
+                .removeWhere((enrollment) => enrollment.containsKey(userId));
 
             await userCollectionRef.update({'enrollments': userEnrollments});
             await instructorCollectionRef

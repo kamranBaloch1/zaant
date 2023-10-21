@@ -30,7 +30,7 @@ class SearchField extends StatelessWidget {
               SizedBox(width: 8.w),
                Expanded(
                 child: Text(
-                  'Search Service',
+                  'Search Instructors',
                   style: TextStyle(fontSize: 16.sp,color: Colors.black,fontWeight: FontWeight.w500),
                 ),
               ),

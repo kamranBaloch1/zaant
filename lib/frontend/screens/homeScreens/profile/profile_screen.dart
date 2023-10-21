@@ -70,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Scaffold(
           appBar: CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Your Profile",
+            title:  name![0].toUpperCase() + name!.substring(1),
           ),
           drawer: const MyDrawer(),
           body: SingleChildScrollView(

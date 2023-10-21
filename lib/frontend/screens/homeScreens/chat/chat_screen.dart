@@ -25,45 +25,50 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
-  
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: AppBar(
-      iconTheme: const IconThemeData(color: Colors.black),
-      backgroundColor: appBarColor,
-  title: Row(
-    children: <Widget>[
-      CircleAvatar(
-  backgroundImage: CachedNetworkImageProvider(
-    widget.receiverProfilePicUrl, // Use the actual profile picture URL from your data
-  ),
-  radius: 18.r,
-),
-      SizedBox(width: 10.w),
-      Text(widget.receiverName,style: TextStyle(
-        color: Colors.black,
-        fontSize: 18.sp
-      ),), // Display the receiver's name here
-    ],
-  ),
- 
-),
-
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: appBarColor,
+        title: Row(
+          children: <Widget>[
+            CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(
+                widget
+                    .receiverProfilePicUrl, // Use the actual profile picture URL from your data
+              ),
+              radius: 18.r,
+            ),
+            SizedBox(width: 10.w),
+            Text(
+              widget.receiverName,
+              style: TextStyle(color: Colors.black, fontSize: 18.sp),
+            ), // Display the receiver's name here
+          ],
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                // Get.to(() => AudioCallScreen(
+                //     callID: widget.senderId,
+                //     userName: widget.receiverName,
+                //     userID: widget.senderId));
+              },
+              icon: const Icon(Icons.call)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.video_call))
+        ],
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ChatList(receiverId: widget.receiverId), // Fixed spelling issue here.
+            child: ChatList(
+                receiverId: widget.receiverId), // Fixed spelling issue here.
           ),
           Divider(height: 1.h),
           BottomChatField(
             receiverId: widget.receiverId,
             senderId: widget.senderId,
-           
-
           ),
         ],
       ),

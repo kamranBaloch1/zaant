@@ -3,24 +3,22 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_sound/public/flutter_sound_recorder.dart';
+
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:provider/provider.dart';
 
 import 'package:zant/frontend/providers/home/chat_providers.dart';
+import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 
 class BottomChatField extends StatefulWidget {
   final String receiverId;
   final String senderId;
-  
 
   const BottomChatField({
     Key? key,
     required this.receiverId,
     required this.senderId,
-  
   }) : super(key: key);
 
   @override
@@ -31,67 +29,29 @@ class _BottomChatFieldState extends State<BottomChatField> {
   bool isSendingMessage = false;
   bool isShowSendButton = false;
   final TextEditingController _messageController = TextEditingController();
-  FlutterSoundRecorder? _soundRecorder;
-  bool isRecorderInit = false;
-  bool isShowEmojiContainer = false;
-  bool isRecording = false;
+
   FocusNode focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    _soundRecorder = FlutterSoundRecorder();
-    openAudio();
-  }
-
-  void openAudio() async {
-    final status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      throw RecordingPermissionException('Microphone permission not allowed!');
-    }
-    await _soundRecorder!.openRecorder();
-    isRecorderInit = true;
-  }
 
   void _sendTextMessage() async {
     final chatProvider = Provider.of<ChatProviders>(context, listen: false);
     if (isShowSendButton) {
-      chatProvider.sendTextMessageProvider(
-        senderId: widget.senderId,
-        receiverId: widget.receiverId,
-        text: _messageController.text.trim(),
-      );
-      setState(() {
-        _messageController.clear();
-      });
-    } else {
-      var tempDir = await getTemporaryDirectory();
-      var path = '${tempDir.path}/flutter_sound.aac';
-      if (!isRecorderInit) {
-        return;
-      }
-      if (isRecording) {
-        await _soundRecorder!.stopRecorder();
-        // Implement your sendFileMessage logic here
-        chatProvider.sendVoiceMessageProvider(
+      String messageText = _messageController.text.trim();
+      if (messageText.isNotEmpty) {
+        chatProvider.sendTextMessageProvider(
           senderId: widget.senderId,
           receiverId: widget.receiverId,
-          audioFile: File(path),
+          text: messageText,
         );
+        setState(() {
+          _messageController.clear();
+        });
       } else {
-        await _soundRecorder!.startRecorder(
-          toFile: path,
-        );
+        showCustomToast("please type something");
       }
-
-      setState(() {
-        isRecording = !isRecording;
-      });
     }
   }
 
   void _sendImageMessage() async {
-    
     if (isSendingMessage) {
       // Don't send another message while one is already being sent
       return;
@@ -107,7 +67,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
       final chatProvider = Provider.of<ChatProviders>(context, listen: false);
-       chatProvider.sendImageMessageProvider(
+      chatProvider.sendImageMessageProvider(
         senderId: widget.senderId,
         receiverId: widget.receiverId,
         imageFile: imageFile,
@@ -135,7 +95,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
     if (pickedFile != null) {
       File videoFile = File(pickedFile.path);
       final chatProvider = Provider.of<ChatProviders>(context, listen: false);
-       chatProvider.sendVideoMessageProvider(
+      chatProvider.sendVideoMessageProvider(
         senderId: widget.senderId,
         receiverId: widget.receiverId,
         videoFile: videoFile,
@@ -151,8 +111,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
   void dispose() {
     super.dispose();
     _messageController.dispose();
-    _soundRecorder!.closeRecorder();
-    isRecorderInit = false;
   }
 
   @override
@@ -217,16 +175,9 @@ class _BottomChatFieldState extends State<BottomChatField> {
               ),
               child: CircleAvatar(
                 backgroundColor: const Color.fromARGB(255, 226, 221, 221),
-                radius: 25,
+                radius: 25.r,
                 child: GestureDetector(
-                  child: Icon(
-                    isShowSendButton
-                        ? Icons.send
-                        : isRecording
-                            ? Icons.close
-                            : Icons.mic,
-                    color: Colors.black,
-                  ),
+                  child: Icon(Icons.send),
                   onTap: _sendTextMessage,
                 ),
               ),

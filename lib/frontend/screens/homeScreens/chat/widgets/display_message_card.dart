@@ -1,16 +1,25 @@
-import 'dart:async';
-import 'package:audioplayers/audioplayers.dart';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:zant/frontend/enum/messgae_enum.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/widgets/video_player.dart';
+import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+
+// Import your project-specific dependencies and enums here
 
 class DisplayMessageCard extends StatefulWidget {
   final String message;
   final MessageEnum type;
 
-  DisplayMessageCard({
+  const DisplayMessageCard({
     Key? key,
     required this.message,
     required this.type,
@@ -21,57 +30,6 @@ class DisplayMessageCard extends StatefulWidget {
 }
 
 class _DisplayMessageCardState extends State<DisplayMessageCard> {
-  bool isPlaying = false;
-  bool audioDurationVisible = true;
-  Duration audioDuration = Duration();
-  Duration audioPosition = Duration();
-  late AudioPlayer audioPlayer;
-  late Timer positionTimer;
-
-  void _updateDuration(Duration duration) {
-    setState(() {
-      audioDuration = duration;
-    });
-  }
-
-  void _updatePosition() {
-    setState(() {
-      audioPosition += Duration(seconds: 1);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    audioPlayer = AudioPlayer();
-    audioPlayer.onDurationChanged.listen(_updateDuration);
-    positionTimer = Timer.periodic(Duration(seconds: 1), (_) {
-      if (isPlaying) {
-        _updatePosition();
-        if (audioPosition >= audioDuration) {
-          setState(() {
-            isPlaying = false;
-            audioDurationVisible = true;
-            audioPosition = Duration(); // Reset position
-          });
-        }
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    audioPlayer.dispose();
-    positionTimer.cancel();
-    super.dispose();
-  }
-
-  void _resetPosition() {
-    setState(() {
-      audioPosition = Duration();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return _buildMessage();
@@ -81,8 +39,7 @@ class _DisplayMessageCardState extends State<DisplayMessageCard> {
     switch (widget.type) {
       case MessageEnum.text:
         return _buildTextMessage();
-      case MessageEnum.audio:
-        return _buildAudioMessage();
+
       case MessageEnum.video:
         return _buildVideoMessage();
       case MessageEnum.image:
@@ -101,76 +58,136 @@ class _DisplayMessageCardState extends State<DisplayMessageCard> {
     );
   }
 
-  Widget _buildAudioMessage() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            IconButton(
-              constraints: BoxConstraints(
-                minWidth: 100.w,
-              ),
-              onPressed: () async {
-                if (!isPlaying) {
-                  await audioPlayer.play(
-                    UrlSource(widget.message),
-                    mode: PlayerMode.mediaPlayer,
-                  );
-                  _resetPosition();
-                  setState(() {
-                    isPlaying = true;
-                    audioDurationVisible = false;
-                  });
-                } else {
-                  await audioPlayer.pause();
-                  setState(() {
-                    isPlaying = false;
-                    audioDurationVisible = true;
-                  });
-                }
-              },
-              icon: Icon(
-                isPlaying ? Icons.pause_circle : Icons.play_circle,
-              ),
-            ),
-            audioDurationVisible
-                ? Text(
-                    '${audioDuration.inSeconds} sec',
-                    style: const TextStyle(fontSize: 16),
-                  )
-                : Text(
-                    '${audioPosition.inSeconds} sec / ${audioDuration.inSeconds} sec',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-          ],
-        ),
-        if (isPlaying && !audioDurationVisible)
-          LinearProgressIndicator(
-            value: audioPosition.inSeconds / audioDuration.inSeconds,
-            minHeight: 8.h,
-            backgroundColor: Colors.grey[300],
-          ),
-      ],
-    );
-  }
-
   Widget _buildVideoMessage() {
-    return VideoPlayerItem(
-      videoUrl: widget.message,
-    );
-  }
-
-  Widget _buildImageMessage() {
-    return Container(
-      width: double.infinity,
-      child: CachedNetworkImage(
-        imageUrl: widget.message,
+    return GestureDetector(
+      onLongPress: () {
+        showSaveMediaDialog(widget.message, isImage: false);
+      },
+      child: VideoPlayerItem(
+        videoUrl: widget.message,
       ),
     );
   }
 
+  Widget _buildImageMessage() {
+    return GestureDetector(
+      onLongPress: () {
+        showSaveMediaDialog(widget.message, isImage: true);
+      },
+      // ignore: sized_box_for_whitespace
+      child: Container(
+        width: double.infinity,
+        child: CachedNetworkImage(
+          imageUrl: widget.message,
+        ),
+      ),
+    );
+  }
+
+  void showSaveMediaDialog(String mediaUrl, {bool isImage = false}) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Save ${isImage ? 'Image' : 'Video'}?',
+              style: const TextStyle(color: Colors.black)),
+          content: Text(
+            'Do you want to save this ${isImage ? 'image' : 'video'} to your gallery?',
+            style: const TextStyle(color: Colors.black),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Save'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _requestPermissionAndSaveMedia(mediaUrl, isImage);
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _requestPermissionAndSaveMedia(String mediaUrl, bool isImage) async {
+    PermissionStatus status = await Permission.storage.status;
+    if (status.isGranted) {
+      _saveMediaToGallery(mediaUrl, isImage);
+    } else if (status.isDenied || status.isRestricted) {
+      status = await Permission.storage.request();
+      if (status.isGranted) {
+        _saveMediaToGallery(mediaUrl, isImage);
+      } else {
+        showCustomToast(
+            "Permission to save the ${isImage ? 'image' : 'video'} to the gallery was not granted.");
+      }
+    }
+  }
+
+  void _saveMediaToGallery(String mediaUrl, bool isImage) async {
+    try {
+      var response = await http.get(Uri.parse(mediaUrl));
+      final uint8List = Uint8List.fromList(response.bodyBytes);
+
+      if (isImage) {
+        final result = await ImageGallerySaver.saveImage(uint8List);
+
+        if (result != null &&
+            result.containsKey('isSuccess') &&
+            result['isSuccess']) {
+          showCustomToast(
+            'Image saved successfully',
+          );
+        } else {
+          showCustomToast(
+            'Failed to save image',
+          );
+        }
+      } else {
+        // Save the video to a temporary file
+        final tempVideoFile =
+            File('${(await getTemporaryDirectory()).path}/video.mp4');
+        await tempVideoFile.writeAsBytes(uint8List);
+
+        // Generate a thumbnail for the video
+        final thumbnailPath = await VideoThumbnail.thumbnailFile(
+          video: tempVideoFile.path,
+          imageFormat: ImageFormat.JPEG,
+          maxHeight: 64, // Adjust thumbnail size as needed
+          quality: 25, // Adjust thumbnail quality as needed
+        );
+
+        // Save the video and its thumbnail to the gallery
+        final result = await ImageGallerySaver.saveFile(tempVideoFile.path);
+        final resultThumbnail =
+            await ImageGallerySaver.saveFile(thumbnailPath!);
+
+        if (result != null && resultThumbnail != null) {
+          showCustomToast(
+            'Video saved successfully',
+          );
+        } else {
+          showCustomToast(
+            'Failed to save video',
+          );
+        }
+      }
+    } catch (e) {
+      showCustomToast(
+        'Failed to save ${isImage ? 'image' : 'video'}',
+      );
+    }
+  }
+
   Widget _buildDefaultMessage() {
-    return  Container(
+    // ignore: sized_box_for_whitespace
+    return Container(
       width: double.infinity,
       child: CachedNetworkImage(
         imageUrl: widget.message,

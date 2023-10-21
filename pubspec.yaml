@@ -37,13 +37,16 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   swipe_to: ^1.0.2
   cached_video_player: ^2.0.4
-  permission_handler: ^11.0.0
+  permission_handler: ^10.0.0
   flutter_sound: ^9.2.13
   path_provider: ^2.1.1
   audioplayers: ^5.1.0
   image_gallery_saver: ^2.0.3
   video_compress: ^3.1.2
   shimmer: ^3.0.0
+  video_thumbnail: ^0.5.3
+  
+ 
   
  
 

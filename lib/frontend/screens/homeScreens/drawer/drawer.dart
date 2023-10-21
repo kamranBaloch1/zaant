@@ -11,7 +11,6 @@ import 'package:zant/frontend/screens/homeScreens/instructor/add/add_details_scr
 import 'package:zant/global/colors.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
-
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
 
@@ -32,7 +31,6 @@ class _MyDrawerState extends State<MyDrawer> {
     name = UserPreferences.getName();
     profileUrl = UserPreferences.getProfileUrl();
     accountType = UserPreferences.getAccountType();
-    print("this is account type $accountType");
   }
 
   @override
@@ -49,7 +47,7 @@ class _MyDrawerState extends State<MyDrawer> {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -81,7 +79,6 @@ class _MyDrawerState extends State<MyDrawer> {
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
-            
               Get.offAll(() => const HomeScreen());
             },
           ),
@@ -95,65 +92,51 @@ class _MyDrawerState extends State<MyDrawer> {
               Get.to(() => const ProfileScreen());
             },
           ),
-            ListTile(
+          ListTile(
             leading: const Icon(Icons.chat),
             title: const Text(
               'Inbox',
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
-               Get.to(()=>  ChatInboxScreen());
+              Get.to(() => ChatInboxScreen());
             },
           ),
-           accountType=="user"?  ListTile(
-            leading: const Icon(Icons.person_outline),
-            title: const Text(
-              'Enrolled Instructors',
-              style: TextStyle(color: Colors.black),
-            ),
-            onTap: () {
-               Get.to(()=>const  ShowEnrolledInstructorForUserScreen());
-            },
-          ):Container(),
-        accountType=="user"?  ListTile(
-            leading: const Icon(Icons.school),
-            title: const Text(
-              'Become an instructor',
-              style: TextStyle(color: Colors.black),
-            ),
-            onTap: () {
-              Get.to(() => const AddDetailsScreen());
-            },
-          ):  accountType=="instructor"? ListTile(
-            leading: const Icon(Icons.person_outline),
-            title: const Text(
-              'Enrolled users',
-              style: TextStyle(color: Colors.black),
-            ),
-            onTap: () {
-               Get.to(()=>const  ShowEnrolledUsersForInstructor());
-            },
-          ):Container(),
-         
-        
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text(
-              'Settings',
-              style: TextStyle(color: Colors.black),
-            ),
-            onTap: () {
-            
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.help),
-            title: const Text(
-              'Help',
-              style: TextStyle(color: Colors.black),
-            ),
-            onTap: () {},
-          ),
+          accountType == "user"
+              ? ListTile(
+                  leading: const Icon(Icons.person_outline),
+                  title: const Text(
+                    'Enrolled Instructors',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  onTap: () {
+                    Get.to(() => const ShowEnrolledInstructorForUserScreen());
+                  },
+                )
+              : Container(),
+          accountType == "user"
+              ? ListTile(
+                  leading: const Icon(Icons.school),
+                  title: const Text(
+                    'Become an instructor',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  onTap: () {
+                    Get.to(() => const AddDetailsScreen());
+                  },
+                )
+              : accountType == "instructor"
+                  ? ListTile(
+                      leading: const Icon(Icons.person_outline),
+                      title: const Text(
+                        'Enrolled users',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      onTap: () {
+                        Get.to(() => const ShowEnrolledUsersForInstructor());
+                      },
+                    )
+                  : Container(),
         ],
       ),
     );

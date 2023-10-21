@@ -3,8 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/email_verify.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/number_otp_verify_screen.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/update/number_otp_verify_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
@@ -271,59 +270,6 @@ class ProfileMethods {
     }
   }
 
-Future<void> sendChangeEmailVerificationLink({required String newEmail, required String password}) async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-
-    // Check if the new email is already in use
-    final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(newEmail);
-
-    if (signInMethods.isEmpty) {
-      // Create a credential for reauthentication
-      final credential = EmailAuthProvider.credential(email: user!.email!, password: password);
-
-      // Reauthenticate the user with their current email and password
-      await user.reauthenticateWithCredential(credential);
-      
-      // Send the verification email to the new email address
-      await user.verifyBeforeUpdateEmail(newEmail);
-      
-      Get.offAll(() => ProfileEmailVerificationScreen(email: newEmail));
-
-      showCustomToast("We have sent an email verification link to this email address");
-    } else {
-      showCustomToast("This email address is already in use. Please choose another email.");
-    }
-  } catch (e) {
-    if (e is FirebaseAuthException) {
-      if (e.code == 'wrong-password') {
-        showCustomToast("Incorrect password. Please try again.");
-      } else {
-        showCustomToast("Error: ${e.message}");
-      }
-    } else {
-      showCustomToast("An error occurred while sending the verification email");
-    }
-  }
-}
-
-  // Method to update user email after email verification
-  Future<void> chnageUserEmail({required String newEmail}) async {
-    try {
-      // Get the current user
-      final User? user = _auth.currentUser;
-      await user!.updateEmail(newEmail);
-      await FirebaseFirestore.instance
-          .collection(userCollection)
-          .doc(user.uid)
-          .update({"email": newEmail});
-
-      // Update data in SharedPreferences
-      await UserPreferences.setEmail(newEmail);
-    } catch (e) {
-      showCustomToast("Something went wrong");
-    }
-  }
 
 
 }

@@ -5,6 +5,7 @@ import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/search_field.dart';
+import 'package:zant/global/constant_values.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -28,17 +29,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(backgroundColor: appBarColor, title:  accountType == "instructor"? "Instructor Details": "Home Screen"),
+      backgroundColor: scaffoldBgColor,
+      appBar: CustomAppBar(
+          backgroundColor: appBarColor,
+          title: accountType == "instructor" ? "Instructor Details" : "Zaanth"),
       drawer: const MyDrawer(),
       body: accountType == "instructor"
           ? ShowInstructorDetailsScreen()
           : Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 40.h),
+                SizedBox(height: 70.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.w),
                   child: const SearchField(),
                 ),
+                SizedBox(height: 40.h,),
+                 Image.asset(
+            homeBannerImg,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            height: 400.h,
+          ),
+
+
               ],
             ),
     );

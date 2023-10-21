@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/change_email.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/change_password.dart';
+import 'package:zant/frontend/screens/homeScreens/profile/update/change_password.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 
@@ -30,9 +29,7 @@ class PrivacySettingsScreen extends StatelessWidget {
           _buildListTile(Icons.lock, 'Change Password', () {
              Get.to(()=> const ChangePasswordScreen());
           }),
-          _buildListTile(Icons.email, 'Change Email', () {
-            Get.to(()=> const ChangeEmailScreen());
-          }),
+        
         ],
       ),
     );
