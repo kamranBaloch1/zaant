@@ -7,31 +7,27 @@ import 'package:http/http.dart' as http;
 
 class SendNotificationsMethod {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  void sendNotificationsToInstructor(
+  Future<void> sendNotificationsToInstructor(
       {required String instructorUid,
       required String userName,
-      required String userId}) {
-    String instructorDeviceToken="";
+      required String userId}) async {
+    String instructorDeviceToken = "";
 
-   try {
-      _firestore
-        .collection(userCollection)
-        .doc(instructorUid)
-        .get()
-        .then((value) {
-      if (value.data()!['deviceToken'] != null) {
-        instructorDeviceToken = value.data()!['deviceToken'];
-        print("device tken is $instructorDeviceToken");
+    try {
+      final instructorDoc =
+          await _firestore.collection(userCollection).doc(instructorUid).get();
+      if (instructorDoc.data() != null &&
+          instructorDoc.data()!['deviceToken'] != null) {
+        instructorDeviceToken = instructorDoc.data()!['deviceToken'];
+        print("device token is $instructorDeviceToken");
+        notificationFormat(
+            instructorDeviceToken: instructorDeviceToken,
+            userName: userName,
+            userId: userId);
       }
-    });
-   } catch (e) {
-      print("error accounrd $e");
-   }
-    notificationFormat(
-        instructorDeviceToken: instructorDeviceToken,
-        userName: userName,
-        userId: userId);
+    } catch (e) {
+      print("error occurred: $e");
+    }
   }
 
   void notificationFormat(
@@ -39,7 +35,7 @@ class SendNotificationsMethod {
       required String userName,
       required String userId}) {
     Map<String, String> notificationHeader = {
-       'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
       'Authorization': fcmServerKey,
     };
     Map notificationBody = {
@@ -48,22 +44,34 @@ class SendNotificationsMethod {
     };
 
     Map dataMap = {
-       "click_action": "FLUTTER_NOTIFICATION_CLICK",
+      "click_action": "FLUTTER_NOTIFICATION_CLICK",
       "id": "1",
       "status": "done",
       "userId": userId,
     };
 
     Map officialNotificationFormat = {
-        'notification': notificationBody,
+      'notification': notificationBody,
       'data': dataMap,
       'priority': 'high',
       'to': instructorDeviceToken,
     };
-  http.post(
+    http
+        .post(
       Uri.parse("https://fcm.googleapis.com/fcm/send"),
       headers: notificationHeader,
       body: jsonEncode(officialNotificationFormat),
-    );
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        print("Notification sent successfully.");
+      } else {
+        print(
+            "Failed to send notification. Status code: ${response.statusCode}");
+        print("Response body: ${response.body}");
+      }
+    }).catchError((error) {
+      print("Error sending notification: $error");
+    });
   }
 }
