@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zant/frontend/notifications/notifications_system.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/update/show_intstructor_details.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
@@ -23,6 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     accountType = UserPreferences.getAccountType();
 
+    PushNotificationsSystem pushNotificationsSystem =
+        PushNotificationsSystem();
+
+    pushNotificationsSystem.generateDeviceRecognitionToken();
+    pushNotificationsSystem.whenNotificationReceived(context: context);
+
     super.initState();
   }
 
@@ -44,15 +51,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 25.w),
                   child: const SearchField(),
                 ),
-                SizedBox(height: 40.h,),
-                 Image.asset(
-            homeBannerImg,
-            width: double.infinity,
-            fit: BoxFit.cover,
-            height: 400.h,
-          ),
-
-
+                SizedBox(
+                  height: 40.h,
+                ),
+                Image.asset(
+                  homeBannerImg,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  height: 400.h,
+                ),
               ],
             ),
     );

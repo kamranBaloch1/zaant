@@ -8,6 +8,8 @@ import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_instructo
 import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_users_for_insructor.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
+import 'package:zant/server/notifications/send_notifications.dart';
+import 'package:zant/sharedprefences/userPref.dart';
 
 class EnrollmentsMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -17,10 +19,12 @@ class EnrollmentsMethods {
   Future<void> enrollUserToInstructor({required String instructorId}) async {
     try {
       User? user = _auth.currentUser;
+     
 
       if (user != null) {
         String currentUserId = user.uid;
         Timestamp currentDate = Timestamp.now();
+         String? currentUserName = "kamran baloch";
 
         // References to user and instructor documents
         DocumentReference userCollectionRef =
@@ -67,6 +71,14 @@ class EnrollmentsMethods {
             await instructorCollectionRef
                 .update({'enrollments': instructorEnrollments});
 
+            SendNotificationsMethod().sendNotificationsToInstructor(
+                instructorUid: instructorId,
+                userName: "kamran",
+                userId: currentUserId);
+              
+
+
+      
             // Show success message
             showCustomToast("Enrolled successfully!");
           } else {
@@ -85,7 +97,7 @@ class EnrollmentsMethods {
     } catch (e) {
       // Handle errors gracefully and log the error
       print("Error enrolling user: $e");
-      showCustomToast("Error enrolling user. Please try again later.");
+      showCustomToast("Error enrolling user. Please try again later. $e");
     }
   }
 

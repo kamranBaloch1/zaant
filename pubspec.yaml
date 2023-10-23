@@ -45,6 +45,7 @@ dependencies:
   video_compress: ^3.1.2
   shimmer: ^3.0.0
   video_thumbnail: ^0.5.3
+  firebase_messaging: ^14.7.1
   
  
   

@@ -113,15 +113,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   content: widget.userModel.phoneNumber!,
                 ),
                 SizedBox(height: 16.h),
-                BuildInfoCardWidget(
-                  icon: widget.userModel.isPhoneNumberVerified!
-                      ? Icons.verified
-                      : Icons.info_outline,
-                  title: "Phone Number Verification",
-                  content: widget.userModel.isPhoneNumberVerified!
-                      ? "Verified"
-                      : "Not Verified",
-                ),
+              
                 BuildInfoCardWidget(
                   icon: widget.userModel.gender == "male"
                       ? Icons.boy
