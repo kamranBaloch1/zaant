@@ -8,6 +8,7 @@ import 'package:zant/frontend/models/auth/user_model.dart';
 import 'package:zant/frontend/models/home/chat_contact_model.dart';
 import 'package:zant/frontend/models/home/message_model.dart';
 import 'package:zant/global/firebase_collection_names.dart';
+import 'package:zant/server/notifications/send_notifications.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 class ChatMethods {
@@ -47,6 +48,8 @@ class ChatMethods {
   }) async {
     try {
       UserModel? receiverUserData;
+      String? currentUserName = UserPreferences.getName();
+    
 
       var userDataMap = await FirebaseFirestore.instance
           .collection(userCollection)
@@ -55,33 +58,38 @@ class ChatMethods {
       receiverUserData = UserModel.fromMap(userDataMap.data()!);
 
       String messageId = Uuid().v4();
-      
+
       final message = MessageModel(
         senderId: senderId,
         receiverId: receiverId,
         text: text,
         type: MessageEnum.text,
         timeSent: DateTime.now(),
-        messageId:messageId ,
+        messageId: messageId,
         isSeen: false,
       );
 
       await _saveDataToContactSubCollection(
           receiverUserData: receiverUserData, lastMessage: text);
 
-      await _storeMessage(senderId, receiverId, message.toMap(),messageId);
+      await _storeMessage(senderId, receiverId, message.toMap(), messageId);
+
+      await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
+          userName: currentUserName!, userId: receiverId);
     } catch (e) {
       print('Error sending text message: $e');
     }
   }
 
   // Send an image message.
-void  sendImageMessage({
+  void sendImageMessage({
     required String senderId,
     required String receiverId,
     required File imageFile,
   }) async {
     try {
+      String? currentUserName = UserPreferences.getName();
+    
       final imageDownloadedUrl = await uploadFile(
         path: 'chat_images',
         file: imageFile,
@@ -109,32 +117,37 @@ void  sendImageMessage({
       await _saveDataToContactSubCollection(
           receiverUserData: receiverUserData, lastMessage: "📷");
 
-      await _storeMessage(senderId, receiverId, message.toMap(),messageId);
+      await _storeMessage(senderId, receiverId, message.toMap(), messageId);
+
+     await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
+          userName: currentUserName!, userId: receiverId);
     } catch (e) {
       print('Error sending image message: $e');
     }
   }
 
   // Send a video message.
-void  sendVideoMessage({
+  void sendVideoMessage({
     required String senderId,
     required String receiverId,
     required File videoFile,
   }) async {
     try {
+      String? currentUserName = UserPreferences.getName();
+    
       final videoDownloadUrl = await uploadFile(
         path: 'chat_videos',
         file: videoFile,
         fileExtension: 'mp4',
       );
-      String messageId =  Uuid().v4();
+      String messageId = Uuid().v4();
       final message = MessageModel(
         senderId: senderId,
         receiverId: receiverId,
         text: videoDownloadUrl,
         type: MessageEnum.video,
         timeSent: DateTime.now(),
-        messageId:messageId,
+        messageId: messageId,
         isSeen: false,
       );
 
@@ -149,19 +162,23 @@ void  sendVideoMessage({
       await _saveDataToContactSubCollection(
           receiverUserData: receiverUserData, lastMessage: "📷");
 
-      await _storeMessage(senderId, receiverId, message.toMap(),messageId);
+      await _storeMessage(senderId, receiverId, message.toMap(), messageId);
+     await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
+          userName: currentUserName!, userId: receiverId);
     } catch (e) {
       print('Error sending video message: $e');
     }
   }
 
   // Send a voice message.
-void sendVoiceMessage({
+  void sendVoiceMessage({
     required String senderId,
     required String receiverId,
     required File audioFile,
   }) async {
     try {
+      String? currentUserName = UserPreferences.getName();
+    
       final audioUrl = await uploadFile(
         path: 'chat_audio',
         file: audioFile,
@@ -189,7 +206,9 @@ void sendVoiceMessage({
       await _saveDataToContactSubCollection(
           receiverUserData: receiverUserData, lastMessage: "🎵");
 
-      await _storeMessage(senderId, receiverId, message.toMap(),messageId);
+      await _storeMessage(senderId, receiverId, message.toMap(), messageId);
+     await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
+          userName: currentUserName!, userId: receiverId);
     } catch (e) {
       print('Error sending voice message: $e');
     }
@@ -222,7 +241,7 @@ void sendVoiceMessage({
         name: receiverUserData.name!,
         profilePicUrl: receiverUserData.profilePicUrl!,
         contactId: receiverUserData.uid!,
-        timeSent:  DateTime.now(),
+        timeSent: DateTime.now(),
         lastMessage: lastMessage,
       );
 
@@ -238,9 +257,8 @@ void sendVoiceMessage({
 
   // Store a message in Firestore.
   Future<void> _storeMessage(String senderId, String receiverId,
-      Map<String, dynamic> messageData,String messageId ) async {
+      Map<String, dynamic> messageData, String messageId) async {
     try {
-    
       await usersCollection
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection(chatsCollection)
@@ -269,7 +287,7 @@ void sendVoiceMessage({
           .collection(chatsCollection)
           .doc(receiverId)
           .collection(messageCollection)
-          .orderBy("timeSent",descending: false)
+          .orderBy("timeSent", descending: false)
           .snapshots()
           .map((event) {
         List<MessageModel> messages = [];
@@ -284,9 +302,9 @@ void sendVoiceMessage({
     }
   }
 
-  // update the isSeen method for chats 
-  
-    void updateMessageIsSeen(
+  // update the isSeen method for chats
+
+  void updateMessageIsSeen(
       {required String receiverId, required String messageId}) async {
     try {
       await usersCollection
@@ -294,7 +312,7 @@ void sendVoiceMessage({
           .collection(chatsCollection)
           .doc(receiverId)
           .collection(messageCollection)
-          .doc(messageId) 
+          .doc(messageId)
           .update({"isSeen": true});
 
       await usersCollection
@@ -305,49 +323,46 @@ void sendVoiceMessage({
           .doc(messageId)
           .update({"isSeen": true});
     } catch (e) {
-        print(e.toString());
+      print(e.toString());
     }
   }
 
-
   // getting the list of contacts for chat Inbox
 
-Stream<List<ChatContactModel>> getChatsContacts() {
-  try {
-    return usersCollection
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection(chatsCollection)
-        .snapshots()
-        .asyncMap((event) async {
-          List<ChatContactModel> contacts = [];
+  Stream<List<ChatContactModel>> getChatsContacts() {
+    try {
+      return usersCollection
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection(chatsCollection)
+          .snapshots()
+          .asyncMap((event) async {
+        List<ChatContactModel> contacts = [];
 
-          for (var document in event.docs) {
-            var chatsContacts = ChatContactModel.fromMap(document.data());
+        for (var document in event.docs) {
+          var chatsContacts = ChatContactModel.fromMap(document.data());
 
-            var userData = await FirebaseFirestore.instance
-                .collection(userCollection)
-                .doc(chatsContacts.contactId)
-                .get();
-            var user = UserModel.fromMap(userData.data()!);
+          var userData = await FirebaseFirestore.instance
+              .collection(userCollection)
+              .doc(chatsContacts.contactId)
+              .get();
+          var user = UserModel.fromMap(userData.data()!);
 
-            contacts.add(ChatContactModel(
-              name: user.name!,
-              profilePicUrl: user.profilePicUrl!,
-              contactId: chatsContacts.contactId,
-              timeSent: chatsContacts.timeSent,
-              lastMessage: chatsContacts.lastMessage,
-            ));
-          }
-          return contacts;
-        });
-  } catch (e) {
-    // Handle the error here, e.g., print or log it
-    print('Error getting chat contacts: $e');
-    return Stream<List<ChatContactModel>>.empty(); // Return an empty stream or handle the error accordingly
+          contacts.add(ChatContactModel(
+            name: user.name!,
+            profilePicUrl: user.profilePicUrl!,
+            contactId: chatsContacts.contactId,
+            timeSent: chatsContacts.timeSent,
+            lastMessage: chatsContacts.lastMessage,
+          ));
+        }
+        return contacts;
+      });
+    } catch (e) {
+      // Handle the error here, e.g., print or log it
+      print('Error getting chat contacts: $e');
+      return Stream<
+          List<
+              ChatContactModel>>.empty(); // Return an empty stream or handle the error accordingly
+    }
   }
 }
-
-
-}
-
-

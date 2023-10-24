@@ -1,77 +1,105 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zant/global/firebase_collection_names.dart';
-import 'package:zant/global/keys.dart';
-import 'package:http/http.dart' as http;
+import 'package:zant/server/notifications/notification_format.dart';
 
 class SendNotificationsMethod {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future<void> sendNotificationsToInstructor(
-      {required String instructorUid,
-      required String userName,
-      required String userId}) async {
-    String instructorDeviceToken = "";
+
+  final NotificationFormat _notificationFormat = NotificationFormat();
+
+  Future<void> sendNotificationsToInstructorForNewEnrollment({
+    required String instructorUid,
+    required String userName,
+  }) async {
+    String deviceToken = "";
 
     try {
       final instructorDoc =
           await _firestore.collection(userCollection).doc(instructorUid).get();
       if (instructorDoc.data() != null &&
           instructorDoc.data()!['deviceToken'] != null) {
-        instructorDeviceToken = instructorDoc.data()!['deviceToken'];
-        print("device token is $instructorDeviceToken");
-        notificationFormat(
-            instructorDeviceToken: instructorDeviceToken,
-            userName: userName,
-            userId: userId);
+        deviceToken = instructorDoc.data()!['deviceToken'];
+
+        _notificationFormat.notificationFormat(
+          deviceToken: deviceToken,
+          userName: userName,
+          notificationBodyText: "$userName enrolled you",
+          notificationTitleText: "New Enrollment",
+        );
       }
     } catch (e) {
       print("error occurred: $e");
     }
   }
 
-  void notificationFormat(
-      {required String instructorDeviceToken,
-      required String userName,
-      required String userId}) {
-    Map<String, String> notificationHeader = {
-      'Content-Type': 'application/json',
-      'Authorization': fcmServerKey,
-    };
-    Map notificationBody = {
-      'body': "$userName enrolled you",
-      'title': "new enrollment"
-    };
+  Future<void> sendNotificationsToInstructorForNewReview({
+    required String instructorUid,
+    required String userName,
+  }) async {
+    String deviceToken = "";
 
-    Map dataMap = {
-      "click_action": "FLUTTER_NOTIFICATION_CLICK",
-      "id": "1",
-      "status": "done",
-      "userId": userId,
-    };
+    try {
+      final instructorDoc =
+          await _firestore.collection(userCollection).doc(instructorUid).get();
+      if (instructorDoc.data() != null &&
+          instructorDoc.data()!['deviceToken'] != null) {
+        deviceToken = instructorDoc.data()!['deviceToken'];
 
-    Map officialNotificationFormat = {
-      'notification': notificationBody,
-      'data': dataMap,
-      'priority': 'high',
-      'to': instructorDeviceToken,
-    };
-    http
-        .post(
-      Uri.parse("https://fcm.googleapis.com/fcm/send"),
-      headers: notificationHeader,
-      body: jsonEncode(officialNotificationFormat),
-    )
-        .then((response) {
-      if (response.statusCode == 200) {
-        print("Notification sent successfully.");
-      } else {
-        print(
-            "Failed to send notification. Status code: ${response.statusCode}");
-        print("Response body: ${response.body}");
+        _notificationFormat.notificationFormat(
+          deviceToken: deviceToken,
+          userName: userName,
+          notificationBodyText: "$userName added a reviwed",
+          notificationTitleText: "New Review",
+        );
       }
-    }).catchError((error) {
-      print("Error sending notification: $error");
-    });
+    } catch (e) {
+      print("error occurred: $e");
+    }
+  }
+
+  Future<void> sendNotificationsToUsersForReviewReplay(
+      {required String userName, required String userId}) async {
+    String deviceToken = "";
+
+    try {
+      final instructorDoc =
+          await _firestore.collection(userCollection).doc(userId).get();
+      if (instructorDoc.data() != null &&
+          instructorDoc.data()!['deviceToken'] != null) {
+        deviceToken = instructorDoc.data()!['deviceToken'];
+
+        _notificationFormat.notificationFormat(
+          deviceToken: deviceToken,
+          userName: userName,
+          notificationBodyText: "$userName replied you",
+          notificationTitleText: "New Replay",
+        );
+      }
+    } catch (e) {
+      print("error occurred: $e");
+    }
+  }
+
+  Future<void> sendNotificationsToUsersForNewMessage(
+      {required String userName, required String userId}) async {
+    String deviceToken = "";
+
+    try {
+      final instructorDoc =
+          await _firestore.collection(userCollection).doc(userId).get();
+      if (instructorDoc.data() != null &&
+          instructorDoc.data()!['deviceToken'] != null) {
+        deviceToken = instructorDoc.data()!['deviceToken'];
+
+        _notificationFormat.notificationFormat(
+          deviceToken: deviceToken,
+          userName: userName,
+          notificationBodyText: "$userName sent message",
+          notificationTitleText: "New Message",
+        );
+      }
+    } catch (e) {
+      print("error occurred: $e");
+    }
   }
 }

@@ -18,7 +18,7 @@ class PushNotificationsSystem {
         .then((RemoteMessage? remoteMessage) {
       if (remoteMessage != null) {
         //open app and show notification data
-        showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
+        // showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
       }
     });
 
@@ -27,7 +27,7 @@ class PushNotificationsSystem {
     FirebaseMessaging.onMessage.listen((RemoteMessage? remoteMessage) {
       if (remoteMessage != null) {
         //directly show notification data
-         showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
+        //  showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
       }
     });
 
@@ -37,7 +37,7 @@ class PushNotificationsSystem {
       if (remoteMessage != null) {
         //open the app - show notification data
         
-       showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
+      //  showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
       }
     });
   }

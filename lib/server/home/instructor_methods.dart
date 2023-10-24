@@ -11,6 +11,7 @@ import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/sho
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/phone/phone_number_otp_screen.dart';
+import 'package:zant/server/notifications/send_notifications.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 class InstructorMethods {
@@ -465,6 +466,7 @@ class InstructorMethods {
   }) async {
     try {
       String userId = FirebaseAuth.instance.currentUser!.uid;
+      String? currentUserName = UserPreferences.getName();
 
       final instructorDoc = FirebaseFirestore.instance
           .collection(instructorsCollections)
@@ -498,7 +500,11 @@ class InstructorMethods {
           await instructorDoc.update({'ratings': clampedAverageRating});
 
           await reviewsCollectionRef.doc(userId).set(reviewModel.toMap());
-
+          await SendNotificationsMethod()
+              .sendNotificationsToInstructorForNewReview(
+            instructorUid: instructorUid,
+            userName: currentUserName!,
+          );
           showCustomToast("Review added");
           Get.to(
               () => ShowInstructorReviewsScreen(instructorId: instructorUid));
@@ -553,6 +559,7 @@ class InstructorMethods {
     try {
       final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
       final String replyId = const Uuid().v4();
+      String? currentUserName = UserPreferences.getName();
 
       ReviewReplyModel reviewReplyModel = ReviewReplyModel(
           userId: currentUserId,
@@ -560,8 +567,7 @@ class InstructorMethods {
           reviewId: reviewId,
           replyText: replyText,
           date: Timestamp.fromDate(DateTime.now()),
-          replyId: replyId
-          );
+          replyId: replyId);
 
       await FirebaseFirestore.instance
           .collection(instructorsCollections)
@@ -571,8 +577,10 @@ class InstructorMethods {
           .collection(reviewsReplyCollection)
           .doc(replyId)
           .set(reviewReplyModel.toMap());
-
-      showCustomToast("Reply added ");
+      await SendNotificationsMethod().sendNotificationsToUsersForReviewReplay(
+          userName: currentUserName!,
+          userId: FirebaseAuth.instance.currentUser!.uid);
+      showCustomToast("Reply added");
     } catch (e) {
       showCustomToast(e.toString());
     }
@@ -624,33 +632,32 @@ class InstructorMethods {
     }
   }
 
-Future<void> deleteReviewReply({
-  required String instructorUid,
-  required String reviewId,
-  required String replyId,
-}) async {
-  try {
-    final replyDocRef = FirebaseFirestore.instance
-        .collection(instructorsCollections)
-        .doc(instructorUid)
-        .collection(reviewsCollection)
-        .doc(reviewId)
-        .collection(reviewsReplyCollection)
-        .doc(replyId);
+  Future<void> deleteReviewReply({
+    required String instructorUid,
+    required String reviewId,
+    required String replyId,
+  }) async {
+    try {
+      final replyDocRef = FirebaseFirestore.instance
+          .collection(instructorsCollections)
+          .doc(instructorUid)
+          .collection(reviewsCollection)
+          .doc(reviewId)
+          .collection(reviewsReplyCollection)
+          .doc(replyId);
 
-    final replyDoc = await replyDocRef.get();
+      final replyDoc = await replyDocRef.get();
 
-    if (replyDoc.exists) {
-      // The reply document exists; proceed with deletion
-      await replyDocRef.delete();
-      showCustomToast("Reply deleted");
-    } else {
-      showCustomToast("Reply not found"); // Handle the case where the reply doesn't exist
+      if (replyDoc.exists) {
+        // The reply document exists; proceed with deletion
+        await replyDocRef.delete();
+        showCustomToast("Reply deleted");
+      } else {
+        showCustomToast(
+            "Reply not found"); // Handle the case where the reply doesn't exist
+      }
+    } catch (e) {
+      showCustomToast("Error occurred while deleting the reply: $e");
     }
-  } catch (e) {
-    showCustomToast("Error occurred while deleting the reply: $e");
   }
-}
-
-
 }

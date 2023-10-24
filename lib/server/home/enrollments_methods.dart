@@ -19,12 +19,11 @@ class EnrollmentsMethods {
   Future<void> enrollUserToInstructor({required String instructorId}) async {
     try {
       User? user = _auth.currentUser;
-     
 
       if (user != null) {
         String currentUserId = user.uid;
         Timestamp currentDate = Timestamp.now();
-         String? currentUserName = "kamran baloch";
+        String? currentUserName = UserPreferences.getName();
 
         // References to user and instructor documents
         DocumentReference userCollectionRef =
@@ -71,14 +70,12 @@ class EnrollmentsMethods {
             await instructorCollectionRef
                 .update({'enrollments': instructorEnrollments});
 
-            SendNotificationsMethod().sendNotificationsToInstructor(
-                instructorUid: instructorId,
-                userName: "kamran",
-                userId: currentUserId);
-              
+           await SendNotificationsMethod()
+                .sendNotificationsToInstructorForNewEnrollment(
+              instructorUid: instructorId,
+              userName: currentUserName!,
+            );
 
-
-      
             // Show success message
             showCustomToast("Enrolled successfully!");
           } else {
