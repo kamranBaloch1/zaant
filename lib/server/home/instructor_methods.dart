@@ -11,6 +11,7 @@ import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/sho
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/phone/phone_number_otp_screen.dart';
+import 'package:zant/server/notifications/notification_method.dart';
 import 'package:zant/server/notifications/send_notifications.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
@@ -505,6 +506,14 @@ class InstructorMethods {
             instructorUid: instructorUid,
             userName: currentUserName!,
           );
+
+            //Saving the notification to firestore
+
+      await NotificationMethod().saveNotificationToFireStore(
+          notificationText: "added a review",
+          receiverUserId: instructorUid,
+          senderUserId: userId);
+
           showCustomToast("Review added");
           Get.to(
               () => ShowInstructorReviewsScreen(instructorId: instructorUid));
@@ -578,8 +587,14 @@ class InstructorMethods {
           .doc(replyId)
           .set(reviewReplyModel.toMap());
       await SendNotificationsMethod().sendNotificationsToUsersForReviewReplay(
-          userName: currentUserName!,
-          userId: FirebaseAuth.instance.currentUser!.uid);
+          userName: currentUserName!, userId: instructorUid);
+
+      //Saving the notification to firestore
+
+      await NotificationMethod().saveNotificationToFireStore(
+          notificationText: "replied you",
+          receiverUserId: instructorUid,
+          senderUserId: currentUserId);
       showCustomToast("Reply added");
     } catch (e) {
       showCustomToast(e.toString());

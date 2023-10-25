@@ -4,7 +4,6 @@ import 'package:zant/server/notifications/notification_format.dart';
 
 class SendNotificationsMethod {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   final NotificationFormat _notificationFormat = NotificationFormat();
 
   Future<void> sendNotificationsToInstructorForNewEnrollment({
@@ -14,12 +13,15 @@ class SendNotificationsMethod {
     String deviceToken = "";
 
     try {
+      // Get instructor's document and check if it has a device token
       final instructorDoc =
           await _firestore.collection(userCollection).doc(instructorUid).get();
+
       if (instructorDoc.data() != null &&
           instructorDoc.data()!['deviceToken'] != null) {
         deviceToken = instructorDoc.data()!['deviceToken'];
 
+        // Format and send the notification
         _notificationFormat.notificationFormat(
           deviceToken: deviceToken,
           userName: userName,
@@ -28,7 +30,7 @@ class SendNotificationsMethod {
         );
       }
     } catch (e) {
-      print("error occurred: $e");
+      print("Error occurred: $e");
     }
   }
 
@@ -39,67 +41,77 @@ class SendNotificationsMethod {
     String deviceToken = "";
 
     try {
+      // Get instructor's document and check if it has a device token
       final instructorDoc =
           await _firestore.collection(userCollection).doc(instructorUid).get();
+
       if (instructorDoc.data() != null &&
           instructorDoc.data()!['deviceToken'] != null) {
         deviceToken = instructorDoc.data()!['deviceToken'];
 
+        // Format and send the notification
         _notificationFormat.notificationFormat(
           deviceToken: deviceToken,
           userName: userName,
-          notificationBodyText: "$userName added a reviwed",
+          notificationBodyText: "$userName added a review",
           notificationTitleText: "New Review",
         );
       }
     } catch (e) {
-      print("error occurred: $e");
+      print("Error occurred: $e");
     }
   }
 
-  Future<void> sendNotificationsToUsersForReviewReplay(
-      {required String userName, required String userId}) async {
+  Future<void> sendNotificationsToUsersForReviewReplay({
+    required String userName,
+    required String userId,
+  }) async {
     String deviceToken = "";
 
     try {
-      final instructorDoc =
-          await _firestore.collection(userCollection).doc(userId).get();
-      if (instructorDoc.data() != null &&
-          instructorDoc.data()!['deviceToken'] != null) {
-        deviceToken = instructorDoc.data()!['deviceToken'];
+      // Get user's document and check if it has a device token
+      final userDoc = await _firestore.collection(userCollection).doc(userId).get();
 
+      if (userDoc.data() != null && userDoc.data()!['deviceToken'] != null) {
+        deviceToken = userDoc.data()!['deviceToken'];
+
+        // Format and send the notification
         _notificationFormat.notificationFormat(
           deviceToken: deviceToken,
           userName: userName,
-          notificationBodyText: "$userName replied you",
+          notificationBodyText: "$userName replied to your review",
           notificationTitleText: "New Replay",
         );
       }
     } catch (e) {
-      print("error occurred: $e");
+      print("Error occurred: $e");
     }
   }
 
-  Future<void> sendNotificationsToUsersForNewMessage(
-      {required String userName, required String userId}) async {
+  Future<void> sendNotificationsToUsersForNewMessage({
+    required String userName,
+    required String userId,
+    required String messageTypeText,
+  }) async {
     String deviceToken = "";
 
     try {
-      final instructorDoc =
-          await _firestore.collection(userCollection).doc(userId).get();
-      if (instructorDoc.data() != null &&
-          instructorDoc.data()!['deviceToken'] != null) {
-        deviceToken = instructorDoc.data()!['deviceToken'];
+      // Get user's document and check if it has a device token
+      final userDoc = await _firestore.collection(userCollection).doc(userId).get();
 
+      if (userDoc.data() != null && userDoc.data()!['deviceToken'] != null) {
+        deviceToken = userDoc.data()!['deviceToken'];
+
+        // Format and send the notification
         _notificationFormat.notificationFormat(
           deviceToken: deviceToken,
           userName: userName,
-          notificationBodyText: "$userName sent message",
+          notificationBodyText: "$userName sent $messageTypeText",
           notificationTitleText: "New Message",
         );
       }
     } catch (e) {
-      print("error occurred: $e");
+      print("Error occurred: $e");
     }
   }
 }

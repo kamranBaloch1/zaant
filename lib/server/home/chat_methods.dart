@@ -8,6 +8,7 @@ import 'package:zant/frontend/models/auth/user_model.dart';
 import 'package:zant/frontend/models/home/chat_contact_model.dart';
 import 'package:zant/frontend/models/home/message_model.dart';
 import 'package:zant/global/firebase_collection_names.dart';
+import 'package:zant/server/notifications/notification_method.dart';
 import 'package:zant/server/notifications/send_notifications.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
@@ -49,7 +50,7 @@ class ChatMethods {
     try {
       UserModel? receiverUserData;
       String? currentUserName = UserPreferences.getName();
-    
+      String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
       var userDataMap = await FirebaseFirestore.instance
           .collection(userCollection)
@@ -75,7 +76,16 @@ class ChatMethods {
       await _storeMessage(senderId, receiverId, message.toMap(), messageId);
 
       await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
-          userName: currentUserName!, userId: receiverId);
+          userName: currentUserName!,
+          userId: receiverId,
+          messageTypeText: "message");
+
+          //Saving the notification to firestore
+
+     await NotificationMethod().saveNotificationToFireStore(
+          notificationText: "sent message",
+          receiverUserId: receiverId,
+          senderUserId: currentUserId);
     } catch (e) {
       print('Error sending text message: $e');
     }
@@ -89,7 +99,8 @@ class ChatMethods {
   }) async {
     try {
       String? currentUserName = UserPreferences.getName();
-    
+      String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
       final imageDownloadedUrl = await uploadFile(
         path: 'chat_images',
         file: imageFile,
@@ -119,8 +130,17 @@ class ChatMethods {
 
       await _storeMessage(senderId, receiverId, message.toMap(), messageId);
 
-     await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
-          userName: currentUserName!, userId: receiverId);
+      await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
+          userName: currentUserName!,
+          userId: receiverId,
+          messageTypeText: "photo 📷");
+
+            //Saving the notification to firestore
+
+     await NotificationMethod().saveNotificationToFireStore(
+          notificationText: "sent photo 📷",
+          receiverUserId: receiverId,
+          senderUserId: currentUserId);
     } catch (e) {
       print('Error sending image message: $e');
     }
@@ -134,7 +154,8 @@ class ChatMethods {
   }) async {
     try {
       String? currentUserName = UserPreferences.getName();
-    
+        String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
       final videoDownloadUrl = await uploadFile(
         path: 'chat_videos',
         file: videoFile,
@@ -160,11 +181,20 @@ class ChatMethods {
       receiverUserData = UserModel.fromMap(userDataMap.data()!);
 
       await _saveDataToContactSubCollection(
-          receiverUserData: receiverUserData, lastMessage: "📷");
+          receiverUserData: receiverUserData, lastMessage: "📹");
 
       await _storeMessage(senderId, receiverId, message.toMap(), messageId);
-     await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
-          userName: currentUserName!, userId: receiverId);
+      await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
+          userName: currentUserName!,
+          userId: receiverId,
+          messageTypeText: "video 📹");
+          
+          //Saving the notification to firestore
+
+     await NotificationMethod().saveNotificationToFireStore(
+          notificationText: "sent video 📹",
+          receiverUserId: receiverId,
+          senderUserId: currentUserId);
     } catch (e) {
       print('Error sending video message: $e');
     }
@@ -178,7 +208,8 @@ class ChatMethods {
   }) async {
     try {
       String? currentUserName = UserPreferences.getName();
-    
+      String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
       final audioUrl = await uploadFile(
         path: 'chat_audio',
         file: audioFile,
@@ -204,11 +235,20 @@ class ChatMethods {
       receiverUserData = UserModel.fromMap(userDataMap.data()!);
 
       await _saveDataToContactSubCollection(
-          receiverUserData: receiverUserData, lastMessage: "🎵");
+          receiverUserData: receiverUserData, lastMessage: "🎤");
 
       await _storeMessage(senderId, receiverId, message.toMap(), messageId);
-     await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
-          userName: currentUserName!, userId: receiverId);
+      await SendNotificationsMethod().sendNotificationsToUsersForNewMessage(
+          userName: currentUserName!,
+          userId: receiverId,
+          messageTypeText: "audio 🎤");
+          
+          //Saving the notification to firestore
+
+     await NotificationMethod().saveNotificationToFireStore(
+          notificationText: "sent voice 🎤",
+          receiverUserId: receiverId,
+          senderUserId: currentUserId);
     } catch (e) {
       print('Error sending voice message: $e');
     }
@@ -365,4 +405,6 @@ class ChatMethods {
               ChatContactModel>>.empty(); // Return an empty stream or handle the error accordingly
     }
   }
+
+
 }

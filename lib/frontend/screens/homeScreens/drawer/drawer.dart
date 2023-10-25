@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -5,10 +6,12 @@ import 'package:zant/frontend/screens/homeScreens/chat/chat_inbox_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_instructor_for_user.dart';
 import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_users_for_insructor.dart';
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
+import 'package:zant/frontend/screens/homeScreens/notifications/notification_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/add/add_details_screen.dart';
 import 'package:zant/global/colors.dart';
+import 'package:zant/server/notifications/notification_method.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -26,11 +29,23 @@ class _MyDrawerState extends State<MyDrawer> {
   @override
   void initState() {
     super.initState();
-
+    // Fetch the unread notification count
+    fetchUnreadNotificationCount();
     // Fetch user info from SharedPreferences
     name = UserPreferences.getName();
     profileUrl = UserPreferences.getProfileUrl();
     accountType = UserPreferences.getAccountType();
+  }
+
+  int unreadNotificationCount = 0;
+  Future<void> fetchUnreadNotificationCount() async {
+    final count = await NotificationMethod().fetchUnreadNotificationCount();
+
+    if (mounted) {
+      setState(() {
+        unreadNotificationCount = count;
+      });
+    }
   }
 
   @override
@@ -73,7 +88,10 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.home),
+            leading: const Icon(
+              Icons.home,
+              color: Colors.black,
+            ),
             title: const Text(
               'Home',
               style: TextStyle(color: Colors.black),
@@ -83,7 +101,10 @@ class _MyDrawerState extends State<MyDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: const Icon(
+              Icons.person,
+              color: Colors.black,
+            ),
             title: const Text(
               'Profile',
               style: TextStyle(color: Colors.black),
@@ -93,7 +114,10 @@ class _MyDrawerState extends State<MyDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.chat),
+            leading: const Icon(
+              Icons.chat,
+              color: Colors.black,
+            ),
             title: const Text(
               'Inbox',
               style: TextStyle(color: Colors.black),
@@ -104,7 +128,10 @@ class _MyDrawerState extends State<MyDrawer> {
           ),
           accountType == "user"
               ? ListTile(
-                  leading: const Icon(Icons.person_outline),
+                  leading: const Icon(
+                    Icons.person_outline,
+                    color: Colors.black,
+                  ),
                   title: const Text(
                     'Enrolled Instructors',
                     style: TextStyle(color: Colors.black),
@@ -116,7 +143,10 @@ class _MyDrawerState extends State<MyDrawer> {
               : Container(),
           accountType == "user"
               ? ListTile(
-                  leading: const Icon(Icons.school),
+                  leading: const Icon(
+                    Icons.school,
+                    color: Colors.black,
+                  ),
                   title: const Text(
                     'Become an instructor',
                     style: TextStyle(color: Colors.black),
@@ -127,7 +157,10 @@ class _MyDrawerState extends State<MyDrawer> {
                 )
               : accountType == "instructor"
                   ? ListTile(
-                      leading: const Icon(Icons.person_outline),
+                      leading: const Icon(
+                        Icons.person_outline,
+                        color: Colors.black,
+                      ),
                       title: const Text(
                         'Enrolled users',
                         style: TextStyle(color: Colors.black),
@@ -137,6 +170,42 @@ class _MyDrawerState extends State<MyDrawer> {
                       },
                     )
                   : Container(),
+          ListTile(
+            leading: Stack(
+              alignment: Alignment.center,
+              children: [
+                const Icon(Icons.notifications, color: Colors.black),
+                if (unreadNotificationCount > 0)
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(2.w),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red,
+                      ),
+                      child: Text(
+                        '$unreadNotificationCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            title: const Text(
+              'Notifications',
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            onTap: () {
+              Get.to(() => NotificationsScreen());
+            },
+          ),
         ],
       ),
     );

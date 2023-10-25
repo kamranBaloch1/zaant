@@ -8,6 +8,7 @@ import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_instructo
 import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_users_for_insructor.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
+import 'package:zant/server/notifications/notification_method.dart';
 import 'package:zant/server/notifications/send_notifications.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
@@ -75,6 +76,13 @@ class EnrollmentsMethods {
               instructorUid: instructorId,
               userName: currentUserName!,
             );
+
+ //Saving the notification to firestore
+ 
+            await NotificationMethod().saveNotificationToFireStore(
+          notificationText: "enrolled you",
+          receiverUserId: instructorId,
+          senderUserId: currentUserId);
 
             // Show success message
             showCustomToast("Enrolled successfully!");
