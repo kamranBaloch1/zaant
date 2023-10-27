@@ -20,11 +20,14 @@ import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/server/auth/logout.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
+
 // Entry point for the application
 void main() async {
   // Ensure that Firebase is initialized before the app starts
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // initializing the sharedPrefences
   await UserPreferences.init();
 
   runApp(
@@ -94,7 +97,7 @@ Future<User?> _getCurrentUser() async {
 Future<DocumentSnapshot<Map<String, dynamic>>> _getUserDocument(
     User user) async {
   return FirebaseFirestore.instance
-      .collection(userCollection)
+      .collection(FirebaseCollectionNamesFields().userCollection)
       .doc(user.uid)
       .get();
 }
@@ -134,7 +137,7 @@ Future<void> _deleteUserData(User user) async {
   // Delete user data from Firestore and Firebase Auth if isEmailVerified is false
   try {
     await FirebaseFirestore.instance
-        .collection(userCollection)
+        .collection(FirebaseCollectionNamesFields().userCollection)
         .doc(user.uid)
         .delete();
     await user.delete();

@@ -9,6 +9,8 @@ import 'package:zant/sharedprefences/userPref.dart';
 
 class LoginMethods {
   // Method to handle user login with email and password
+
+ final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
   Future<void> loginWithEmailAndPassword(String email, String password) async {
     try {
       final credential = await FirebaseAuth.instance
@@ -20,7 +22,7 @@ class LoginMethods {
         // Fetch user data from Firestore
         DocumentSnapshot<Map<String, dynamic>> userSnapshot =
             await FirebaseFirestore.instance
-                .collection(userCollection)
+                .collection(_collectionNamesFields.userCollection)
                 .doc(currentUser.uid)
                 .get();
 

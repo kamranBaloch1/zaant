@@ -22,7 +22,7 @@ class ChatInboxScreen extends StatefulWidget {
 
 class _ChatInboxScreenState extends State<ChatInboxScreen> {
   final Map<String, int> unreadMessageCounts = {};
-
+final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
   @override
   void initState() {
     // TODO: implement initState
@@ -46,12 +46,12 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
       int unreadMessageCount = 0;
 
       var messagesQuery = await FirebaseFirestore.instance
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(chatsCollection)
+          .collection(_collectionNamesFields.chatsCollection)
           .doc(contactId)
-          .collection(messageCollection)
-          .where("recieverid",
+          .collection(_collectionNamesFields.messageCollection)
+          .where("receiverId",
               isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where('isSeen', isEqualTo: false)
           .get();

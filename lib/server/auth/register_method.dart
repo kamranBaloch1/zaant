@@ -13,6 +13,10 @@ import 'package:zant/sharedprefences/userPref.dart';
 
 
 class RegisterMethod {
+   
+    final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
+
+
   // Method to upload image to Firebase Storage and get download URL
   Future<String?> uploadImageToStorage(XFile? photoUrl) async {
     try {
@@ -22,7 +26,7 @@ class RegisterMethod {
 
       String imgId = DateTime.now().millisecondsSinceEpoch.toString();
       Reference ref =
-          FirebaseStorage.instance.ref().child(usersProfileImages).child(imgId);
+          FirebaseStorage.instance.ref().child(_collectionNamesFields.usersProfileImages).child(imgId);
 
       TaskSnapshot snapshot = await ref.putFile(File(photoUrl.path));
       String downloadUrl = await snapshot.ref.getDownloadURL();
@@ -81,7 +85,7 @@ class RegisterMethod {
 
         // Save user data to Firestore
         await FirebaseFirestore.instance
-            .collection(userCollection)
+            .collection(_collectionNamesFields.userCollection)
             .doc(user.uid)
             .set(userModel.toMap());
 
@@ -123,7 +127,7 @@ class RegisterMethod {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       await FirebaseFirestore.instance
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(uid)
           .update({"accountStatus": true, "isEmailVerified": true});
 

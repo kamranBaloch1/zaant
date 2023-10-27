@@ -1,17 +1,17 @@
+class FirebaseCollectionNamesFields {
+// firestore collection names
 
+  String userCollection = "users";
+  String instructorsCollection = "instructors";
+  String reviewsCollection = "reviews";
+  String reviewsReplyCollection = "replies";
+  String notificationCollection = "notifications";
 
-String userCollection = "users";
-String usersProfileImages= "usesrProfieImages";
-String instructorsCollections = "instructor";
-String reviewsCollection= "reviews";
-String reviewsReplyCollection = "replies";
-String notificationCollection= "notifications";
+// firebase storage collection names
+  String usersProfileImages = "usesrProfieImages";
 
+// chats
 
-
-// chats 
-
- String chatsCollection = "chats";
- String messageCollection = "messages";
-
- 
+  String chatsCollection = "chats";
+  String messageCollection = "messages";
+}

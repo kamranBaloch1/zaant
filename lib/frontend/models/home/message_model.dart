@@ -35,7 +35,7 @@ class MessageModel {
   factory MessageModel.fromMap(Map<String, dynamic> map) {
     return MessageModel(
       senderId: map['senderId'] ?? '',
-      receiverId: map['recieverid'] ?? '',
+      receiverId: map['receiverId'] ?? '',
       text: map['text'] ?? '',
       type: (map['type'] as String).toEnum(),
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),

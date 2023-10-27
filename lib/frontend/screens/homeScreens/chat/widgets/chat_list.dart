@@ -84,6 +84,7 @@ class _ChatListState extends State<ChatList> {
                         receiverId: widget.receiverId,
                         messageId: messageData.messageId);
                   }
+                 
 
                   if (messageData.senderId ==
                       FirebaseAuth.instance.currentUser!.uid) {

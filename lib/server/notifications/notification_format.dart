@@ -1,4 +1,4 @@
-import 'package:zant/global/keys.dart';
+import 'package:zant/global/apis_keys.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -16,7 +16,7 @@ class NotificationFormat{
       }) {
     Map<String, String> notificationHeader = {
       'Content-Type': 'application/json',
-      'Authorization': 'key=$fcmServerKey',
+      'Authorization': 'key=${ApisKeys().fcmServerKey}',
     };
     Map notificationBody = {
       'body': notificationBodyText,

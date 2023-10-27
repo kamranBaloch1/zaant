@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+
 import 'package:zant/server/home/enrollments_methods.dart';
 
 class EnrollmentsProvider extends ChangeNotifier {
@@ -11,7 +11,7 @@ class EnrollmentsProvider extends ChangeNotifier {
       await _enrollmentsMethods.enrollUserToInstructor(instructorId: instructorId);
       notifyListeners();
     } catch (e) {
-      showCustomToast("Something went wrong");
+      print("Something went wrong $e");
     }
   }
 
@@ -21,7 +21,7 @@ class EnrollmentsProvider extends ChangeNotifier {
       bool userEnrolled = await _enrollmentsMethods.checkEnrollmentStatus(instructorId: instructorId);
       return userEnrolled;
     } catch (e) {
-      showCustomToast("Something went wrong");
+      print("Something went wrong $e");
       return false; // Return false in case of an error
     }
   }
@@ -32,7 +32,7 @@ class EnrollmentsProvider extends ChangeNotifier {
       await _enrollmentsMethods.unenrollInstructorForUser(instructorId: instructorId);
       notifyListeners();
     } catch (e) {
-      showCustomToast("Error unenrolling user. Please try again later.");
+      print("Error unenrolling user. $e");
     }
   }
 
@@ -42,7 +42,7 @@ class EnrollmentsProvider extends ChangeNotifier {
       await _enrollmentsMethods.unenrollUserForInstrcutor(userId: userId);
       notifyListeners();
     } catch (e) {
-      showCustomToast("Error unenrolling user. Please try again later.");
+      print("Error unenrolling user. Please try again later. $e");
     }
   }
 }

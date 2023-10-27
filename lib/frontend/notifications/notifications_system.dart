@@ -8,6 +8,8 @@ import 'package:zant/global/firebase_collection_names.dart';
 
 class PushNotificationsSystem {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  final FirebaseCollectionNamesFields _collectionNamesFields =
+      FirebaseCollectionNamesFields();
 
   //notifications arrived/received
   Future whenNotificationReceived({required BuildContext context}) async {
@@ -36,8 +38,8 @@ class PushNotificationsSystem {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? remoteMessage) {
       if (remoteMessage != null) {
         //open the app - show notification data
-        
-      //  showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
+
+        //  showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
       }
     });
   }
@@ -47,11 +49,10 @@ class PushNotificationsSystem {
     String? registrationDeviceToken = await messaging.getToken();
 
     FirebaseFirestore.instance
-        .collection(userCollection)
+        .collection(_collectionNamesFields.userCollection)
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .update({
       "deviceToken": registrationDeviceToken,
-      
     });
 
     messaging.subscribeToTopic("zaanthUsers");
@@ -59,7 +60,7 @@ class PushNotificationsSystem {
 
   showNotificationWhenOpenApp({required String uid, required context}) async {
     await FirebaseFirestore.instance
-        .collection(userCollection)
+        .collection(_collectionNamesFields.userCollection)
         .doc(uid)
         .get()
         .then((snapshot) {

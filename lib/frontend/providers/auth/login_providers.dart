@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+
 import 'package:zant/server/auth/login_methods.dart';
 
 class LoginProviders extends ChangeNotifier {
@@ -12,7 +12,7 @@ class LoginProviders extends ChangeNotifier {
       await _loginMethods.loginWithEmailAndPassword(email, password);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred. Please try again.");
+      print("An error occurred. Please try again.");
     }
   }
 
@@ -22,7 +22,7 @@ class LoginProviders extends ChangeNotifier {
       await _loginMethods.resetUserPassword(email);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred. Please try again.");
+      print("An error occurred. Please try again.");
     }
   }
 }

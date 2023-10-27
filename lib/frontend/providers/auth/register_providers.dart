@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/server/auth/register_method.dart';
 
 class RegisterProviders extends ChangeNotifier {
@@ -29,7 +28,7 @@ class RegisterProviders extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred while creating an account.");
+      print("An error occurred while creating an account.");
     }
   }
 
@@ -40,7 +39,7 @@ class RegisterProviders extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred.");
+      print("An error occurred.");
     }
   }
 }

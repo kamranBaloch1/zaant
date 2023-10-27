@@ -10,6 +10,7 @@ import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 class ProfileMethods {
+  final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   // Upload image to Firebase Storage and return download URL
   Future<String?> uploadImageToStorage(File? photoUrl) async {
@@ -21,7 +22,7 @@ class ProfileMethods {
       // Generate a unique image ID based on the current timestamp
       String imgId = DateTime.now().millisecondsSinceEpoch.toString();
       Reference ref =
-          FirebaseStorage.instance.ref().child(usersProfileImages).child(imgId);
+          FirebaseStorage.instance.ref().child(_collectionNamesFields.usersProfileImages).child(imgId);
 
       TaskSnapshot snapshot = await ref.putFile(photoUrl);
       String downloadUrl = await snapshot.ref.getDownloadURL();
@@ -62,20 +63,20 @@ class ProfileMethods {
       // Check if the uid exists in the instructorsCollections collection
       DocumentSnapshot<Map<String, dynamic>> instructorsSnapshot =
           await FirebaseFirestore.instance
-              .collection(instructorsCollections)
+              .collection(_collectionNamesFields.instructorsCollection)
               .doc(uid)
               .get();
 
       // Update user information in userCollection
       await FirebaseFirestore.instance
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(uid)
           .update(updateData);
 
       // If the uid exists in instructorsCollections, also update the document there
       if (instructorsSnapshot.exists) {
         await FirebaseFirestore.instance
-            .collection(instructorsCollections)
+            .collection(_collectionNamesFields.instructorsCollection)
             .doc(uid)
             .update(updateData);
       }
@@ -83,7 +84,7 @@ class ProfileMethods {
       // Update user information in SharedPreferences
       DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
           .instance
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(uid)
           .get();
 
@@ -112,7 +113,7 @@ class ProfileMethods {
       // Check if the phone number is already associated with a user
       QuerySnapshot<Map<String, dynamic>> usersWithPhoneNumber =
           await FirebaseFirestore.instance
-              .collection(userCollection)
+              .collection(_collectionNamesFields.userCollection)
               .where("phoneNumber", isEqualTo: phoneNumber)
               .get();
 
@@ -183,21 +184,21 @@ class ProfileMethods {
 
       // Update the user collection
       await FirebaseFirestore.instance
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(_auth.currentUser!.uid)
           .update({"phoneNumber": phoneNumber, "isPhoneNumberVerified": true});
 
       // Check if the instructor collection exists
       DocumentSnapshot<Map<String, dynamic>> instructorDoc =
           await FirebaseFirestore.instance
-              .collection(instructorsCollections)
+              .collection(_collectionNamesFields.instructorsCollection)
               .doc(_auth.currentUser!.uid)
               .get();
 
       if (instructorDoc.exists) {
         // Update the instructor collection
         await FirebaseFirestore.instance
-            .collection(instructorsCollections)
+            .collection(_collectionNamesFields.instructorsCollection)
             .doc(_auth.currentUser!.uid)
             .update(
                 {"phoneNumber": phoneNumber, "isPhoneNumberVerified": true});

@@ -1,5 +1,0 @@
-int appID = 1886914791;
-String appSign =
-    "843f219391451f9f74620d7e149c1fac0499739cd5ef3d2a70b3ed8b99132d66";
-
-String fcmServerKey = "AAAAW4ZafEQ:APA91bHuh3ukz2FyifY7qD-Z_GL-39cYSZjbk0MLYBX5gvsIkIIyFYRsu_f8q9uxETt5PsAYE8uwPtb1JEAhNhWH0ivbV8FlD5SPUlC0hqhuzPQpIpyOJ9eTv__9_FNEWeyBrcgHtWt6";

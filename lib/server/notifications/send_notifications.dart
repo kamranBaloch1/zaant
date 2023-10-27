@@ -3,6 +3,7 @@ import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/server/notifications/notification_format.dart';
 
 class SendNotificationsMethod {
+  final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final NotificationFormat _notificationFormat = NotificationFormat();
 
@@ -15,7 +16,7 @@ class SendNotificationsMethod {
     try {
       // Get instructor's document and check if it has a device token
       final instructorDoc =
-          await _firestore.collection(userCollection).doc(instructorUid).get();
+          await _firestore.collection(_collectionNamesFields.userCollection).doc(instructorUid).get();
 
       if (instructorDoc.data() != null &&
           instructorDoc.data()!['deviceToken'] != null) {
@@ -43,7 +44,7 @@ class SendNotificationsMethod {
     try {
       // Get instructor's document and check if it has a device token
       final instructorDoc =
-          await _firestore.collection(userCollection).doc(instructorUid).get();
+          await _firestore.collection(_collectionNamesFields.userCollection).doc(instructorUid).get();
 
       if (instructorDoc.data() != null &&
           instructorDoc.data()!['deviceToken'] != null) {
@@ -70,7 +71,7 @@ class SendNotificationsMethod {
 
     try {
       // Get user's document and check if it has a device token
-      final userDoc = await _firestore.collection(userCollection).doc(userId).get();
+      final userDoc = await _firestore.collection(_collectionNamesFields.userCollection).doc(userId).get();
 
       if (userDoc.data() != null && userDoc.data()!['deviceToken'] != null) {
         deviceToken = userDoc.data()!['deviceToken'];
@@ -97,7 +98,7 @@ class SendNotificationsMethod {
 
     try {
       // Get user's document and check if it has a device token
-      final userDoc = await _firestore.collection(userCollection).doc(userId).get();
+      final userDoc = await _firestore.collection(_collectionNamesFields.userCollection).doc(userId).get();
 
       if (userDoc.data() != null && userDoc.data()!['deviceToken'] != null) {
         deviceToken = userDoc.data()!['deviceToken'];

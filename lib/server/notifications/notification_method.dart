@@ -7,6 +7,7 @@ import 'package:zant/global/firebase_collection_names.dart';
 
 // Define a class called NotificationMethod for handling notifications
 class NotificationMethod {
+  final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Function to save a notification to Firestore
@@ -29,9 +30,9 @@ class NotificationMethod {
 
       // Save the notification to Firestore
       await _firestore
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(receiverUserId)
-          .collection(notificationCollection)
+          .collection(_collectionNamesFields.notificationCollection)
           .doc(notificationId)
           .set(notificationModel.toMap());
        
@@ -45,9 +46,9 @@ class NotificationMethod {
   Stream<List<Map<String, dynamic>>> getNotificationStream() {
     try {
       return _firestore
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(notificationCollection)
+          .collection(_collectionNamesFields.notificationCollection)
           .orderBy("notificationDate", descending: true)
           .snapshots()
           .asyncMap((snapshot) async {
@@ -61,7 +62,7 @@ class NotificationMethod {
 
             for (final notification in notifications) {
               final senderUserId = notification.senderUserId;
-              final userRef = _firestore.collection(userCollection).doc(senderUserId);
+              final userRef = _firestore.collection(_collectionNamesFields.userCollection).doc(senderUserId);
               final userData = (await userRef.get()).data() as Map<String, dynamic>;
 
               final notificationDataWithUserData = {
@@ -88,9 +89,9 @@ class NotificationMethod {
     int unreadNotificationCount = 0;
 
     if (user != null) {
-      final userCollectionRef = _firestore.collection(userCollection);
+      final userCollectionRef = _firestore.collection(_collectionNamesFields.userCollection);
       final currentUserDoc = userCollectionRef.doc(user.uid);
-      final notificationCollectionRef = currentUserDoc.collection(notificationCollection);
+      final notificationCollectionRef = currentUserDoc.collection(_collectionNamesFields.notificationCollection);
 
       final QuerySnapshot querySnapshot = await notificationCollectionRef.where('isSeen', isEqualTo: false).get();
       unreadNotificationCount = querySnapshot.size;
@@ -109,9 +110,9 @@ Future<void> markNotificationAsRead({
   final user = FirebaseAuth.instance.currentUser;
 
   if (user != null) {
-    final userCollectionRef = FirebaseFirestore.instance.collection(userCollection);
+    final userCollectionRef = FirebaseFirestore.instance.collection(_collectionNamesFields.userCollection);
     final currentUserDoc = userCollectionRef.doc(user.uid);
-    final notificationCollectionRef = currentUserDoc.collection(notificationCollection);
+    final notificationCollectionRef = currentUserDoc.collection(_collectionNamesFields.notificationCollection);
 
     try {
       // Get the notification document

@@ -25,7 +25,7 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
 
     if (user != null) {
       final DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
-          .collection(instructorsCollections)
+          .collection(FirebaseCollectionNamesFields().instructorsCollection)
           .doc(user.uid)
           .get();
 

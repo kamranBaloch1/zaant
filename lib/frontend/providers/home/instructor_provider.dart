@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+
 import 'package:zant/server/home/instructor_methods.dart';
 
 class InstructorProviders extends ChangeNotifier {
@@ -29,7 +29,7 @@ class InstructorProviders extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle errors gracefully and show a custom toast
-      showCustomToast("An error occurred while adding the instructor.");
+      print("An error occurred while adding the instructor.");
     }
   }
 
@@ -39,7 +39,7 @@ class InstructorProviders extends ChangeNotifier {
       return _instructorMethods.getInstructorsStream(query: query);
     } catch (e) {
       // Handle errors gracefully and show a custom toast
-      showCustomToast("An error occurred.");
+      print("An error occurred.");
       return const Stream.empty();
     }
   }
@@ -53,7 +53,7 @@ class InstructorProviders extends ChangeNotifier {
           selectedDaysForSubjects: selectedDaysForSubjects);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred while updating subjects' days.");
+      print("An error occurred while updating subjects' days.");
     }
   }
 
@@ -67,7 +67,7 @@ class InstructorProviders extends ChangeNotifier {
           subject: subject, newTimings: newTimings);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred while updating subject timing.");
+      print("An error occurred while updating subject timing.");
     }
   }
 
@@ -79,7 +79,7 @@ class InstructorProviders extends ChangeNotifier {
           feesPerHour: feesPerHour);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred while updating fees charges.");
+      print("An error occurred while updating fees charges.");
     }
   }
 
@@ -91,7 +91,7 @@ class InstructorProviders extends ChangeNotifier {
           qualification: qualification);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred while updating qualification.");
+      print("An error occurred while updating qualification.");
     }
   }
 
@@ -109,7 +109,7 @@ class InstructorProviders extends ChangeNotifier {
           selectedDaysForSubjects: selectedDaysForSubjects);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred while adding new subjects.");
+      print("An error occurred while adding new subjects.");
     }
   }
 
@@ -122,7 +122,7 @@ class InstructorProviders extends ChangeNotifier {
           subjectsToRemove: subjectsToRemove);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred while removing subjects.");
+      print("An error occurred while removing subjects.");
     }
   }
 
@@ -137,7 +137,7 @@ class InstructorProviders extends ChangeNotifier {
           instructorUid: instructorUid, ratings: ratings, content: content);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred while adding the review.");
+      print("An error occurred while adding the review.");
     }
   }
 
@@ -152,7 +152,7 @@ class InstructorProviders extends ChangeNotifier {
       return reviewsData;
     } catch (e) {
       // Handle errors gracefully and show a custom toast
-      showCustomToast(
+      print(
           "An error occurred while fetching reviews with user details: $e");
       return [];
     }
@@ -184,7 +184,7 @@ class InstructorProviders extends ChangeNotifier {
       return replyData;
     } catch (e) {
       // Handle errors gracefully and show a custom toast
-      showCustomToast(
+      print(
           "An error occurred while fetching reviews: $e");
       return [];
     }
@@ -227,7 +227,7 @@ Future<void> deleteReviewReplyProvider({
       notifyListeners();
     } catch (e) {
       // Handle errors gracefully and show a custom toast
-      showCustomToast("An error occurred during phone number verification.");
+      print("An error occurred during phone number verification.");
     }
   }
 
@@ -251,7 +251,7 @@ Future<void> deleteReviewReplyProvider({
       return isVerified;
     } catch (e) {
       // Handle errors gracefully and show a custom toast
-      showCustomToast("An error occurred during OTP verification.");
+      print("An error occurred during OTP verification.");
       return false;
     }
   }

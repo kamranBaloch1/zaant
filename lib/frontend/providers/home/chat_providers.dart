@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:zant/frontend/models/home/chat_contact_model.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+
 import 'package:zant/server/home/chat_methods.dart';
 import 'package:zant/frontend/models/home/message_model.dart';
 
@@ -28,7 +28,7 @@ class ChatProviders extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      showCustomToast("Error sending text message: $e");
+      print("Error sending text message: $e");
     }
   }
 
@@ -47,7 +47,7 @@ class ChatProviders extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      showCustomToast("Error sending image message: $e");
+      print("Error sending image message: $e");
     }
   }
 
@@ -66,7 +66,7 @@ class ChatProviders extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      showCustomToast("Error sending video message: $e");
+      print("Error sending video message: $e");
     }
   }
 
@@ -85,18 +85,20 @@ class ChatProviders extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      showCustomToast("Error sending voice message: $e");
+      print("Error sending voice message: $e");
     }
   }
 
   void updateMessageIsSeeenProvider(
       {required String receiverId, required String messageId}) {
-    _chatMethods.updateMessageIsSeen(
+    
+
+    try {
+       _chatMethods.updateMessageIsSeen(
         receiverId: receiverId, messageId: messageId);
 
     ChangeNotifier();
-
-    try {} catch (e) {
+    } catch (e) {
     print(e.toString());
     }
   }
@@ -107,7 +109,7 @@ class ChatProviders extends ChangeNotifier {
       _chatStream = _chatMethods.getChatStream(receiverId: receiverId);
       notifyListeners();
     } catch (e) {
-      showCustomToast("Error initializing chat stream: $e");
+      print("Error initializing chat stream: $e");
     }
   }
 
@@ -118,7 +120,7 @@ class ChatProviders extends ChangeNotifier {
       _chatsContactsStream = _chatMethods.getChatsContacts();
       notifyListeners();
     } catch (e) {
-      showCustomToast("Error initializing chats contacts stream: $e");
+      print("Error initializing chats contacts stream: $e");
     }
   }
 

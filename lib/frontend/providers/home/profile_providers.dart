@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/server/home/profile_methods.dart';
 
 class ProfileProviders extends ChangeNotifier {
@@ -24,7 +23,7 @@ class ProfileProviders extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Show a custom toast message in case of an error
-      showCustomToast("An error occurred while updating the information");
+      print("An error occurred while updating the information");
     }
   }
 
@@ -37,7 +36,7 @@ class ProfileProviders extends ChangeNotifier {
           currentPassword: currentPassword, newPassword: newPassword);
       notifyListeners();
     } catch (e) {
-      showCustomToast("An error occurred while changing the password");
+      print("An error occurred while changing the password");
     }
   }
 }

@@ -14,8 +14,12 @@ import 'package:zant/server/notifications/send_notifications.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 class ChatMethods {
+
+   final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
+
   final CollectionReference usersCollection =
-      FirebaseFirestore.instance.collection(userCollection);
+      FirebaseFirestore.instance.collection(FirebaseCollectionNamesFields().userCollection);
+    
 
   final Reference _storageReference = FirebaseStorage.instance.ref();
 
@@ -54,7 +58,7 @@ class ChatMethods {
       String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
       var userDataMap = await FirebaseFirestore.instance
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(receiverId)
           .get();
       receiverUserData = UserModel.fromMap(userDataMap.data()!);
@@ -121,7 +125,7 @@ class ChatMethods {
       UserModel? receiverUserData;
 
       var userDataMap = await FirebaseFirestore.instance
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(receiverId)
           .get();
       receiverUserData = UserModel.fromMap(userDataMap.data()!);
@@ -176,7 +180,7 @@ class ChatMethods {
       UserModel? receiverUserData;
 
       var userDataMap = await FirebaseFirestore.instance
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(receiverId)
           .get();
       receiverUserData = UserModel.fromMap(userDataMap.data()!);
@@ -230,7 +234,7 @@ class ChatMethods {
       UserModel? receiverUserData;
 
       var userDataMap = await FirebaseFirestore.instance
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .doc(receiverId)
           .get();
       receiverUserData = UserModel.fromMap(userDataMap.data()!);
@@ -274,7 +278,7 @@ class ChatMethods {
 
       await usersCollection
           .doc(receiverUserData.uid)
-          .collection(chatsCollection)
+          .collection(_collectionNamesFields.chatsCollection)
           .doc(senderId)
           .set(receiverChatContactModel.toMap());
 
@@ -288,7 +292,7 @@ class ChatMethods {
 
       await usersCollection
           .doc(senderId)
-          .collection(chatsCollection)
+          .collection(_collectionNamesFields.chatsCollection)
           .doc(receiverUserData.uid)
           .set(senderChatContactModel.toMap());
     } catch (e) {
@@ -302,17 +306,17 @@ class ChatMethods {
     try {
       await usersCollection
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(chatsCollection)
+          .collection(_collectionNamesFields.chatsCollection)
           .doc(receiverId)
-          .collection(messageCollection)
+          .collection(_collectionNamesFields.messageCollection)
           .doc(messageId)
           .set(messageData);
 
       await usersCollection
           .doc(receiverId)
-          .collection(chatsCollection)
+          .collection(_collectionNamesFields.chatsCollection)
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(messageCollection)
+          .collection(_collectionNamesFields.messageCollection)
           .doc(messageId)
           .set(messageData);
     } catch (e) {
@@ -325,9 +329,9 @@ class ChatMethods {
     try {
       return usersCollection
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(chatsCollection)
+          .collection(_collectionNamesFields.chatsCollection)
           .doc(receiverId)
-          .collection(messageCollection)
+          .collection(_collectionNamesFields.messageCollection)
           .orderBy("timeSent", descending: false)
           .snapshots()
           .map((event) {
@@ -350,19 +354,20 @@ class ChatMethods {
     try {
       await usersCollection
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(chatsCollection)
+          .collection(_collectionNamesFields.chatsCollection)
           .doc(receiverId)
-          .collection(messageCollection)
+          .collection(_collectionNamesFields.messageCollection)
           .doc(messageId)
           .update({"isSeen": true});
 
       await usersCollection
           .doc(receiverId)
-          .collection(chatsCollection)
+          .collection(_collectionNamesFields.chatsCollection)
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(messageCollection)
+          .collection(_collectionNamesFields.messageCollection)
           .doc(messageId)
           .update({"isSeen": true});
+         
     } catch (e) {
       print("error updating the isSeen $e");
     }
@@ -374,7 +379,7 @@ class ChatMethods {
     try {
       return usersCollection
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(chatsCollection)
+          .collection(_collectionNamesFields.chatsCollection)
           .snapshots()
           .asyncMap((event) async {
         List<ChatContactModel> contacts = [];
@@ -383,7 +388,7 @@ class ChatMethods {
           var chatsContacts = ChatContactModel.fromMap(document.data());
 
           var userData = await FirebaseFirestore.instance
-              .collection(userCollection)
+              .collection(_collectionNamesFields.userCollection)
               .doc(chatsContacts.contactId)
               .get();
           var user = UserModel.fromMap(userData.data()!);
@@ -414,16 +419,16 @@ Future<int> fetchunreadMessagesCount() async {
 
   try {
     if (user != null) {
-      final userCollectionRef = FirebaseFirestore.instance.collection(userCollection);
+      final userCollectionRef = FirebaseFirestore.instance.collection(_collectionNamesFields.userCollection);
 
       final currentUserDoc = userCollectionRef.doc(user.uid);
-      final chatsCollectionRef = currentUserDoc.collection(chatsCollection);
+      final chatsCollectionRef = currentUserDoc.collection(_collectionNamesFields.chatsCollection);
 
       // Get all chat documents for the current user
       final chatDocuments = await chatsCollectionRef.get();
 
       for (final chatDocument in chatDocuments.docs) {
-        final messagesCollectionRef = chatDocument.reference.collection(messageCollection);
+        final messagesCollectionRef = chatDocument.reference.collection(_collectionNamesFields.messageCollection);
 
         // Query for unread messages in the current chat where receiverId is the current user's ID
         final querySnapshot = await messagesCollectionRef

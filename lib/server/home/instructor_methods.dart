@@ -16,6 +16,7 @@ import 'package:zant/server/notifications/send_notifications.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 class InstructorMethods {
+  final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
 // method to add new instructor
@@ -42,7 +43,7 @@ class InstructorMethods {
       final address = UserPreferences.getAddress() ?? "";
 
       final userDocRef =
-          FirebaseFirestore.instance.collection(userCollection).doc(uid);
+          FirebaseFirestore.instance.collection(_collectionNamesFields.userCollection).doc(uid);
 
       final userDoc = await userDocRef.get();
       if (!userDoc.exists) {
@@ -70,7 +71,7 @@ class InstructorMethods {
       );
 
       await FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid)
           .set(instructorModel.toMap());
 
@@ -104,7 +105,7 @@ class InstructorMethods {
       // Check if the phone number is already associated with a user
       QuerySnapshot<Map<String, dynamic>> usersWithPhoneNumber =
           await FirebaseFirestore.instance
-              .collection(userCollection)
+              .collection(_collectionNamesFields.userCollection)
               .where("phoneNumber", isEqualTo: phoneNumber)
               .get();
 
@@ -194,7 +195,7 @@ class InstructorMethods {
     try {
       final queryText = query.toLowerCase();
       final queryRef = FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .where('address', isGreaterThanOrEqualTo: queryText)
           .where('address', isLessThan: '${queryText}z');
 
@@ -213,7 +214,7 @@ class InstructorMethods {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       final DocumentSnapshot instructorDoc = await FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid)
           .get();
 
@@ -249,7 +250,7 @@ class InstructorMethods {
       });
 
       await FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid)
           .update({"selectedDaysForSubjects": selectedDaysData});
 
@@ -269,7 +270,7 @@ class InstructorMethods {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       final DocumentSnapshot instructorDoc = await FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid)
           .get();
 
@@ -287,7 +288,7 @@ class InstructorMethods {
       };
 
       await FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid)
           .update(mergedData);
 
@@ -305,7 +306,7 @@ class InstructorMethods {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       await FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid)
           .update({"feesPerHour": feesPerHour});
       showCustomToast("Charges updated");
@@ -323,7 +324,7 @@ class InstructorMethods {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       await FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid)
           .update({"qualification": qualification});
       showCustomToast("Qualification updated");
@@ -350,7 +351,7 @@ class InstructorMethods {
       final uid = user.uid;
 
       final instructorDocRef = FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid);
 
       final instructorDoc = await instructorDocRef.get();
@@ -422,7 +423,7 @@ class InstructorMethods {
       final uid = user.uid;
 
       final instructorDocRef = FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid);
 
       final instructorDoc = await instructorDocRef.get();
@@ -483,10 +484,10 @@ class InstructorMethods {
       String? currentUserName = UserPreferences.getName();
 
       final instructorDoc = FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(instructorUid);
 
-      final reviewsCollectionRef = instructorDoc.collection(reviewsCollection);
+      final reviewsCollectionRef = instructorDoc.collection(_collectionNamesFields.reviewsCollection);
 
       final existingReviewDoc = await reviewsCollectionRef.doc(userId).get();
 
@@ -542,9 +543,9 @@ class InstructorMethods {
       {required String instructorUid}) async {
     try {
       final reviewsRef = FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(instructorUid)
-          .collection(reviewsCollection);
+          .collection(_collectionNamesFields.reviewsCollection);
 
       final reviewsQuerySnapshot =
           await reviewsRef.orderBy('date', descending: true).get();
@@ -556,7 +557,7 @@ class InstructorMethods {
         final userId = reviewData['userId'] as String;
 
         final userDoc = await FirebaseFirestore.instance
-            .collection(userCollection)
+            .collection(_collectionNamesFields.userCollection)
             .doc(userId)
             .get();
         final userData = userDoc.data() as Map<String, dynamic>;
@@ -594,11 +595,11 @@ class InstructorMethods {
           replyId: replyId);
 
       await FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(instructorUid)
-          .collection(reviewsCollection)
+          .collection(_collectionNamesFields.reviewsCollection)
           .doc(reviewId)
-          .collection(reviewsReplyCollection)
+          .collection(_collectionNamesFields.reviewsReplyCollection)
           .doc(replyId)
           .set(reviewReplyModel.toMap());
       await SendNotificationsMethod().sendNotificationsToUsersForReviewReplay(
@@ -624,14 +625,14 @@ class InstructorMethods {
   }) async {
     try {
       final reviewsCollectionDoc = FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(instructorUid)
-          .collection(reviewsCollection);
+          .collection(_collectionNamesFields.reviewsCollection);
       final reviewDoc = await reviewsCollectionDoc.doc(reviewId).get();
 
       if (reviewDoc.exists) {
         final repliesCollection =
-            reviewDoc.reference.collection(reviewsReplyCollection);
+            reviewDoc.reference.collection(_collectionNamesFields.reviewsReplyCollection);
         final repliesQuery =
             await repliesCollection.orderBy('date', descending: true).get();
 
@@ -642,7 +643,7 @@ class InstructorMethods {
 
           // Fetch user data for the reply author
           final userDoc = await FirebaseFirestore.instance
-              .collection(userCollection)
+              .collection(_collectionNamesFields.userCollection)
               .doc(userId)
               .get();
           final userData = userDoc.data() as Map<String, dynamic>;
@@ -672,11 +673,11 @@ class InstructorMethods {
   }) async {
     try {
       final replyDocRef = FirebaseFirestore.instance
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(instructorUid)
-          .collection(reviewsCollection)
+          .collection(_collectionNamesFields.reviewsCollection)
           .doc(reviewId)
-          .collection(reviewsReplyCollection)
+          .collection(_collectionNamesFields.reviewsReplyCollection)
           .doc(replyId);
 
       final replyDoc = await replyDocRef.get();

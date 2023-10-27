@@ -13,6 +13,8 @@ import 'package:zant/server/notifications/send_notifications.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 class EnrollmentsMethods {
+
+  final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -28,9 +30,9 @@ class EnrollmentsMethods {
 
         // References to user and instructor documents
         DocumentReference userCollectionRef =
-            _firestore.collection(userCollection).doc(currentUserId);
+            _firestore.collection(_collectionNamesFields.userCollection).doc(currentUserId);
         DocumentReference instructorCollectionRef =
-            _firestore.collection(instructorsCollections).doc(instructorId);
+            _firestore.collection(_collectionNamesFields.instructorsCollection).doc(instructorId);
 
         // Fetch user and instructor documents
         DocumentSnapshot userDocSnapshot = await userCollectionRef.get();
@@ -115,7 +117,7 @@ class EnrollmentsMethods {
         String currentUserId = user.uid;
 
         DocumentSnapshot instructorDoc = await _firestore
-            .collection(instructorsCollections)
+            .collection(_collectionNamesFields.instructorsCollection)
             .doc(instructorId)
             .get();
 
@@ -151,7 +153,7 @@ class EnrollmentsMethods {
     String userId = FirebaseAuth.instance.currentUser!.uid;
     try {
       final DocumentSnapshot userSnapshot =
-          await _firestore.collection(userCollection).doc(userId).get();
+          await _firestore.collection(_collectionNamesFields.userCollection).doc(userId).get();
       final Map<String, dynamic>? userData =
           userSnapshot.data() as Map<String, dynamic>?;
 
@@ -188,7 +190,7 @@ class EnrollmentsMethods {
       }
 
       _firestore
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .where("uid", whereIn: enrollmentIds)
           .snapshots()
           .listen((querySnapshot) {
@@ -213,7 +215,7 @@ class EnrollmentsMethods {
     String instructorId = FirebaseAuth.instance.currentUser!.uid;
     try {
       final DocumentSnapshot instructorSnapshot = await _firestore
-          .collection(instructorsCollections)
+          .collection(_collectionNamesFields.instructorsCollection)
           .doc(instructorId)
           .get();
       final Map<String, dynamic>? instructorData =
@@ -254,7 +256,7 @@ class EnrollmentsMethods {
       }
 
       _firestore
-          .collection(userCollection)
+          .collection(_collectionNamesFields.userCollection)
           .where("uid", whereIn: enrollmentIds)
           .snapshots()
           .listen((querySnapshot) {
@@ -283,9 +285,9 @@ class EnrollmentsMethods {
         String currentUserId = user.uid;
 
         DocumentReference userCollectionRef =
-            _firestore.collection(userCollection).doc(currentUserId);
+            _firestore.collection(_collectionNamesFields.userCollection).doc(currentUserId);
         DocumentReference instructorCollectionRef =
-            _firestore.collection(instructorsCollections).doc(instructorId);
+            _firestore.collection(_collectionNamesFields.instructorsCollection).doc(instructorId);
 
         DocumentSnapshot userDocSnapshot = await userCollectionRef.get();
         DocumentSnapshot instructorDocSnapshot =
@@ -341,9 +343,9 @@ class EnrollmentsMethods {
         String currentUserId = user.uid;
 
         DocumentReference userCollectionRef =
-            _firestore.collection(userCollection).doc(userId);
+            _firestore.collection(_collectionNamesFields.userCollection).doc(userId);
         DocumentReference instructorCollectionRef =
-            _firestore.collection(instructorsCollections).doc(currentUserId);
+            _firestore.collection(_collectionNamesFields.instructorsCollection).doc(currentUserId);
 
         DocumentSnapshot userDocSnapshot = await userCollectionRef.get();
         DocumentSnapshot instructorDocSnapshot =
