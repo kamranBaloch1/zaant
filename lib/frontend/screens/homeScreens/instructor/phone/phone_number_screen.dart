@@ -61,7 +61,7 @@ final instructorProvider = Provider.of<InstructorProviders>(context,listen: fals
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Enter phone number",
           ),

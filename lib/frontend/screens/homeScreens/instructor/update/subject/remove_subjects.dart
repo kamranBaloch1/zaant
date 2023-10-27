@@ -47,7 +47,7 @@ class _RemoveSubjectsState extends State<RemoveSubjects> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Remove Subjects",
           ),
@@ -71,7 +71,7 @@ class _RemoveSubjectsState extends State<RemoveSubjects> {
                     return ListTile(
                       title: Text(
                         subject,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       ),
                       trailing: Checkbox(
                         value: isSelected,

@@ -25,14 +25,14 @@ final void Function()? onTap;
         alignment: Alignment.center,
         height: height.h,
         width: width.w,
-        child:  Text(text,style:  TextStyle(
-          color: Colors.white,
-          fontSize: 15.sp
-        ),),
         decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(10.r)
-        )
+        ),
+        child:   Text(text,style:  TextStyle(
+          color: Colors.white,
+          fontSize: 15.sp
+        ),)
       ),
     );
   }

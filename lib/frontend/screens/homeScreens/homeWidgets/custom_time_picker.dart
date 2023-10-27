@@ -7,7 +7,7 @@ class CustomTimePicker extends StatelessWidget {
   final Function(TimeOfDay)? onTimeChanged;
   final IconData icon;
 
-  CustomTimePicker({
+ const  CustomTimePicker({super.key, 
     required this.labelText,
     required this.selectedTime,
     required this.onTimeChanged,

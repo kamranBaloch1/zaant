@@ -118,7 +118,7 @@ class ProfileMethods {
 
       if (usersWithPhoneNumber.docs.isNotEmpty) {
         // The phone number is already associated with a user
-        showCustomToast('This phone number is already in use by another user.');
+        showCustomToast('this phone number is already in use by another user');
         return;
       }
 
@@ -136,7 +136,7 @@ class ProfileMethods {
             errorMessage = 'Phone number blocked due to too many requests';
           } else {
             errorMessage =
-                'Phone Number Verification Failed, please check the number ${e.message}';
+                'Phone Number Verification Failed, please check the number';
           }
           showCustomToast(errorMessage);
         },
@@ -215,15 +215,15 @@ class ProfileMethods {
           showCustomToast("Invalid OTP code. Please try again.");
         } else if (e.code == 'expired-action-code') {
           showCustomToast(
-              "The OTP code has expired. Please request a new one.");
+              "The OTP code has expired");
         } else if (e.code == 'provider-already-linked') {
           showCustomToast(
               "This phone number is already linked to another account.");
         } else {
-          showCustomToast("Error verifying OTP: ${e.message}");
+          showCustomToast("Error verifying OTP");
         }
       } else {
-        showCustomToast("An unexpected error occurred: $e");
+        showCustomToast("An unexpected error occurred");
       }
       return false; // Return false if an error occurs during verification
     }

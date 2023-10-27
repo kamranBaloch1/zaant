@@ -71,7 +71,7 @@ class _UpdateQualificationScreenState extends State<UpdateQualificationScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Update Qualification",
           ),

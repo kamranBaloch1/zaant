@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class homeCustomTextField extends StatelessWidget {
+class HomeCustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final IconData icon;
@@ -11,7 +11,7 @@ class homeCustomTextField extends StatelessWidget {
   final bool?  enable;
 
 
-  const homeCustomTextField({
+  const HomeCustomTextField({
     Key? key,
     required this.controller,
     required this.labelText,
@@ -33,7 +33,7 @@ class homeCustomTextField extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),

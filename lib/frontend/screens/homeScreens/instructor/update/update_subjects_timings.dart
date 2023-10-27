@@ -6,7 +6,6 @@ import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_time_picker
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 
 class UpdateSubjectsTimingsScreen extends StatefulWidget {
@@ -39,7 +38,7 @@ class _UpdateSubjectsTimingsScreenState
     } catch (error) {
       // Handle the error here, e.g., print it to the console
       print("Error during initialization: $error");
-      showCustomToast("Error during initialization: $error");
+      
     }
   }
 
@@ -114,8 +113,8 @@ class _UpdateSubjectsTimingsScreenState
       });
 
       final timings = subjectTimings[_subjectToUpdate!] ?? {};
-      final startTime = timings['start'] ?? TimeOfDay(hour: 0, minute: 0);
-      final endTime = timings['end'] ?? TimeOfDay(hour: 0, minute: 0);
+      final startTime = timings['start'] ?? const TimeOfDay(hour: 0, minute: 0);
+      final endTime = timings['end'] ?? const TimeOfDay(hour: 0, minute: 0);
 
       // Format start and end times to "hh:mm am/pm" format
       final formattedStartTime = _formatTime(startTime);
@@ -156,7 +155,7 @@ class _UpdateSubjectsTimingsScreenState
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Update timings for subjects",
           ),

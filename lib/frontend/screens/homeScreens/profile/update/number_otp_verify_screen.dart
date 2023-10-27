@@ -69,7 +69,7 @@ class _NumberOtpVerifyScreenState extends State<NumberOtpVerifyScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
               backgroundColor: appBarColor, title: "Enter OTP Code"),
           body: Padding(
             padding:  EdgeInsets.all(16.w),

@@ -28,7 +28,7 @@ class _AddPhoneNumberScreenState extends State<AddPhoneNumberScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+  
      _phoneController =  TextEditingController(text:widget.phoneNumber );
 
 
@@ -63,7 +63,7 @@ class _AddPhoneNumberScreenState extends State<AddPhoneNumberScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Enter phone number",
           ),

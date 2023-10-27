@@ -29,7 +29,7 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Update Subject Days",
           ),

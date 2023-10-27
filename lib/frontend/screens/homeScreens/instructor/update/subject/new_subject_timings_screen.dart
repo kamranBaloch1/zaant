@@ -128,7 +128,7 @@ class _AddNewSubjectTimingsScreenState
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Select Timings for Subjects",
           ),

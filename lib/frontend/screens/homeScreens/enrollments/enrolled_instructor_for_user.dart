@@ -68,9 +68,9 @@ class _ShowEnrolledInstructorForUserScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         backgroundColor: appBarColor,
-        title: "Your Enrolled Instructors", // Corrected spelling here
+        title: "Your Enrolled Instructors", 
       ),
       drawer: const MyDrawer(),
       body: StreamBuilder<List<InstructorModel>>(

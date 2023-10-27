@@ -23,7 +23,7 @@ class PrivacySettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          CustomAppBar(backgroundColor: appBarColor, title: "Privacy Settings"),
+          const CustomAppBar(backgroundColor: appBarColor, title: "Privacy Settings"),
       body: Column(
         children: [
           _buildListTile(Icons.lock, 'Change Password', () {

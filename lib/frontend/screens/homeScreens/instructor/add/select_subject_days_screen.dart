@@ -123,7 +123,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
                                     day,
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 16.0,
+                                      fontSize: 16.sp,
                                     ),
                                   ),
                                   Checkbox(

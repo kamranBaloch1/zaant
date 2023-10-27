@@ -11,6 +11,7 @@ import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
+
 class RegisterMethod {
   // Method to upload image to Firebase Storage and get download URL
   Future<String?> uploadImageToStorage(XFile? photoUrl) async {
@@ -109,10 +110,10 @@ class RegisterMethod {
       if (e.code == 'weak-password') {
         showCustomToast("The password provided is too weak");
       } else if (e.code == 'email-already-in-use') {
-        showCustomToast("The account already exists for that email.");
+        showCustomToast("A account already exists for that email.");
       }
     } catch (e) {
-      showCustomToast("Error occurred while creating an account $e");
+      showCustomToast("Error occurred while creating an account");
     }
   }
 

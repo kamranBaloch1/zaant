@@ -23,7 +23,7 @@ class MessageModel {
   Map<String, dynamic> toMap() {
     return {
       'senderId': senderId,
-      'recieverid': receiverId,
+      'receiverId': receiverId,
       'text': text,
       'type': type.type,
       'timeSent': timeSent.millisecondsSinceEpoch,

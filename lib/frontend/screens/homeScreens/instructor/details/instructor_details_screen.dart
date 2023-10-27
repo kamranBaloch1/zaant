@@ -37,6 +37,8 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
 
   final TextEditingController _reviewContent = TextEditingController();
 
+
+
   void _addReview() async {
     String reviewContent = _reviewContent.text.trim();
 
@@ -77,7 +79,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     checkEnrollmentStatus();
   }
 
-  Future<void> checkEnrollmentStatus() async {
+  void checkEnrollmentStatus() async {
     final enrollmnetsProvider =
         Provider.of<EnrollmentsProvider>(context, listen: false);
     setState(() {
@@ -91,7 +93,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     });
   }
 
-  Future<void> enrollUser() async {
+ void enrollUser() async {
     setState(() {
       _isLoading = true;
     });
@@ -105,7 +107,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     });
   }
 
-  Future<void> unenrollTheUser() async {
+ void unenrollTheUser() async {
     setState(() {
       _isLoading = true;
     });
@@ -177,7 +179,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             title: 'Instructor Details',
             backgroundColor: appBarColor,
           ),

@@ -39,7 +39,7 @@ class _UpdateInstrctorOptionsScreenState
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Edit Profile",
           ),

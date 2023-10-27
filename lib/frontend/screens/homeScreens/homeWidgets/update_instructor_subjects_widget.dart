@@ -12,13 +12,14 @@ class UpdateInstructorSubjectsWidgets extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _UpdateInstructorSubjectsWidgetsState createState() =>
       _UpdateInstructorSubjectsWidgetsState();
 }
 
 class _UpdateInstructorSubjectsWidgetsState
     extends State<UpdateInstructorSubjectsWidgets> {
-  List<String> _subjectsList = [
+final  List<String> _subjectsList = [
     "Mathematics",
     "Science",
     "English",
@@ -45,10 +46,10 @@ class _UpdateInstructorSubjectsWidgetsState
         SizedBox(
           height: 10.h,
         ),
-        Container(
+        SizedBox(
           height: 200.h, // Set a fixed height for the list view
           child: ListView.builder(
-             physics: ClampingScrollPhysics(),
+             physics: const ClampingScrollPhysics(),
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: _subjectsList.length,

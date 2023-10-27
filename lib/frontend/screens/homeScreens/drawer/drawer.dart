@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zant/frontend/providers/home/chat_providers.dart';
+import 'package:zant/frontend/providers/home/notification_provider.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/chat_inbox_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_instructor_for_user.dart';
 import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_users_for_insructor.dart';
@@ -11,8 +12,9 @@ import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/instructor/add/add_details_screen.dart';
 import 'package:zant/global/colors.dart';
-import 'package:zant/server/notifications/notification_method.dart';
+
 import 'package:zant/sharedprefences/userPref.dart';
+import 'package:provider/provider.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -31,6 +33,7 @@ class _MyDrawerState extends State<MyDrawer> {
     super.initState();
     // Fetch the unread notification count
     fetchUnreadNotificationCount();
+    fetchUnreadMessagesCount();
     // Fetch user info from SharedPreferences
     name = UserPreferences.getName();
     profileUrl = UserPreferences.getProfileUrl();
@@ -38,12 +41,27 @@ class _MyDrawerState extends State<MyDrawer> {
   }
 
   int unreadNotificationCount = 0;
+  int unreadMessageCount = 0;
   Future<void> fetchUnreadNotificationCount() async {
-    final count = await NotificationMethod().fetchUnreadNotificationCount();
+    final notificationProvider =
+        Provider.of<NotificationProviders>(context, listen: false);
+    final count =
+        await notificationProvider.fetchUnreadNotificationCountProvider();
 
     if (mounted) {
       setState(() {
         unreadNotificationCount = count;
+      });
+    }
+  }
+
+  Future<void> fetchUnreadMessagesCount() async {
+    final chatsProvider = Provider.of<ChatProviders>(context, listen: false);
+    final count = await chatsProvider.fetchUnreadMessagesCountProvider();
+
+    if (mounted) {
+      setState(() {
+        unreadMessageCount = count;
       });
     }
   }
@@ -114,16 +132,31 @@ class _MyDrawerState extends State<MyDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(
-              Icons.chat,
-              color: Colors.black,
+            leading: Stack(
+              alignment: Alignment.center,
+              children: [
+                const Icon(Icons.chat, color: Colors.black),
+                if (unreadMessageCount > 0)
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(4.w),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             title: const Text(
               'Inbox',
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(
+                color: Colors.black,
+              ),
             ),
             onTap: () {
-              Get.to(() => ChatInboxScreen());
+              Get.to(() => const ChatInboxScreen());
             },
           ),
           accountType == "user"
@@ -203,7 +236,7 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ),
             onTap: () {
-              Get.to(() => NotificationsScreen());
+              Get.to(() => const NotificationsScreen());
             },
           ),
         ],

@@ -18,6 +18,7 @@ import 'package:zant/sharedprefences/userPref.dart';
 class InstructorMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+// method to add new instructor
   Future<void> addNewInstructor({
     required String phoneNumber,
     required String qualification,
@@ -89,10 +90,11 @@ class InstructorMethods {
       Get.offAll(() => const HomeScreen());
     } catch (e) {
       showCustomToast(
-          "An error occurred while becoming an instructor. Please try again later. $e");
+          "an error occurred while becoming an instructor. please try again later");
     }
   }
 
+// method to verify instructor phone number
   Future<void> verifyPhoneNumber({
     required String? phoneNumber,
     required String? selectedQualification,
@@ -108,7 +110,7 @@ class InstructorMethods {
 
       if (usersWithPhoneNumber.docs.isNotEmpty) {
         // The phone number is already associated with a user
-        showCustomToast('This phone number is already in use by another user.');
+        showCustomToast('this phone number is already in use by another user.');
         return;
       }
       await _auth.verifyPhoneNumber(
@@ -119,10 +121,10 @@ class InstructorMethods {
           if (e.code == 'invalid-phone-number') {
             errorMessage = 'Invalid phone number';
           } else if (e.code == 'too-many-requests') {
-            errorMessage = 'Phone number blocked due to too many requests';
+            errorMessage = 'phone number blocked due to too many requests';
           } else {
             errorMessage =
-                'Phone Number Verification Failed, please check the number';
+                'pshone Number Verification Failed, please check the number';
           }
           showCustomToast(errorMessage);
         },
@@ -135,15 +137,16 @@ class InstructorMethods {
               ));
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          showCustomToast('Code retrieval timed out');
+          showCustomToast('code retrieval timed out');
         },
         timeout: const Duration(minutes: 2),
       );
     } catch (e) {
-      showCustomToast("Error sending OTP");
+      showCustomToast("error sending OTP");
     }
   }
 
+// method to verify instructor phone number Otp code
   Future<bool> verifyOTP({
     required String? phoneNumberVerificationId,
     required String? otp,
@@ -179,11 +182,13 @@ class InstructorMethods {
           showCustomToast("Error verifying OTP: ${e.message}");
         }
       } else {
-        showCustomToast("An unexpected error occurred: $e");
+        showCustomToast("an unexpected error occurred");
       }
       return false; // Return false if an error occurs during verification
     }
   }
+
+// method to fecth the instrctors for user search
 
   Stream<QuerySnapshot> getInstructorsStream({required String query}) {
     try {
@@ -196,11 +201,11 @@ class InstructorMethods {
       return queryRef.snapshots();
     } catch (e) {
       print('Error in getInstructorsStream: $e');
-      showCustomToast(e.toString());
       return const Stream.empty();
     }
   }
 
+// method to update instructor subjects
   Future<void> updateInstructorSubjectsDays({
     required Map<String, List<String>> selectedDaysForSubjects,
   }) async {
@@ -251,10 +256,11 @@ class InstructorMethods {
       showCustomToast("Subjects days updated");
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      showCustomToast(e.toString());
+      showCustomToast("error accoured while updating the subjects days");
     }
   }
 
+// method to update instructor subjects timings
   Future<void> updateInstructorSubjectTiming({
     required String subject,
     required Map<String, dynamic> newTimings,
@@ -288,10 +294,11 @@ class InstructorMethods {
       showCustomToast("$subject timings updated");
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      showCustomToast(e.toString());
-      print(e.toString());
+      showCustomToast("error accoured while updating the timings");
     }
   }
+
+  // method to update instructor fees charges
 
   Future<void> updateInstructorFeesCharges({required int feesPerHour}) async {
     try {
@@ -304,9 +311,11 @@ class InstructorMethods {
       showCustomToast("Charges updated");
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      showCustomToast(e.toString());
+      showCustomToast("error accoured while updating the charges");
     }
   }
+
+  // method to update instructor qualification
 
   Future<void> updateInstructorQualification(
       {required String qualification}) async {
@@ -320,9 +329,11 @@ class InstructorMethods {
       showCustomToast("Qualification updated");
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      showCustomToast(e.toString());
+      showCustomToast("error accoured while updating the qualification");
     }
   }
+
+// method to add new subjects for  instructor
 
   Future<void> addNewSubjects({
     required List<String> newSubjects,
@@ -393,11 +404,12 @@ class InstructorMethods {
             "One or more subjects already exist. Please choose different subjects.");
       } else {
         showCustomToast(
-            "An error occurred while adding a new subject. Please try again later.");
+            "error occurred while adding a new subject.");
       }
     }
   }
 
+// method to remove instructor subjects
   Future<void> removeSubjects({
     required List<String> subjectsToRemove,
   }) async {
@@ -455,11 +467,12 @@ class InstructorMethods {
         showCustomToast("$e. Please choose existing subjects.");
       } else {
         showCustomToast(
-            "An error occurred while removing subjects. Please try again later.");
+            "error occurred while removing subjects.");
       }
     }
   }
 
+// method to add instructor review
   Future<void> addInstructorReview({
     required String instructorUid,
     required double ratings,
@@ -478,7 +491,7 @@ class InstructorMethods {
       final existingReviewDoc = await reviewsCollectionRef.doc(userId).get();
 
       if (existingReviewDoc.exists) {
-        showCustomToast("You have already reviewed this instructor.");
+        showCustomToast("You have already added a review for this instructor.");
       } else {
         ReviewModel reviewModel = ReviewModel(
           userId: userId,
@@ -507,12 +520,12 @@ class InstructorMethods {
             userName: currentUserName!,
           );
 
-            //Saving the notification to firestore
+          //Saving the notification to firestore
 
-      await NotificationMethod().saveNotificationToFireStore(
-          notificationText: "added a review",
-          receiverUserId: instructorUid,
-          senderUserId: userId);
+          await NotificationMethod().saveNotificationToFireStore(
+              notificationText: "added a review",
+              receiverUserId: instructorUid,
+              senderUserId: userId);
 
           showCustomToast("Review added");
           Get.to(
@@ -520,10 +533,11 @@ class InstructorMethods {
         }
       }
     } catch (e) {
-      showCustomToast(e.toString());
+      showCustomToast("error accoured please try again");
     }
   }
 
+// method to fecth reviews of  instructor
   Future<List<Map<String, dynamic>>> fetchReviewsOfInstructor(
       {required String instructorUid}) async {
     try {
@@ -555,11 +569,12 @@ class InstructorMethods {
 
       return reviewsData;
     } catch (e) {
-      showCustomToast("Error fetching reviews with user details: $e");
+      print("error fetching reviews with user details: $e");
       return [];
     }
   }
 
+// method to add a replay for an review
   Future<void> addInstructorReviewReply({
     required String instructorUid,
     required String reviewId,
@@ -597,9 +612,11 @@ class InstructorMethods {
           senderUserId: currentUserId);
       showCustomToast("Reply added");
     } catch (e) {
-      showCustomToast(e.toString());
+      showCustomToast("error accoured while adding an reply");
     }
   }
+
+  // method to fecth reviews replies
 
   Future<List<Map<String, dynamic>>> fetchRepliesForReview({
     required String instructorUid,
@@ -643,10 +660,11 @@ class InstructorMethods {
       }
     } catch (e) {
       print('Error fetching replies: $e');
-      throw e;
+      rethrow;
     }
   }
 
+// method to delete an review
   Future<void> deleteReviewReply({
     required String instructorUid,
     required String reviewId,
@@ -672,7 +690,7 @@ class InstructorMethods {
             "Reply not found"); // Handle the case where the reply doesn't exist
       }
     } catch (e) {
-      showCustomToast("Error occurred while deleting the reply: $e");
+      showCustomToast("error occurred while deleting the reply");
     }
   }
 }

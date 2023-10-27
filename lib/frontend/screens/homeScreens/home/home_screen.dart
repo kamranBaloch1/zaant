@@ -5,7 +5,7 @@ import 'package:zant/frontend/screens/homeScreens/instructor/update/show_intstru
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/search_field.dart';
+import 'package:zant/frontend/screens/homeScreens/homeWidgets/search_field_design.dart';
 import 'package:zant/global/constant_values.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 

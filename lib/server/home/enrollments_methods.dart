@@ -96,13 +96,13 @@ class EnrollmentsMethods {
         }
       } else {
         // User not authenticated
-        print("User not authenticated.");
+        
         showCustomToast("User not authenticated.");
       }
     } catch (e) {
       // Handle errors gracefully and log the error
-      print("Error enrolling user: $e");
-      showCustomToast("Error enrolling user. Please try again later. $e");
+     
+      showCustomToast("Error enrolling user. Please try again later.");
     }
   }
 
@@ -137,7 +137,7 @@ class EnrollmentsMethods {
       }
     } catch (e) {
       // Handle any potential errors here
-      print("Error checking enrollment status: $e");
+    
       showCustomToast(
           "Error checking enrollment status. Please try again later.");
     }
@@ -171,7 +171,7 @@ class EnrollmentsMethods {
     } catch (e) {
       // Handle errors when fetching enrollment IDs.
       print("Error fetching enrollment IDs: $e");
-      throw e; // You can choose to rethrow the exception or handle it as needed
+      rethrow; // You can choose to rethrow the exception or handle it as needed
     }
   }
 
@@ -248,7 +248,7 @@ class EnrollmentsMethods {
     getEnrollmentUsersIDsForInstructors().then((enrollmentIds) {
       // Check if there are no enrollment IDs to avoid unnecessary Firestore queries.
       if (enrollmentIds.isEmpty) {
-        print("empty");
+      
         controller.add([]);
         return;
       }
@@ -324,12 +324,11 @@ class EnrollmentsMethods {
           showCustomToast("User or instructor not found.");
         }
       } else {
-        print("User not authenticated.");
+      
         showCustomToast("User not authenticated.");
       }
     } catch (e) {
-      print("Error unenrolling user: $e");
-      showCustomToast("Error unenrolling user. Please try again later.");
+        showCustomToast("Error unenrolling user. Please try again later.");
     }
   }
 
@@ -383,11 +382,10 @@ class EnrollmentsMethods {
           showCustomToast("User or instructor not found.");
         }
       } else {
-        print("User not authenticated.");
         showCustomToast("User not authenticated.");
       }
     } catch (e) {
-      print("Error unenrolling user: $e");
+     
       showCustomToast("Error unenrolling user. Please try again later.");
     }
   }

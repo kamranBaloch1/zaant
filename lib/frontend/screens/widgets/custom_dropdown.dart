@@ -20,6 +20,7 @@ class CustomDropdown<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomDropdownState<T> createState() => _CustomDropdownState<T>();
 }
 
@@ -45,7 +46,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 4.r,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),

@@ -22,6 +22,7 @@ class BottomChatField extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _BottomChatFieldState createState() => _BottomChatFieldState();
 }
 
@@ -177,7 +178,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                 backgroundColor: const Color.fromARGB(255, 226, 221, 221),
                 radius: 25.r,
                 child: GestureDetector(
-                  child: Icon(Icons.send),
+                  child: const Icon(Icons.send),
                   onTap: _sendTextMessage,
                 ),
               ),

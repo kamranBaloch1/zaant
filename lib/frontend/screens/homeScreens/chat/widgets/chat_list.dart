@@ -135,5 +135,5 @@ class _ChatListState extends State<ChatList> {
 }
 
 extension DateTimeExtension on DateTime {
-  DateTime get date => DateTime(this.year, this.month, this.day);
+  DateTime get date =>  DateTime(year, month, day);
 }

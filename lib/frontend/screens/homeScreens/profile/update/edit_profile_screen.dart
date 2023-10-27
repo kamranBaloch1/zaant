@@ -153,14 +153,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       _buildProfileAvatar(),
                       SizedBox(height: 40.h),
-                      homeCustomTextField(
+                      HomeCustomTextField(
                         controller: _nameC,
                         labelText: 'Name',
                         icon: Icons.person,
                         keyBoardType: TextInputType.name,
                       ),
                       SizedBox(height: 20.h),
-                      homeCustomTextField(
+                      HomeCustomTextField(
                           controller: _address,
                           labelText: "write your full address",
                           icon: Icons.house,

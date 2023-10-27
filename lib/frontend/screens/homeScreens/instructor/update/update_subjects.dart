@@ -17,6 +17,7 @@ class UpdateSubjectsScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _UpdateSubjectsScreenState createState() => _UpdateSubjectsScreenState();
 }
 
@@ -35,7 +36,7 @@ class _UpdateSubjectsScreenState extends State<UpdateSubjectsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(backgroundColor: appBarColor, title: "Update Subjects"),
+      appBar: const CustomAppBar(backgroundColor: appBarColor, title: "Update Subjects"),
       body: SingleChildScrollView(
         child: Center(
           child: Column(

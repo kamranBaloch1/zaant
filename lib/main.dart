@@ -11,6 +11,7 @@ import 'package:zant/frontend/providers/auth/register_providers.dart';
 import 'package:zant/frontend/providers/home/chat_providers.dart';
 import 'package:zant/frontend/providers/home/enrollmens_provider.dart';
 import 'package:zant/frontend/providers/home/instructor_provider.dart';
+import 'package:zant/frontend/providers/home/notification_provider.dart';
 import 'package:zant/frontend/providers/home/profile_providers.dart';
 import 'package:zant/frontend/screens/authSceens/login/onBoarding_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
@@ -40,6 +41,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ProfileProviders()),
         ChangeNotifierProvider(create: (context) => ChatProviders()),
         ChangeNotifierProvider(create: (context) => EnrollmentsProvider()),
+        ChangeNotifierProvider(create: (context) => NotificationProviders()),
       ],
       // Initialize the app
       child: const MyApp(),

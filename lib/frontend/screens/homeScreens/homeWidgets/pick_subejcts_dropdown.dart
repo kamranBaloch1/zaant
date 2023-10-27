@@ -17,7 +17,7 @@ class PickSubjectsDropdown extends StatefulWidget {
 }
 
 class _PickSubjectsDropdownState extends State<PickSubjectsDropdown> {
-  List<String> _subjectsList = [
+ final List<String> _subjectsList = [
     "Mathematics",
     "Science",
     "English",

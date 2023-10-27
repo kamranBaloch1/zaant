@@ -110,6 +110,8 @@ class ChatProviders extends ChangeNotifier {
       showCustomToast("Error initializing chat stream: $e");
     }
   }
+
+  
   // Initialize the chats contacts stream.
   Future<void> getChatsContactsProvider() async {
     try {
@@ -118,6 +120,11 @@ class ChatProviders extends ChangeNotifier {
     } catch (e) {
       showCustomToast("Error initializing chats contacts stream: $e");
     }
+  }
+
+   // Asynchronously fetch the count of unread messages
+  Future<int> fetchUnreadMessagesCountProvider() async {
+    return _chatMethods.fetchunreadMessagesCount();
   }
 
   // Dispose of the chat stream when no longer needed.

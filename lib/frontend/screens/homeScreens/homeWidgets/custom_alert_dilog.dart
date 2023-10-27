@@ -13,21 +13,21 @@ class CustomAlertDilog {
         return AlertDialog(
           title: Text(
             title,
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
           content: Text(
             content,
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text("Cancel", style: TextStyle(color: Colors.black)),
+              child: const Text("cancel", style: TextStyle(color: Colors.black)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text("Mark as Read", style: TextStyle(color: Colors.black)),
+              child: const Text("confirm", style: TextStyle(color: Colors.black)),
               onPressed: () {
                 onConfirm(); // Call the provided callback
                 Navigator.of(context).pop();

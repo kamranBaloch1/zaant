@@ -47,7 +47,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             title: 'User Details', // Updated the title
             backgroundColor: appBarColor,
           ),

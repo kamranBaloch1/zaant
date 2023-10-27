@@ -88,10 +88,10 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
         final timings = subjectTimings[subject] ?? {};
         selectedTimings[subject] = {
           'Start Time': {
-            'time': "${_formatTime(timings['start'])}",
+            'time': _formatTime(timings['start']),
           },
           'End Time': {
-            'time': "${_formatTime(timings['end'])}",
+            'time': _formatTime(timings['end']),
           },
         };
       }

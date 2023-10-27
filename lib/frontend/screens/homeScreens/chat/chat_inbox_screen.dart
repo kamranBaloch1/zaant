@@ -14,7 +14,7 @@ import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/server/home/chat_methods.dart';
 
 class ChatInboxScreen extends StatefulWidget {
-  ChatInboxScreen({Key? key}) : super(key: key);
+  const ChatInboxScreen({Key? key}) : super(key: key);
 
   @override
   State<ChatInboxScreen> createState() => _ChatInboxScreenState();
@@ -69,7 +69,7 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(backgroundColor: appBarColor, title: "Inbox"),
+      appBar: const CustomAppBar(backgroundColor: appBarColor, title: "Inbox"),
       drawer: const MyDrawer(),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0),

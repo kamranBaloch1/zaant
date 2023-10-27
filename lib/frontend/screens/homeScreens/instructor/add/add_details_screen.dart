@@ -89,7 +89,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                 SizedBox(
                   height: 20.h,
                 ),
-                homeCustomTextField(
+                HomeCustomTextField(
                   controller: _feesPerHour,
                   labelText: "Fees per hour",
                   icon: Icons.money,

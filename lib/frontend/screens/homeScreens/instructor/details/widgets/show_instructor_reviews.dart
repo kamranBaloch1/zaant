@@ -226,11 +226,11 @@ class _ShowInstructorReviewsScreenState
                                         const CustomShimmerLoadingBar(), // Replace 'YourShimmeringUI' with your UI for loading state
                                   );
                                 } else if (snapshot.hasError) {
-                                  return Center(
+                                  return const Center(
                                     child: Text(
-                                      'Error: ${snapshot.error}',
+                                      'Error: accoured',
                                       style:
-                                          const TextStyle(color: Colors.black),
+                                           TextStyle(color: Colors.black),
                                     ),
                                   );
                                 } else if (!snapshot.hasData ||
