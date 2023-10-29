@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
+
 import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
 import 'package:zant/frontend/screens/homeScreens/profile/edit_options_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/sharedprefences/userPref.dart';
+
 import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -24,11 +26,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? accountType;
   String? phoneNumber;
   bool? isPhoneNumberVerified;
-  bool _isLoading = true;
+  String? uid;
   String? error;
   DateTime? dob;
   String? formattedDate;
-  String? uid;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -42,7 +44,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  // Simulate loading state with a delay
   Future<void> _loadingTheState() async {
     await Future.delayed(const Duration(seconds: 1));
     setState(() {
@@ -50,97 +51,127 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  // Fetch user info from shared preferences
   Future<void> _getUserInfoFromSharedPref() async {
     name = UserPreferences.getName();
     email = UserPreferences.getEmail();
     profileUrl = UserPreferences.getProfileUrl();
     phoneNumber = UserPreferences.getPhoneNumber();
-    isPhoneNumberVerified =  UserPreferences.getIsPhoneNumberVerified();
+    isPhoneNumberVerified = UserPreferences.getIsPhoneNumberVerified();
     dob = UserPreferences.getDob();
-    accountType = UserPreferences.getAccountType();
     formattedDate = DateFormat('yyyy-MM-dd').format(dob!);
-    uid  = UserPreferences.getUid();
+    accountType = UserPreferences.getAccountType();
+    uid = UserPreferences.getUid();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: CustomAppBar(
-            backgroundColor: appBarColor,
-            title:  name![0].toUpperCase() + name!.substring(1),
-          ),
-          drawer: const MyDrawer(),
-          body: SingleChildScrollView(
+    return Scaffold(
+      appBar: CustomAppBar(
+        backgroundColor: appBarColor,
+        title: name![0].toUpperCase() + name!.substring(1),
+      ),
+      drawer: const MyDrawer(),
+      body: Stack(
+        children: [
+          Container(
+           
+            decoration:   BoxDecoration(
+                borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(5.r),  
+      topRight: Radius.circular(5..r), 
+     
+    ),
+              gradient: const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF1976D2), Colors.yellow],
+              ),
+            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20.h),
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return FullImageDialog(imageUrl: profileUrl!);
-                      },
-                    );
-                  },
-                  child: CircleAvatar(
-                    radius: 70.r,
-                    backgroundImage: NetworkImage(profileUrl!),
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                _buildUserInfoRow(
-                  "Name",
-                  name![0].toUpperCase() + name!.substring(1),
-                ),
-                _buildUserInfoRow("Email", email!),
-                _buildUserInfoRow("Date of Birth", formattedDate!),
-               _buildUserInfoRow(
-                        "Phone Number",
-                        phoneNumber != "" ? phoneNumber! : "Empty",
-                      ),
-                  
-                SizedBox(height: 50.h),
-                Container(
-                  width: 120.w,
-                  height: 50.h,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      Get.to(() => ProfileEditOptionsScreen(
-                            accountType: accountType,
-                            isPhoneNumberVerified: isPhoneNumberVerified,
-                            phoneNumber: phoneNumber,
-                            uid: uid,
-                          ));
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return FullImageDialog(imageUrl: profileUrl!);
+                        },
+                      );
                     },
-                    child: Text(
-                      "Settings",
-                      style: TextStyle(color: Colors.black, fontSize: 18.sp),
+                    child: Container(
+                      width: 140.r,
+                      height: 140.r,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 4.r,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        radius: 68.r,
+                        backgroundImage: NetworkImage(profileUrl!),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24.r),
+                        topRight: Radius.circular(24.r),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildUserInfoRow("Name", name!),
+                        _buildUserInfoRow("Email", email!),
+                        _buildUserInfoRow("Date of Birth", formattedDate!),
+                        _buildUserInfoRow(
+                          "Phone Number",
+                          phoneNumber != "" ? phoneNumber! : "Empty",
+                        ),
+                         SizedBox(height: 24.h),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.to(() => ProfileEditOptionsScreen(
+                                  accountType: accountType,
+                                  isPhoneNumberVerified: isPhoneNumberVerified,
+                                  phoneNumber: phoneNumber,
+                                  uid: uid,
+                                ));
+                          },
+                          child: Text(
+                            "Edit Profile",
+                            style: TextStyle(fontSize: 15.sp),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
           ),
-        ),
-
-        // Show a loading overlay if `_isLoading` is true
-        if (_isLoading) const CustomLoadingOverlay()
-      ],
+          if (_isLoading) const CustomLoadingOverlay(),
+        ],
+      ),
     );
   }
 
   Widget _buildUserInfoRow(String title, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+      padding: EdgeInsets.all(16.r),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

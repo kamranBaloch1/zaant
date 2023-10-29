@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'dart:typed_data';
-
+import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,10 +10,10 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zant/frontend/enum/messgae_enum.dart';
 import 'package:zant/frontend/screens/homeScreens/chat/widgets/video_player.dart';
+
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 
-// Import your project-specific dependencies and enums here
-
+// Create a stateful widget to display different message types
 class DisplayMessageCard extends StatefulWidget {
   final String message;
   final MessageEnum type;
@@ -26,7 +25,6 @@ class DisplayMessageCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _DisplayMessageCardState createState() => _DisplayMessageCardState();
 }
 
@@ -50,15 +48,23 @@ class _DisplayMessageCardState extends State<DisplayMessageCard> {
     }
   }
 
+  // Build a text message
   Widget _buildTextMessage() {
-    return Text(
-      widget.message,
-      style: TextStyle(
-        fontSize: 16.sp,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onLongPress: () {
+        _copyToClipboard(text: widget.message);
+      },
+      child: Text(
+        widget.message,
+        style: TextStyle(
+          fontSize: 16.sp,
+        ),
       ),
     );
   }
 
+  // Build a video message
   Widget _buildVideoMessage() {
     return GestureDetector(
       onLongPress: () {
@@ -70,13 +76,13 @@ class _DisplayMessageCardState extends State<DisplayMessageCard> {
     );
   }
 
+  // Build an image message
   Widget _buildImageMessage() {
     return GestureDetector(
       onLongPress: () {
         showSaveMediaDialog(widget.message, isImage: true);
       },
-      // ignore: sized_box_for_whitespace
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         child: CachedNetworkImage(
           imageUrl: widget.message,
@@ -85,6 +91,7 @@ class _DisplayMessageCardState extends State<DisplayMessageCard> {
     );
   }
 
+  // Show a dialog to confirm saving media
   void showSaveMediaDialog(String mediaUrl, {bool isImage = false}) async {
     showDialog(
       context: context,
@@ -116,6 +123,7 @@ class _DisplayMessageCardState extends State<DisplayMessageCard> {
     );
   }
 
+  // Request permission to save media and handle saving
   void _requestPermissionAndSaveMedia(String mediaUrl, bool isImage) async {
     PermissionStatus status = await Permission.storage.status;
     if (status.isGranted) {
@@ -131,6 +139,7 @@ class _DisplayMessageCardState extends State<DisplayMessageCard> {
     }
   }
 
+  // Save media to the gallery
   void _saveMediaToGallery(String mediaUrl, bool isImage) async {
     try {
       var response = await http.get(Uri.parse(mediaUrl));
@@ -186,13 +195,18 @@ class _DisplayMessageCardState extends State<DisplayMessageCard> {
     }
   }
 
+  // Build a default message (used for unknown message types)
   Widget _buildDefaultMessage() {
-    // ignore: sized_box_for_whitespace
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: CachedNetworkImage(
         imageUrl: widget.message,
       ),
     );
+  }
+
+  // Copy text to clipboard
+  void _copyToClipboard({required String text}) {
+    Clipboard.setData(ClipboardData(text: text));
   }
 }
