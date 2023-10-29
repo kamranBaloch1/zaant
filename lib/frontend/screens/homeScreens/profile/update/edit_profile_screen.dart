@@ -140,8 +140,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
-            title: _isLoading ? "Updating..." : "Edit Profile",
+          appBar: const CustomAppBar(
+            title:  "Edit Profile",
             backgroundColor: appBarColor,
           ),
           body: _isShimmerLoading

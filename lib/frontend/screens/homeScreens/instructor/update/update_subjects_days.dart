@@ -18,11 +18,72 @@ class UpdateSubjectDaysScreen extends StatefulWidget {
 
   @override
   State<UpdateSubjectDaysScreen> createState() =>
-      _UpdateSubjectDaysScreenState();
+      _UpdateSubjectDaysScreenState(selectedDaysOfSubjects);
 }
 
 class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
   bool _isLoading = false;
+  Map<String, List<String>> _updatedSelectedDays;
+
+ _UpdateSubjectDaysScreenState(Map<String, List<String>> selectedDaysOfSubjects)
+    : _updatedSelectedDays = Map.from(selectedDaysOfSubjects);
+
+  void _handleCheckboxChange(String subject, String day, bool value) {
+    setState(() {
+      if (value) {
+        if (_updatedSelectedDays.containsKey(subject)) {
+          _updatedSelectedDays[subject]!.add(day);
+        } else {
+          _updatedSelectedDays[subject] = [day];
+        }
+      } else {
+        if (_updatedSelectedDays.containsKey(subject)) {
+          _updatedSelectedDays[subject]!.remove(day);
+        }
+      }
+    });
+  }
+
+
+void _updateSelectedDays() {
+  // Create a copy of the selectedDaysOfSubjects
+  Map<String, List<String>> updatedData = {};
+
+  // Validate that at least one day is selected for each subject
+  bool isValid = true;
+
+  for (final subject in widget.selectedDaysOfSubjects.keys) {
+    final days = _updatedSelectedDays[subject] ?? [];
+
+    if (days.isNotEmpty) {
+      updatedData[subject] = days;
+    }
+    else {
+      isValid = false;
+    }
+  }
+
+  if (!isValid) {
+    // Show an error message to the user and prevent the update action
+    showCustomToast("Please select at least one day for each subject.");
+    return;
+  }
+
+  setState(() {
+    _isLoading = true;
+  });
+
+  // Call your backend update method with the updated data
+  final instructorProvider = Provider.of<InstructorProviders>(context, listen: false);
+  instructorProvider
+      .updateInstructorSubjectsDaysProvider(selectedDaysForSubjects: updatedData)
+      .then((_) {
+    setState(() {
+      _isLoading = false;
+    });
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +111,7 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
                     if (index < widget.selectedDaysOfSubjects.length) {
                       final subject =
                           widget.selectedDaysOfSubjects.keys.elementAt(index);
-                      final days = widget.selectedDaysOfSubjects[subject] ?? [];
+                      final days = _updatedSelectedDays[subject] ?? [];
 
                       return Column(
                         children: [
@@ -92,15 +153,7 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
                                         Checkbox(
                                           value: days.contains(day),
                                           onChanged: (value) {
-                                            setState(() {
-                                              if (value != null) {
-                                                if (value) {
-                                                  days.add(day);
-                                                } else {
-                                                  days.remove(day);
-                                                }
-                                              }
-                                            });
+                                            _handleCheckboxChange(subject, day, value!);
                                           },
                                         ),
                                       ],
@@ -112,7 +165,6 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
                         ],
                       );
                     } else {
-                      // Render the "Update" button
                       return Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: 40.h, horizontal: 80.w),
@@ -128,51 +180,8 @@ class _UpdateSubjectDaysScreenState extends State<UpdateSubjectDaysScreen> {
                   },
                 ),
         ),
-
-        // Show a loading overlay if loading is true
         if (_isLoading) const CustomLoadingOverlay()
       ],
     );
-  }
-
-  // Function to update the selected days for subjects
-  void _updateSelectedDays() {
-    // Create a copy of the selectedDaysOfSubjects
-    Map<String, List<String>> updatedData =
-        Map.from(widget.selectedDaysOfSubjects);
-
-    // Validate that at least one day is selected for each subject
-    bool isValid = true;
-
-    for (final subject in updatedData.keys) {
-      final days = updatedData[subject] ?? [];
-      if (days.isEmpty) {
-        isValid = false;
-        break;
-      }
-    }
-
-    if (!isValid) {
-      // Show an error message to the user and prevent the update action
-      showCustomToast("Please select at least one day for each subject.");
-      return; // Exit the method without updating
-    }
-
-    setState(() {
-      _isLoading = true; // Show loading overlay while updating
-    });
-
-    // Call your backend update method with the updated data
-    final instructorProvider =
-        Provider.of<InstructorProviders>(context, listen: false);
-    instructorProvider
-        .updateInstructorSubjectsDaysProvider(
-            selectedDaysForSubjects: updatedData)
-        .then((_) {
-      // Once the update is complete, set _isLoading to false
-      setState(() {
-        _isLoading = false;
-      });
-    });
   }
 }

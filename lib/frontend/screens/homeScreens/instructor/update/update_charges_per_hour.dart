@@ -70,9 +70,9 @@ class _UpdateChargesPerHourState extends State<UpdateChargesPerHour> {
     return Stack(
       children: [
         Scaffold(
-          appBar: const CustomAppBar(
+          appBar: const  CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Update Fees Per Hour",
+            title:  "Update Fees Per Hour",
           ),
           body: Column(
             children: [

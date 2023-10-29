@@ -157,7 +157,7 @@ class _UpdateSubjectsTimingsScreenState
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Update timings for subjects",
+            title:"Update timings for subjects",
           ),
           body:  widget.selectedTimingsForSubjects.isEmpty
               ? Center(
@@ -251,7 +251,7 @@ class _UpdateSubjectsTimingsScreenState
         ),
 
         // Showing a loading overlay if _isLoading is true
-        if (_isLoading) CustomLoadingOverlay()
+        if (_isLoading) const CustomLoadingOverlay()
       ],
     );
   }

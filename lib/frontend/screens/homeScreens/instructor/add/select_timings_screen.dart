@@ -133,7 +133,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Select timings for subjects",
           ),

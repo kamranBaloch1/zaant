@@ -16,7 +16,8 @@ import 'package:zant/server/notifications/send_notifications.dart';
 import 'package:zant/sharedprefences/userPref.dart';
 
 class InstructorMethods {
-  final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
+  final FirebaseCollectionNamesFields _collectionNamesFields =
+      FirebaseCollectionNamesFields();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
 // method to add new instructor
@@ -42,8 +43,9 @@ class InstructorMethods {
       final gender = UserPreferences.getGender() ?? "";
       final address = UserPreferences.getAddress() ?? "";
 
-      final userDocRef =
-          FirebaseFirestore.instance.collection(_collectionNamesFields.userCollection).doc(uid);
+      final userDocRef = FirebaseFirestore.instance
+          .collection(_collectionNamesFields.userCollection)
+          .doc(uid);
 
       final userDoc = await userDocRef.get();
       if (!userDoc.exists) {
@@ -229,9 +231,7 @@ class InstructorMethods {
             existingData["selectedDaysForSubjects"] as Map<String, dynamic>;
 
         existingSelectedDaysData.forEach((subject, days) {
-          if (days is List<dynamic>) {
-            selectedDaysData[subject] = List<String>.from(days);
-          } else if (days is List<String>) {
+          if (days is List<String>) {
             selectedDaysData[subject] = days;
           }
         });
@@ -239,6 +239,10 @@ class InstructorMethods {
 
       selectedDaysForSubjects.forEach((subject, days) {
         if (selectedDaysData.containsKey(subject)) {
+          // Remove deselected days
+          selectedDaysData[subject]!.removeWhere((day) => !days.contains(day));
+
+          // Add selected days
           days.forEach((day) {
             if (!selectedDaysData[subject]!.contains(day)) {
               selectedDaysData[subject]!.add(day);
@@ -257,7 +261,7 @@ class InstructorMethods {
       showCustomToast("Subjects days updated");
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      showCustomToast("error accoured while updating the subjects days");
+      showCustomToast("error occurred while updating the subjects days");
     }
   }
 
@@ -404,8 +408,7 @@ class InstructorMethods {
         showCustomToast(
             "One or more subjects already exist. Please choose different subjects.");
       } else {
-        showCustomToast(
-            "error occurred while adding a new subject.");
+        showCustomToast("error occurred while adding a new subject.");
       }
     }
   }
@@ -467,8 +470,7 @@ class InstructorMethods {
       if (e.toString().contains("Subjects not found")) {
         showCustomToast("$e. Please choose existing subjects.");
       } else {
-        showCustomToast(
-            "error occurred while removing subjects.");
+        showCustomToast("error occurred while removing subjects.");
       }
     }
   }
@@ -487,7 +489,8 @@ class InstructorMethods {
           .collection(_collectionNamesFields.instructorsCollection)
           .doc(instructorUid);
 
-      final reviewsCollectionRef = instructorDoc.collection(_collectionNamesFields.reviewsCollection);
+      final reviewsCollectionRef =
+          instructorDoc.collection(_collectionNamesFields.reviewsCollection);
 
       final existingReviewDoc = await reviewsCollectionRef.doc(userId).get();
 
@@ -631,8 +634,8 @@ class InstructorMethods {
       final reviewDoc = await reviewsCollectionDoc.doc(reviewId).get();
 
       if (reviewDoc.exists) {
-        final repliesCollection =
-            reviewDoc.reference.collection(_collectionNamesFields.reviewsReplyCollection);
+        final repliesCollection = reviewDoc.reference
+            .collection(_collectionNamesFields.reviewsReplyCollection);
         final repliesQuery =
             await repliesCollection.orderBy('date', descending: true).get();
 

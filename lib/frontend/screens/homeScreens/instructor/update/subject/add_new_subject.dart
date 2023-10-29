@@ -35,9 +35,9 @@ class _AddNewSubjectForInstructorScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: const  CustomAppBar(
         backgroundColor: appBarColor,
-        title: 'Add new Subject',
+        title:'Add new Subject',
       ),
       body: Column(
         children: [
