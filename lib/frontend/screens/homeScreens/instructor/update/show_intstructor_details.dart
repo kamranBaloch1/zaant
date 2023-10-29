@@ -115,9 +115,9 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
         ),
         SizedBox(height: 16.h),
         BuildInfoCardWidget(
-          icon: Icons.attach_money,
+          icon: Icons.money,
           title: "Fees per Hour",
-          content: "\$${instructorModel.feesPerHour.toString()}",
+          content: "PKR : ${instructorModel.feesPerHour.toString()}",
         ),
         SizedBox(height: 16.h),
         BuildInfoCardWidget(

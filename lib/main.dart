@@ -16,6 +16,7 @@ import 'package:zant/frontend/providers/home/profile_providers.dart';
 import 'package:zant/frontend/screens/authSceens/login/onBoarding_screen.dart';
 import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+import 'package:zant/frontend/screens/widgets/scaffoald_loader.dart';
 import 'package:zant/global/firebase_collection_names.dart';
 import 'package:zant/server/auth/logout.dart';
 import 'package:zant/sharedprefences/userPref.dart';
@@ -78,7 +79,7 @@ class MyApp extends StatelessWidget {
             future: _buildHomeScreen(),
             builder: (context, AsyncSnapshot<Widget> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const CustomScaffoaldLoader();
               } else {
                 return snapshot.data!;
               }

@@ -234,9 +234,9 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
-                  icon: Icons.attach_money,
+                  icon: Icons.money,
                   title: "Fees per Hour",
-                  content: "\$${widget.instructorModel.feesPerHour.toString()}",
+                  content: "PKR : ${widget.instructorModel.feesPerHour.toString()}",
                 ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(

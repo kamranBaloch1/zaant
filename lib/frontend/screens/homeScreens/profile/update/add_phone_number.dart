@@ -6,6 +6,7 @@ import 'package:zant/frontend/screens/authSceens/authWidgets/custom_auth_field.d
 import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zant/frontend/screens/widgets/custom_button.dart';
 import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zant/frontend/screens/widgets/custom_toast.dart';
 import 'package:zant/global/colors.dart';
 import 'package:zant/server/home/profile_methods.dart';
 
@@ -13,7 +14,7 @@ class AddPhoneNumberScreen extends StatefulWidget {
   final String? phoneNumber;
   const AddPhoneNumberScreen({
     Key? key,
-   required this.phoneNumber,
+    required this.phoneNumber,
   }) : super(key: key);
 
   @override
@@ -21,16 +22,13 @@ class AddPhoneNumberScreen extends StatefulWidget {
 }
 
 class _AddPhoneNumberScreenState extends State<AddPhoneNumberScreen> {
-  late final TextEditingController _phoneController ;
+  late final TextEditingController _phoneController;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-
   @override
   void initState() {
-  
-     _phoneController =  TextEditingController(text:widget.phoneNumber );
-
+    _phoneController = TextEditingController(text: widget.phoneNumber);
 
     super.initState();
   }
@@ -49,6 +47,13 @@ class _AddPhoneNumberScreenState extends State<AddPhoneNumberScreen> {
     String phoneNumber = _phoneController.text.trim();
     String formattedNumber = "+92$phoneNumber";
 
+    if (formattedNumber == widget.phoneNumber) {
+      showCustomToast("please write an another number");
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
     await ProfileMethods().verifyPhoneNumber(
       phoneNumber: formattedNumber,
     );
