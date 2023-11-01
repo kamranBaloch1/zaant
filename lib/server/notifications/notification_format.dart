@@ -13,6 +13,7 @@ class NotificationFormat{
       required String userName,
       required String notificationBodyText,
       required String notificationTitleText,
+      required String userId
       }) {
     Map<String, String> notificationHeader = {
       'Content-Type': 'application/json',
@@ -20,13 +21,16 @@ class NotificationFormat{
     };
     Map notificationBody = {
       'body': notificationBodyText,
-      'title': notificationTitleText
+      'title': notificationTitleText,
+     
     };
 
     Map dataMap = {
       "click_action": "FLUTTER_NOTIFICATION_CLICK",
       "id": "1",
       "status": "done",
+      'userId': userId,
+      'bodyText':notificationBodyText
       
     };
 

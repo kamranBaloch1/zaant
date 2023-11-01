@@ -6,7 +6,7 @@ void showCustomSnackbar(BuildContext context, String title)
 {
   SnackBar snackBar = SnackBar(
     backgroundColor: Colors.black,
-    duration: const Duration(seconds: 1),
+    duration: const Duration(seconds: 2),
     content: Text(
       title.toString(),
       style: const TextStyle(

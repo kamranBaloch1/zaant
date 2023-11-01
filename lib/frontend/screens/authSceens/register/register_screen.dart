@@ -101,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (selectedDate != null && selectedGender != null) {
       final DateTime now = DateTime.now();
-      final DateTime minDate = DateTime(now.year - 12, now.month, now.day);
+      final DateTime minDate = DateTime(now.year - 4, now.month, now.day);
 
       if (selectedDate!.isBefore(minDate)) {
         await registerProvider
@@ -113,8 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 gender: selectedGender,
                 dob: selectedDate,
                 city: selectedCity!,
-                location: location
-                )
+                location: location)
             .then((value) => {
                   setState(() {
                     _isLoading = false;
@@ -124,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() {
           _isLoading = false;
         });
-        showCustomToast("You must be older than 12 years to register.");
+        showCustomToast("You must be older than 4 years to register.");
       }
     } else {
       setState(() {
@@ -139,9 +138,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar:const CustomAppBar(
-              backgroundColor: appBarColor,
-              title:  "Register an account"),
+          appBar: const CustomAppBar(
+              backgroundColor: appBarColor, title: "Register an account"),
           body: SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -255,23 +253,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     labelText: "Select the gender",
                     icon: Icons.person,
                   ),
-                  
-                   SizedBox(height: 20.h),
-                   CustomAuthTextField(
-                controller: _locationController,
-                hintText: "write your full address",
-                icon: const Icon(Icons.house),
-                 validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please write your address';
-                      }
-                      return null;
-                    },
-                 obSecure:false,
-             
-
-                keyBoardType: TextInputType.text),
-                 
+                  SizedBox(height: 20.h),
+                  CustomAuthTextField(
+                      controller: _locationController,
+                      hintText: "write your full address",
+                      icon: const Icon(Icons.house),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'please write your address';
+                        }
+                        return null;
+                      },
+                      obSecure: false,
+                      keyBoardType: TextInputType.text),
                   SizedBox(height: 20.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),

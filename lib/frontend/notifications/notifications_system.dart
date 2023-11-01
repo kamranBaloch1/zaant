@@ -20,7 +20,12 @@ class PushNotificationsSystem {
         .then((RemoteMessage? remoteMessage) {
       if (remoteMessage != null) {
         //open app and show notification data
-        // showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
+
+        showNotificationWhenOpenApp(
+          uid: remoteMessage.data["userId"],
+          context: context,
+          messageData: remoteMessage.data,
+        );
       }
     });
 
@@ -28,8 +33,12 @@ class PushNotificationsSystem {
     //When the app is open and it receives a push notification
     FirebaseMessaging.onMessage.listen((RemoteMessage? remoteMessage) {
       if (remoteMessage != null) {
-        //directly show notification data
-        //  showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
+        // Show notification when the app is open
+        showNotificationWhenOpenApp(
+          uid: remoteMessage.data["userId"],
+          context: context,
+          messageData: remoteMessage.data,
+        );
       }
     });
 
@@ -37,9 +46,12 @@ class PushNotificationsSystem {
     //When the app is in the background and opened directly from the push notification.
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? remoteMessage) {
       if (remoteMessage != null) {
-        //open the app - show notification data
-
-        //  showNotificationWhenOpenApp(uid: remoteMessage.data["userId"], context: context);
+        // Show notification when the app is open
+        showNotificationWhenOpenApp(
+          uid: remoteMessage.data["userId"],
+          context: context,
+          messageData: remoteMessage.data,
+        );
       }
     });
   }
@@ -58,13 +70,15 @@ class PushNotificationsSystem {
     messaging.subscribeToTopic("zaanthUsers");
   }
 
-  showNotificationWhenOpenApp({required String uid, required context}) async {
-    await FirebaseFirestore.instance
-        .collection(_collectionNamesFields.userCollection)
-        .doc(uid)
-        .get()
-        .then((snapshot) {
-      showCustomSnackbar(context, "${snapshot.data()!['name']} enrolled you");
-    });
+  showNotificationWhenOpenApp({
+    required String uid,
+    required context,
+    required Map<String, dynamic> messageData,
+  }) async {
+    // Use the message data to display the notification
+
+    String notificationBodyText = messageData['bodyText'];
+
+    showCustomSnackbar(context, notificationBodyText);
   }
 }

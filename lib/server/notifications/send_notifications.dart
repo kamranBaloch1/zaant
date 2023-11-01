@@ -28,6 +28,7 @@ class SendNotificationsMethod {
           userName: userName,
           notificationBodyText: "$userName enrolled you",
           notificationTitleText: "New Enrollment",
+          userId: instructorUid
         );
       }
     } catch (e) {
@@ -38,6 +39,7 @@ class SendNotificationsMethod {
   Future<void> sendNotificationsToInstructorForNewReview({
     required String instructorUid,
     required String userName,
+ 
   }) async {
     String deviceToken = "";
 
@@ -56,6 +58,7 @@ class SendNotificationsMethod {
           userName: userName,
           notificationBodyText: "$userName added a review",
           notificationTitleText: "New Review",
+           userId: instructorUid
         );
       }
     } catch (e) {
@@ -82,6 +85,7 @@ class SendNotificationsMethod {
           userName: userName,
           notificationBodyText: "$userName replied to your review",
           notificationTitleText: "New Replay",
+          userId: userId
         );
       }
     } catch (e) {
@@ -109,6 +113,7 @@ class SendNotificationsMethod {
           userName: userName,
           notificationBodyText: "$userName sent $messageTypeText",
           notificationTitleText: "New Message",
+           userId: userId
         );
       }
     } catch (e) {
