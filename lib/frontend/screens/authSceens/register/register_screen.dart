@@ -4,17 +4,17 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:zant/frontend/providers/auth/register_providers.dart';
-import 'package:zant/frontend/screens/authSceens/login/login_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/frontend/screens/widgets/custom_button.dart';
-import 'package:zant/frontend/screens/widgets/custom_dropdown.dart';
-import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/colors.dart';
-import 'package:zant/global/constant_values.dart';
+import 'package:zaanth/frontend/providers/auth/register_providers.dart';
+import 'package:zaanth/frontend/screens/authSceens/login/login_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_dropdown.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zaanth/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:zaanth/global/constant_values.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);

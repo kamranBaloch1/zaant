@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:zant/frontend/providers/home/notification_provider.dart';
-import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_alert_dilog.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/global/colors.dart';
+import 'package:zaanth/frontend/providers/home/notification_provider.dart';
+import 'package:zaanth/frontend/screens/homeScreens/drawer/drawer.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/custom_alert_dilog.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/global/colors.dart';
 import 'package:provider/provider.dart';
 
 

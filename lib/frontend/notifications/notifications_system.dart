@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:zant/frontend/screens/widgets/custom_snakbar.dart';
-import 'package:zant/global/firebase_collection_names.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_snakbar.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
 
 class PushNotificationsSystem {
   FirebaseMessaging messaging = FirebaseMessaging.instance;

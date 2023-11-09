@@ -2,15 +2,15 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/models/auth/user_model.dart';
-import 'package:zant/frontend/models/home/instructor_model.dart';
-import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_instructor_for_user.dart';
-import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_users_for_insructor.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/firebase_collection_names.dart';
-import 'package:zant/server/notifications/notification_method.dart';
-import 'package:zant/server/notifications/send_notifications.dart';
-import 'package:zant/sharedprefences/userPref.dart';
+import 'package:zaanth/frontend/models/auth/user_model.dart';
+import 'package:zaanth/frontend/models/home/instructor_model.dart';
+import 'package:zaanth/frontend/screens/homeScreens/enrollments/enrolled_instructor_for_user.dart';
+import 'package:zaanth/frontend/screens/homeScreens/enrollments/enrolled_users_for_insructor.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
+import 'package:zaanth/server/notifications/notification_method.dart';
+import 'package:zaanth/server/notifications/send_notifications.dart';
+import 'package:zaanth/sharedprefences/userPref.dart';
 
 class EnrollmentsMethods {
 

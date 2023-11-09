@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/models/auth/user_model.dart';
-import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
-import 'package:zant/frontend/screens/homeScreens/user/user_detail_screen.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/global/colors.dart';
-import 'package:zant/server/home/enrollments_methods.dart';
+import 'package:zaanth/frontend/models/auth/user_model.dart';
+import 'package:zaanth/frontend/screens/homeScreens/drawer/drawer.dart';
+import 'package:zaanth/frontend/screens/homeScreens/user/user_detail_screen.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:zaanth/server/home/enrollments_methods.dart';
 
 class ShowEnrolledUsersForInstructor extends StatelessWidget {
   const ShowEnrolledUsersForInstructor({Key? key}) : super(key: key);

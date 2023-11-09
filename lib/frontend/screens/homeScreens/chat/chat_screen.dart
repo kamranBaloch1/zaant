@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/widgets/bottom_chat_field.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/widgets/chat_list.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/widgets/bottom_chat_field.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/widgets/chat_list.dart';
 
-import 'package:zant/global/colors.dart';
+import 'package:zaanth/global/colors.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverId;

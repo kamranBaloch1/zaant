@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/update/add_phone_number.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/update/edit_profile_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/privacy_settings_screen.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/global/colors.dart';
-import 'package:zant/server/auth/logout.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
+import 'package:zaanth/frontend/screens/homeScreens/profile/update/add_phone_number.dart';
+import 'package:zaanth/frontend/screens/homeScreens/profile/update/edit_profile_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/profile/privacy_settings_screen.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:zaanth/server/auth/logout.dart';
 
 class ProfileEditOptionsScreen extends StatefulWidget {
   final String? accountType;

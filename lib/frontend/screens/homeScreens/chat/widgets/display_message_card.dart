@@ -8,10 +8,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:zant/frontend/enum/messgae_enum.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/widgets/video_player.dart';
+import 'package:zaanth/frontend/enum/messgae_enum.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/widgets/video_player.dart';
 
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 
 // Create a stateful widget to display different message types
 class DisplayMessageCard extends StatefulWidget {

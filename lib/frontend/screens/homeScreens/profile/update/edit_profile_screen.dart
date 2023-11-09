@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:zant/frontend/providers/home/profile_providers.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_home_text_field.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/colors.dart';
-import 'package:zant/global/constant_values.dart';
-import 'package:zant/sharedprefences/userPref.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
+import 'package:zaanth/frontend/providers/home/profile_providers.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/custom_home_text_field.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:zaanth/global/constant_values.dart';
+import 'package:zaanth/sharedprefences/userPref.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);

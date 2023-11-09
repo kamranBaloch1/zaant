@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:zant/server/notifications/notification_method.dart';
+import 'package:zaanth/server/notifications/notification_method.dart';
 
 // Create a class called NotificationProviders that extends ChangeNotifier
 class NotificationProviders extends ChangeNotifier {

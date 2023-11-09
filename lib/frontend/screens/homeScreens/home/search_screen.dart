@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
-import 'package:zant/frontend/models/home/instructor_model.dart';
-import 'package:zant/frontend/providers/home/instructor_provider.dart';
-import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/instructor_details_screen.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/global/colors.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/frontend/models/home/instructor_model.dart';
+import 'package:zaanth/frontend/providers/home/instructor_provider.dart';
+import 'package:zaanth/frontend/screens/homeScreens/drawer/drawer.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/instructor_details_screen.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}): super(key: key);

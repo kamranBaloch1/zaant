@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:zant/server/home/enrollments_methods.dart';
+import 'package:zaanth/server/home/enrollments_methods.dart';
 
 class EnrollmentsProvider extends ChangeNotifier {
   final EnrollmentsMethods _enrollmentsMethods = EnrollmentsMethods();

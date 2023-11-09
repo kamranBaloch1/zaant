@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:zant/frontend/providers/auth/login_providers.dart';
-import 'package:zant/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
-import 'package:zant/frontend/screens/authSceens/login/forgot_password.dart';
-import 'package:zant/frontend/screens/authSceens/register/register_screen.dart';
-import 'package:zant/frontend/screens/widgets/custom_button.dart';
-import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/colors.dart';
-import 'package:zant/global/constant_values.dart';
+import 'package:zaanth/frontend/providers/auth/login_providers.dart';
+import 'package:zaanth/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
+import 'package:zaanth/frontend/screens/authSceens/login/forgot_password.dart';
+import 'package:zaanth/frontend/screens/authSceens/register/register_screen.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:zaanth/global/constant_values.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

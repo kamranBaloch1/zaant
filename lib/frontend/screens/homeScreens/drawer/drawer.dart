@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/providers/home/chat_providers.dart';
-import 'package:zant/frontend/providers/home/notification_provider.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/chat_inbox_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_instructor_for_user.dart';
-import 'package:zant/frontend/screens/homeScreens/enrollments/enrolled_users_for_insructor.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
-import 'package:zant/frontend/screens/homeScreens/notifications/notification_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/add/add_details_screen.dart';
-import 'package:zant/global/colors.dart';
+import 'package:zaanth/frontend/providers/home/chat_providers.dart';
+import 'package:zaanth/frontend/providers/home/notification_provider.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/chat_inbox_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/enrollments/enrolled_instructor_for_user.dart';
+import 'package:zaanth/frontend/screens/homeScreens/enrollments/enrolled_users_for_insructor.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
+import 'package:zaanth/frontend/screens/homeScreens/notifications/notification_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/profile/profile_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/home/home_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/add/add_details_screen.dart';
+import 'package:zaanth/global/colors.dart';
 
-import 'package:zant/sharedprefences/userPref.dart';
+import 'package:zaanth/sharedprefences/userPref.dart';
 import 'package:provider/provider.dart';
 
 class MyDrawer extends StatefulWidget {

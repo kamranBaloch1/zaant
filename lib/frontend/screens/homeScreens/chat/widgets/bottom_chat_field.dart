@@ -8,8 +8,8 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:zant/frontend/providers/home/chat_providers.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/frontend/providers/home/chat_providers.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 
 class BottomChatField extends StatefulWidget {
   final String receiverId;

@@ -1,4 +1,4 @@
-import 'package:zant/global/apis_keys.dart';
+import 'package:zaanth/global/apis_keys.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

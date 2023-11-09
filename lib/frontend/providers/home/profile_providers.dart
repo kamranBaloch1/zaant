@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:zant/server/home/profile_methods.dart';
+import 'package:zaanth/server/home/profile_methods.dart';
 
 class ProfileProviders extends ChangeNotifier {
   final ProfileMethods _profileMethods = ProfileMethods();

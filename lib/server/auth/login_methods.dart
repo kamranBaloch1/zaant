@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/models/auth/user_model.dart';
-import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/firebase_collection_names.dart';
-import 'package:zant/sharedprefences/userPref.dart';
+import 'package:zaanth/frontend/models/auth/user_model.dart';
+import 'package:zaanth/frontend/screens/homeScreens/home/home_screen.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
+import 'package:zaanth/sharedprefences/userPref.dart';
 
 class LoginMethods {
   // Method to handle user login with email and password

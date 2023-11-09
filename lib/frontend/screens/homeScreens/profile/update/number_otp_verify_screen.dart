@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/global/colors.dart';
-import 'package:zant/server/home/profile_methods.dart';
+import 'package:zaanth/frontend/screens/homeScreens/profile/profile_screen.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:zaanth/server/home/profile_methods.dart';
 
 class NumberOtpVerifyScreen extends StatefulWidget {
   final String? verificationId;

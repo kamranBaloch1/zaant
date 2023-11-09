@@ -2,18 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zant/frontend/models/home/instructor_model.dart';
-import 'package:zant/enum/account_type.dart';
-import 'package:zant/frontend/models/home/review_model.dart';
-import 'package:zant/frontend/models/home/review_reply_model.dart';
-import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/firebase_collection_names.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/phone/phone_number_otp_screen.dart';
-import 'package:zant/server/notifications/notification_method.dart';
-import 'package:zant/server/notifications/send_notifications.dart';
-import 'package:zant/sharedprefences/userPref.dart';
+import 'package:zaanth/frontend/models/home/instructor_model.dart';
+import 'package:zaanth/enum/account_type.dart';
+import 'package:zaanth/frontend/models/home/review_model.dart';
+import 'package:zaanth/frontend/models/home/review_reply_model.dart';
+import 'package:zaanth/frontend/screens/homeScreens/home/home_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/phone/phone_number_otp_screen.dart';
+import 'package:zaanth/server/notifications/notification_method.dart';
+import 'package:zaanth/server/notifications/send_notifications.dart';
+import 'package:zaanth/sharedprefences/userPref.dart';
 
 class InstructorMethods {
   final FirebaseCollectionNamesFields _collectionNamesFields =

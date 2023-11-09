@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/star_rating_widget.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/star_rating_widget.dart';
 
 class RatingCardWidget extends StatelessWidget {
   const RatingCardWidget({

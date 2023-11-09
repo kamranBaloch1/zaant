@@ -4,12 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:zant/enum/account_type.dart';
-import 'package:zant/frontend/models/auth/user_model.dart';
-import 'package:zant/frontend/screens/authSceens/register/verify_email.screen.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/firebase_collection_names.dart';
-import 'package:zant/sharedprefences/userPref.dart';
+import 'package:zaanth/enum/account_type.dart';
+import 'package:zaanth/frontend/models/auth/user_model.dart';
+import 'package:zaanth/frontend/screens/authSceens/register/verify_email.screen.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
+import 'package:zaanth/sharedprefences/userPref.dart';
 
 
 class RegisterMethod {

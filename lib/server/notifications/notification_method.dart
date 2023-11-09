@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
-import 'package:zant/frontend/models/home/notification_model.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/firebase_collection_names.dart';
+import 'package:zaanth/frontend/models/home/notification_model.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
 
 // Define a class called NotificationMethod for handling notifications
 class NotificationMethod {

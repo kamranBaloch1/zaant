@@ -4,21 +4,21 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/models/home/instructor_model.dart';
-import 'package:zant/frontend/providers/home/enrollmens_provider.dart';
-import 'package:zant/frontend/providers/home/instructor_provider.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/chat_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/rating_card_widget.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_timings_widget.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/frontend/screens/widgets/custom_button.dart';
-import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/colors.dart';
+import 'package:zaanth/frontend/models/home/instructor_model.dart';
+import 'package:zaanth/frontend/providers/home/enrollmens_provider.dart';
+import 'package:zaanth/frontend/providers/home/instructor_provider.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/chat_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/rating_card_widget.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_instructor_reviews.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_timings_widget.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/colors.dart';
 
 class InstructorDetailScreen extends StatefulWidget {
   final InstructorModel instructorModel;
@@ -245,15 +245,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   content: widget.instructorModel.phoneNumber,
                 ),
                 SizedBox(height: 16.h),
-                BuildInfoCardWidget(
-                  icon: widget.instructorModel.isPhoneNumberVerified
-                      ? Icons.verified
-                      : Icons.info_outline,
-                  title: "Phone Number Verification",
-                  content: widget.instructorModel.isPhoneNumberVerified
-                      ? "Verified"
-                      : "Not Verified",
-                ),
+              
                 BuildInfoCardWidget(
                   icon: widget.instructorModel.gender == "male"
                       ? Icons.male
@@ -261,7 +253,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   title: "Gender",
                   content: widget.instructorModel.gender,
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 16.h),
                 BuildInfoCardWidget(
                   icon: Icons.subject,
                   title: "Subjects",
@@ -269,17 +261,17 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                       ? widget.instructorModel.subjects.join(", ")
                       : "No subjects specified",
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 16.h),
                 ShowDaysWidget(
                   daysForSubjects:
                       widget.instructorModel.selectedDaysForSubjects,
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 16.h),
                 ShowTimingWidget(
                   selectedTimings:
                       widget.instructorModel.selectedTimingsForSubjects,
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 16.h),
                 RatingCardWidget(
                   rating: widget.instructorModel.ratings.toDouble(),
                 ),

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'package:zant/server/home/instructor_methods.dart';
+import 'package:zaanth/server/home/instructor_methods.dart';
 
 class InstructorProviders extends ChangeNotifier {
   final InstructorMethods _instructorMethods = InstructorMethods();

@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:zant/frontend/models/home/chat_contact_model.dart';
+import 'package:zaanth/frontend/models/home/chat_contact_model.dart';
 
-import 'package:zant/server/home/chat_methods.dart';
-import 'package:zant/frontend/models/home/message_model.dart';
+import 'package:zaanth/server/home/chat_methods.dart';
+import 'package:zaanth/frontend/models/home/message_model.dart';
 
 class ChatProviders extends ChangeNotifier {
   final ChatMethods _chatMethods = ChatMethods();

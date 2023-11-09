@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:zant/frontend/models/home/chat_contact_model.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/chat_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/global/colors.dart';
-import 'package:zant/global/firebase_collection_names.dart';
-import 'package:zant/server/home/chat_methods.dart';
+import 'package:zaanth/frontend/models/home/chat_contact_model.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/chat_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/drawer/drawer.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
+import 'package:zaanth/server/home/chat_methods.dart';
 
 class ChatInboxScreen extends StatefulWidget {
   const ChatInboxScreen({Key? key}) : super(key: key);

@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:zant/enum/account_type.dart';
+import 'package:zaanth/enum/account_type.dart';
 
 class InstructorModel {
   String uid;

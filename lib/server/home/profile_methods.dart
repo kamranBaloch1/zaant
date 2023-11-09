@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/update/number_otp_verify_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/profile_screen.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
-import 'package:zant/global/firebase_collection_names.dart';
-import 'package:zant/sharedprefences/userPref.dart';
+import 'package:zaanth/frontend/screens/homeScreens/profile/update/number_otp_verify_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/profile/profile_screen.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
+import 'package:zaanth/sharedprefences/userPref.dart';
 
 class ProfileMethods {
   final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();

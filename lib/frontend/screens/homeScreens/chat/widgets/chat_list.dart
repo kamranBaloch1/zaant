@@ -4,11 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'package:zant/frontend/models/home/message_model.dart';
-import 'package:zant/frontend/providers/home/chat_providers.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/widgets/my_message_card.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/widgets/sender_message_card.dart';
-import 'package:zant/server/home/chat_methods.dart';
+import 'package:zaanth/frontend/models/home/message_model.dart';
+import 'package:zaanth/frontend/providers/home/chat_providers.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/widgets/my_message_card.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/widgets/sender_message_card.dart';
+import 'package:zaanth/server/home/chat_methods.dart';
 
 class ChatList extends StatefulWidget {
   final String receiverId;

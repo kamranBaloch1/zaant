@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:zant/server/auth/login_methods.dart';
+import 'package:zaanth/server/auth/login_methods.dart';
 
 class LoginProviders extends ChangeNotifier {
   final LoginMethods _loginMethods = LoginMethods();

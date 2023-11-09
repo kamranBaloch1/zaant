@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zant/frontend/enum/messgae_enum.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/widgets/display_message_card.dart';
+import 'package:zaanth/frontend/enum/messgae_enum.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/widgets/display_message_card.dart';
 
 class SenderMessageCard extends StatelessWidget {
   const SenderMessageCard({

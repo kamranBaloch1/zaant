@@ -5,15 +5,15 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:zant/frontend/models/auth/user_model.dart';
-import 'package:zant/frontend/providers/home/enrollmens_provider.dart';
-import 'package:zant/frontend/screens/homeScreens/chat/chat_screen.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart'; // Corrected spelling here
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/frontend/screens/widgets/custom_button.dart';
-import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/global/colors.dart';
+import 'package:zaanth/frontend/models/auth/user_model.dart';
+import 'package:zaanth/frontend/providers/home/enrollmens_provider.dart';
+import 'package:zaanth/frontend/screens/homeScreens/chat/chat_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart'; // Corrected spelling here
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zaanth/global/colors.dart';
 
 class UserDetailScreen extends StatefulWidget {
   final UserModel userModel;

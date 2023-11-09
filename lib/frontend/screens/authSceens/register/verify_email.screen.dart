@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
-import 'package:zant/frontend/providers/auth/register_providers.dart';
-import 'package:zant/frontend/screens/homeScreens/home/home_screen.dart';
+import 'package:zaanth/frontend/providers/auth/register_providers.dart';
+import 'package:zaanth/frontend/screens/homeScreens/home/home_screen.dart';
 
-import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/frontend/screens/widgets/custom_toast.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 
 
 class EmailVerificationScreen extends StatefulWidget {

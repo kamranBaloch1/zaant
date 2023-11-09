@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zant/frontend/screens/homeScreens/drawer/drawer.dart';
+import 'package:zaanth/frontend/screens/homeScreens/drawer/drawer.dart';
 
-import 'package:zant/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
-import 'package:zant/frontend/screens/homeScreens/profile/edit_options_screen.dart';
-import 'package:zant/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zant/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zant/global/colors.dart';
-import 'package:zant/sharedprefences/userPref.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
+import 'package:zaanth/frontend/screens/homeScreens/profile/edit_options_screen.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:zaanth/sharedprefences/userPref.dart';
 
 import 'package:intl/intl.dart';
 
@@ -81,10 +81,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       topRight: Radius.circular(5..r), 
      
     ),
-              gradient: const LinearGradient(
+              gradient:  LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF1976D2), Colors.yellow],
+               colors: [Colors.grey[200]!, Colors.black26],
               ),
             ),
             child: Column(

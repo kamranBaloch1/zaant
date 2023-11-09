@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:zant/server/auth/register_method.dart';
+import 'package:zaanth/server/auth/register_method.dart';
 
 class RegisterProviders extends ChangeNotifier {
   final RegisterMethod _registerMethod = RegisterMethod();

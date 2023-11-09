@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zant/frontend/models/home/instructor_model.dart';
+import 'package:zaanth/frontend/models/home/instructor_model.dart';
 
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/details/widgets/show_timings_widget.dart';
-import 'package:zant/frontend/screens/homeScreens/instructor/update/update_instrctor_details_options.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_timings_widget.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_instrctor_details_options.dart';
 
-import 'package:zant/frontend/screens/widgets/custom_button.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
 
-import 'package:zant/global/firebase_collection_names.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
 import 'package:get/get.dart';
 
 class ShowInstructorDetailsScreen extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:zant/global/firebase_collection_names.dart';
-import 'package:zant/server/notifications/notification_format.dart';
+import 'package:zaanth/global/firebase_collection_names.dart';
+import 'package:zaanth/server/notifications/notification_format.dart';
 
 class SendNotificationsMethod {
   final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();

@@ -1,5 +1,5 @@
 
-import 'package:zant/frontend/enum/messgae_enum.dart';
+import 'package:zaanth/frontend/enum/messgae_enum.dart';
 
 class MessageModel {
   final String senderId;
