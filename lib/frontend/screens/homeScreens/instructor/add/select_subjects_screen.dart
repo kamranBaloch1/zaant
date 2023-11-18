@@ -61,7 +61,7 @@ class _SelectSubjectsScreenState extends State<SelectSubjectsScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             title: "Select subjects",
             backgroundColor: appBarColor,
           ),

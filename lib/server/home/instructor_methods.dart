@@ -208,6 +208,104 @@ class InstructorMethods {
     }
   }
 
+ 
+// Future<List<Map<String, dynamic>>> searchInstructors({
+//   required String address,
+//   required String gender,
+//   required double minPrice,
+//   required double maxPrice,
+// }) async {
+//   CollectionReference instructors =
+//       FirebaseFirestore.instance.collection(_collectionNamesFields.instructorsCollection);
+
+//   try {
+//     print('Executing Firestore query...');
+    
+//     QuerySnapshot querySnapshot = await instructors
+//         .where('address', isEqualTo: address)
+//         // .where('gender', isEqualTo: gender)
+//         // .where('feesPerHour', isGreaterThanOrEqualTo: minPrice)
+//         // .where('feesPerHour', isLessThanOrEqualTo: maxPrice)
+//         .get();
+    
+//     print('Query executed successfully.');
+
+//     List<Map<String, dynamic>> searchResults = querySnapshot.docs
+//         .map((doc) => doc.data() as Map<String, dynamic>)
+//         .toList();
+
+//     print('Search Results: $searchResults');
+
+//     return searchResults;
+//   } catch (e) {
+//     print('Error during search: $e');
+//     // Add additional error handling if needed
+//     throw e; // rethrow the error to propagate it to the calling code
+//   }
+// }
+
+
+Future<List<Map<String, dynamic>>> searchInstructors({
+  required String address,
+  required String gender,
+  required int minPrice,
+  required int maxPrice,
+  required List<String> subjects,
+}) async {
+  CollectionReference instructors =
+      FirebaseFirestore.instance.collection(_collectionNamesFields.instructorsCollection);
+
+  try {
+    // Construct a single query with multiple conditions
+    Query query = instructors;
+
+
+    // Add conditions based on the provided parameters
+    if (address.isNotEmpty) {
+      query = query.where('address', isEqualTo: address);
+    }
+
+    if (gender.isNotEmpty) {
+      query = query.where('gender', isEqualTo: gender);
+    }
+
+   if (minPrice > 0 || maxPrice < double.infinity) {
+  // Use range filtering for feesPerHour
+  query = query.where('feesPerHour', isGreaterThanOrEqualTo: minPrice);
+
+  // If maxPrice is less than double.infinity, add an additional filter
+  if (maxPrice < double.infinity) {
+    query = query.where('feesPerHour', isLessThanOrEqualTo: maxPrice);
+  }
+}
+
+
+    // Check if subjects list is not empty before adding array-contains filter
+    if (subjects.isNotEmpty) {
+      query = query.where('subjects', arrayContainsAny: subjects);
+    }
+
+    // Execute the query and retrieve the documents
+    QuerySnapshot querySnapshot = await query.get();
+
+    // Convert documents to a list of Map<String, dynamic>
+    List<Map<String, dynamic>> searchResults = querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+    return searchResults;
+  } catch (e) {
+    // Handle errors, e.g., show an error message
+    showCustomToast('Error during search');
+   
+    return [];
+  }
+}
+
+
+
+
+
+
 // method to update instructor subjects
   Future<void> updateInstructorSubjectsDays({
     required Map<String, List<String>> selectedDaysForSubjects,

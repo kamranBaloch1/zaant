@@ -117,7 +117,8 @@ class RegisterMethod {
         showCustomToast("A account already exists for that email.");
       }
     } catch (e) {
-      showCustomToast("Error occurred while creating an account");
+      showCustomToast("Error occurred while creating an account $e");
+      print("Error occurred while creating an account $e");
     }
   }
 

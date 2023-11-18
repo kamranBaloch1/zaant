@@ -22,11 +22,6 @@ class _PickSubjectsDropdownState extends State<PickSubjectsDropdown> {
     "Science",
     "English",
     "History",
-    "dd",
-    "eed",
-    "rt",
-    "edsse"
-    
   ];
 
   @override
