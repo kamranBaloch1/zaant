@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zaanth/frontend/models/home/instructor_model.dart';
-
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/calculate_user_age.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_timings_widget.dart';
@@ -119,6 +119,20 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
           title: "Fees per Hour",
           content: "PKR : ${instructorModel.feesPerHour.toString()}",
         ),
+        SizedBox(height: 16.h),
+         BuildInfoCardWidget(
+                  icon: instructorModel.gender == "male"
+                      ? Icons.boy
+                      : Icons.girl,
+                  title: "Gender",
+                  content: instructorModel.gender,
+                ),
+         SizedBox(height: 16.h),
+          BuildInfoCardWidget(
+  icon: Icons.cake,
+  title: "Age",
+  content:" ${ CalculateUserAge.calculateAge(instructorModel.dob)?.toString()} Years" ,
+),
         SizedBox(height: 16.h),
         BuildInfoCardWidget(
           icon: Icons.location_on,

@@ -9,6 +9,7 @@ import 'package:zaanth/frontend/providers/home/enrollmens_provider.dart';
 import 'package:zaanth/frontend/providers/home/instructor_provider.dart';
 import 'package:zaanth/frontend/screens/homeScreens/chat/chat_screen.dart';
 import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/calculate_user_age.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/rating_card_widget.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/show_days_widget.dart';
@@ -27,7 +28,8 @@ class InstructorDetailScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<InstructorDetailScreen> createState() => _InstructorDetailScreenState();
+  State<InstructorDetailScreen> createState() =>
+      _InstructorDetailScreenState();
 }
 
 class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
@@ -36,8 +38,6 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
   double rating = 0;
 
   final TextEditingController _reviewContent = TextEditingController();
-
-
 
   void _addReview() async {
     String reviewContent = _reviewContent.text.trim();
@@ -61,7 +61,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
           _reviewContent.clear();
           setState(() {
             _isLoading = false;
-            rating=0;
+            rating = 0;
           });
         });
       } else {
@@ -72,6 +72,9 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     }
   }
 
+ 
+
+
   @override
   void initState() {
     super.initState();
@@ -80,12 +83,12 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
   }
 
   void checkEnrollmentStatus() async {
-    final enrollmnetsProvider =
+    final enrollmentsProvider =
         Provider.of<EnrollmentsProvider>(context, listen: false);
     setState(() {
       _isLoading = true;
     });
-    bool userEnrolled = await enrollmnetsProvider.checkEnrollmentStatusProvider(
+    bool userEnrolled = await enrollmentsProvider.checkEnrollmentStatusProvider(
         instructorId: widget.instructorModel.uid);
     setState(() {
       isEnrolled = userEnrolled;
@@ -93,13 +96,13 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     });
   }
 
- void enrollUser() async {
+  void enrollUser() async {
     setState(() {
       _isLoading = true;
     });
-    final enrollmnetsProvider =
+    final enrollmentsProvider =
         Provider.of<EnrollmentsProvider>(context, listen: false);
-    await enrollmnetsProvider.enrollUserToInstructorProvider(
+    await enrollmentsProvider.enrollUserToInstructorProvider(
         instructorId: widget.instructorModel.uid);
     setState(() {
       isEnrolled = true;
@@ -107,13 +110,13 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     });
   }
 
- void unenrollTheUser() async {
+  void unenrollTheUser() async {
     setState(() {
       _isLoading = true;
     });
-    final enrollmnetsProvider =
+    final enrollmentsProvider =
         Provider.of<EnrollmentsProvider>(context, listen: false);
-    await enrollmnetsProvider.unenrollInstructorForUserProvider(
+    await enrollmentsProvider.unenrollInstructorForUserProvider(
         instructorId: widget.instructorModel.uid);
 
     setState(() {
@@ -236,7 +239,8 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                 BuildInfoCardWidget(
                   icon: Icons.money,
                   title: "Fees per Hour",
-                  content: "PKR : ${widget.instructorModel.feesPerHour.toString()}",
+                  content:
+                      "PKR : ${widget.instructorModel.feesPerHour.toString()}",
                 ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
@@ -245,14 +249,20 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   content: widget.instructorModel.phoneNumber,
                 ),
                 SizedBox(height: 16.h),
-              
                 BuildInfoCardWidget(
                   icon: widget.instructorModel.gender == "male"
-                      ? Icons.male
-                      : Icons.female,
+                      ? Icons.boy
+                      : Icons.girl,
                   title: "Gender",
                   content: widget.instructorModel.gender,
                 ),
+                SizedBox(height: 16.h),
+               BuildInfoCardWidget(
+  icon: Icons.cake,
+  title: "Age",
+  content:" ${ CalculateUserAge.calculateAge(widget.instructorModel.dob)?.toString()} Years" ,
+),
+
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
                   icon: Icons.subject,

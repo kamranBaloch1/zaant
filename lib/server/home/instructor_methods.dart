@@ -21,81 +21,89 @@ class InstructorMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
 // method to add new instructor
-  Future<void> addNewInstructor({
-    required String phoneNumber,
-    required String qualification,
-    required List<String> subjects,
-    required int feesPerHour,
-    required Map<String, Map<String, Map<String, String>>>
-        selectedTimingsForSubjects,
-    required Map<String, List<String>> selectedDaysForSubjects,
-  }) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        throw Exception("User not authenticated.");
-      }
-
-      final uid = user.uid;
-      final name = UserPreferences.getName() ?? "";
-      final city = UserPreferences.getCity() ?? "";
-      final profilePicUrl = UserPreferences.getProfileUrl() ?? "";
-      final gender = UserPreferences.getGender() ?? "";
-      final address = UserPreferences.getAddress() ?? "";
-
-      final userDocRef = FirebaseFirestore.instance
-          .collection(_collectionNamesFields.userCollection)
-          .doc(uid);
-
-      final userDoc = await userDocRef.get();
-      if (!userDoc.exists) {
-        throw Exception("User document not found.");
-      }
-
-      final instructorModel = InstructorModel(
-        uid: uid,
-        phoneNumber: phoneNumber,
-        isPhoneNumberVerified: true,
-        qualification: qualification,
-        feesPerHour: feesPerHour,
-        ratings: 1,
-        subjects: subjects,
-        selectedTimingsForSubjects: selectedTimingsForSubjects,
-        accountType: AccountTypeEnum.instructor,
-        createdOn: Timestamp.fromDate(DateTime.now()),
-        selectedDaysForSubjects: selectedDaysForSubjects,
-        enrollments: [],
-        address: address,
-        city: city,
-        name: name,
-        profilePicUrl: profilePicUrl,
-        gender: gender,
-      );
-
-      await FirebaseFirestore.instance
-          .collection(_collectionNamesFields.instructorsCollection)
-          .doc(uid)
-          .set(instructorModel.toMap());
-
-      await userDocRef.update({
-        "accountType": AccountTypeEnum.instructor.value,
-        "phoneNumber": phoneNumber,
-        "isPhoneNumberVerified": true,
-      });
-
-      await UserPreferences.setAccountType(
-          AccountTypeEnum.instructor.toString().split('.').last);
-      await UserPreferences.setPhoneNumber(phoneNumber);
-      await UserPreferences.setIsPhoneNumberVerified(true);
-
-      showCustomToast("You have successfully become an instructor");
-
-      Get.offAll(() => const HomeScreen());
-    } catch (e) {
-      showCustomToast(
-          "an error occurred while becoming an instructor. please try again later");
+// method to add new instructor
+Future<void> addNewInstructor({
+  required String phoneNumber,
+  required String qualification,
+  required List<String> subjects,
+  required int feesPerHour,
+  required Map<String, Map<String, Map<String, String>>>
+      selectedTimingsForSubjects,
+  required Map<String, List<String>> selectedDaysForSubjects,
+}) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception("User not authenticated.");
     }
+
+    final uid = user.uid;
+    final name = UserPreferences.getName() ?? "";
+    final city = UserPreferences.getCity() ?? "";
+    final profilePicUrl = UserPreferences.getProfileUrl() ?? "";
+    final gender = UserPreferences.getGender() ?? "";
+    final address = UserPreferences.getAddress() ?? "";
+    String dobString = UserPreferences.getDob().toString();// Replace with your logic
+
+// Convert the String to DateTime
+DateTime? dob = dobString.isNotEmpty ? DateTime.tryParse(dobString) : null;
+
+    final userDocRef = FirebaseFirestore.instance
+        .collection(_collectionNamesFields.userCollection)
+        .doc(uid);
+
+    final userDoc = await userDocRef.get();
+    if (!userDoc.exists) {
+      throw Exception("User document not found.");
+    }
+
+    final instructorModel = InstructorModel(
+      uid: uid,
+      phoneNumber: phoneNumber,
+      isPhoneNumberVerified: true,
+      qualification: qualification,
+      feesPerHour: feesPerHour,
+      ratings: 1,
+      subjects: subjects,
+      selectedTimingsForSubjects: selectedTimingsForSubjects,
+      accountType: AccountTypeEnum.instructor,
+      createdOn: Timestamp.fromDate(DateTime.now()),
+      selectedDaysForSubjects: selectedDaysForSubjects,
+      enrollments: [],
+      address: address,
+      city: city,
+      name: name,
+      profilePicUrl: profilePicUrl,
+      gender: gender,
+      dob: dob,
+    );
+
+    await FirebaseFirestore.instance
+        .collection(_collectionNamesFields.instructorsCollection)
+        .doc(uid)
+        .set(instructorModel.toMap());
+
+    await userDocRef.update({
+      "accountType": AccountTypeEnum.instructor.value,
+      "phoneNumber": phoneNumber,
+      "isPhoneNumberVerified": true,
+    });
+
+    await UserPreferences.setAccountType(
+        AccountTypeEnum.instructor.toString().split('.').last);
+    await UserPreferences.setPhoneNumber(phoneNumber);
+    await UserPreferences.setIsPhoneNumberVerified(true);
+
+    showCustomToast("You have successfully become an instructor");
+
+    Get.offAll(() => const HomeScreen());
+  } catch (e) {
+    showCustomToast(
+        "An error occurred while becoming an instructor. Please try again later. $e");
+    print(
+        "An error occurred while becoming an instructor. Please try again later. $e");
   }
+}
 
 // method to verify instructor phone number
   Future<void> verifyPhoneNumber({
@@ -193,58 +201,6 @@ class InstructorMethods {
 
 // method to fecth the instrctors for user search
 
-  Stream<QuerySnapshot> getInstructorsStream({required String query}) {
-    try {
-      final queryText = query.toLowerCase();
-      final queryRef = FirebaseFirestore.instance
-          .collection(_collectionNamesFields.instructorsCollection)
-          .where('address', isGreaterThanOrEqualTo: queryText)
-          .where('address', isLessThan: '${queryText}z');
-
-      return queryRef.snapshots();
-    } catch (e) {
-      print('Error in getInstructorsStream: $e');
-      return const Stream.empty();
-    }
-  }
-
- 
-// Future<List<Map<String, dynamic>>> searchInstructors({
-//   required String address,
-//   required String gender,
-//   required double minPrice,
-//   required double maxPrice,
-// }) async {
-//   CollectionReference instructors =
-//       FirebaseFirestore.instance.collection(_collectionNamesFields.instructorsCollection);
-
-//   try {
-//     print('Executing Firestore query...');
-    
-//     QuerySnapshot querySnapshot = await instructors
-//         .where('address', isEqualTo: address)
-//         // .where('gender', isEqualTo: gender)
-//         // .where('feesPerHour', isGreaterThanOrEqualTo: minPrice)
-//         // .where('feesPerHour', isLessThanOrEqualTo: maxPrice)
-//         .get();
-    
-//     print('Query executed successfully.');
-
-//     List<Map<String, dynamic>> searchResults = querySnapshot.docs
-//         .map((doc) => doc.data() as Map<String, dynamic>)
-//         .toList();
-
-//     print('Search Results: $searchResults');
-
-//     return searchResults;
-//   } catch (e) {
-//     print('Error during search: $e');
-//     // Add additional error handling if needed
-//     throw e; // rethrow the error to propagate it to the calling code
-//   }
-// }
-
-
 Future<List<Map<String, dynamic>>> searchInstructors({
   required String address,
   required String gender,
@@ -259,29 +215,24 @@ Future<List<Map<String, dynamic>>> searchInstructors({
     // Construct a single query with multiple conditions
     Query query = instructors;
 
-
     // Add conditions based on the provided parameters
-    if (address.isNotEmpty) {
-      query = query.where('address', isEqualTo: address);
-    }
-
     if (gender.isNotEmpty) {
       query = query.where('gender', isEqualTo: gender);
     }
 
-   if (minPrice > 0 || maxPrice < double.infinity) {
-  // Use range filtering for feesPerHour
-  query = query.where('feesPerHour', isGreaterThanOrEqualTo: minPrice);
+    if (minPrice > 0 || maxPrice < double.infinity) {
+      // Use range filtering for feesPerHour
+      query = query.where('feesPerHour', isGreaterThanOrEqualTo: minPrice);
 
-  // If maxPrice is less than double.infinity, add an additional filter
-  if (maxPrice < double.infinity) {
-    query = query.where('feesPerHour', isLessThanOrEqualTo: maxPrice);
-  }
-}
-
+      // If maxPrice is less than double.infinity, add an additional filter
+      if (maxPrice < double.infinity) {
+        query = query.where('feesPerHour', isLessThanOrEqualTo: maxPrice);
+      }
+    }
 
     // Check if subjects list is not empty before adding array-contains filter
     if (subjects.isNotEmpty) {
+      // Combine array-contains and range filters using logical AND
       query = query.where('subjects', arrayContainsAny: subjects);
     }
 
@@ -292,14 +243,61 @@ Future<List<Map<String, dynamic>>> searchInstructors({
     List<Map<String, dynamic>> searchResults = querySnapshot.docs
         .map((doc) => doc.data() as Map<String, dynamic>)
         .toList();
+
+    // If addressing is provided, filter the results based on Levenshtein distance
+    if (address.isNotEmpty) {
+      searchResults = searchResults
+          .where((doc) => _isAddressFuzzyMatch(address, doc['address'], 3))
+          .toList();
+    }
+
     return searchResults;
   } catch (e) {
     // Handle errors, e.g., show an error message
+   
     showCustomToast('Error during search');
    
     return [];
   }
 }
+
+
+// part of  searchInstructors method code 
+bool _isAddressFuzzyMatch(String userInput, String actualAddress, int maxDistance) {
+  userInput = userInput.toLowerCase();
+  actualAddress = actualAddress.toLowerCase();
+
+  final int distance = _calculateLevenshteinDistance(userInput, actualAddress);
+
+  return distance <= maxDistance;
+}
+// part of  searchInstructors method code 
+int _calculateLevenshteinDistance(String a, String b) {
+  final int lenA = a.length;
+  final int lenB = b.length;
+
+  final List<List<int>> dp = List.generate(lenA + 1, (i) => List<int>.filled(lenB + 1, 0));
+
+  for (int i = 0; i <= lenA; i++) {
+    for (int j = 0; j <= lenB; j++) {
+      if (i == 0) {
+        dp[i][j] = j;
+      } else if (j == 0) {
+        dp[i][j] = i;
+      } else {
+        dp[i][j] = _min(dp[i - 1][j - 1] + (a[i - 1] != b[j - 1] ? 1 : 0),
+            _min(dp[i - 1][j] + 1, dp[i][j - 1] + 1));
+      }
+    }
+  }
+
+  return dp[lenA][lenB];
+}
+// part of  searchInstructors method code 
+int _min(int a, int b) {
+  return a < b ? a : b;
+}
+
 
 
 

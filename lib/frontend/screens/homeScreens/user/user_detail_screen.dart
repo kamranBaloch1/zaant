@@ -2,12 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import 'package:zaanth/frontend/models/auth/user_model.dart';
 import 'package:zaanth/frontend/providers/home/enrollmens_provider.dart';
 import 'package:zaanth/frontend/screens/homeScreens/chat/chat_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/calculate_user_age.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/details/widgets/build_info_card_widget.dart';
 import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart'; // Corrected spelling here
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
@@ -88,11 +87,19 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   content: widget.userModel.email!,
                 ),
                 SizedBox(height: 16.h),
-                BuildInfoCardWidget(
-                  icon: Icons.cake,
-                  title: "Date of Birth",
-                  content: DateFormat('yyyy-MM-dd').format(widget.userModel.dob!),
+                 BuildInfoCardWidget(
+                  icon: widget.userModel.gender == "male"
+                      ? Icons.boy
+                      : Icons.girl,
+                  title: "Gender",
+                  content: widget.userModel.gender.toString(),
                 ),
+         SizedBox(height: 16.h),
+          BuildInfoCardWidget(
+  icon: Icons.cake,
+  title: "Age",
+  content:" ${CalculateUserAge.calculateAge(widget.userModel.dob)?.toString()} Years" ,
+),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
                   icon: Icons.location_on,

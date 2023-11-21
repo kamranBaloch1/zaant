@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:zaanth/frontend/models/home/instructor_model.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/instructor_details_screen.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/global/colors.dart';
 
@@ -25,6 +28,7 @@ class SearchResultScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Navigate to the detailed instructor screen
+        Get.to(()=> InstructorDetailScreen(instructorModel: InstructorModel.fromMap(instructorData)));
       },
       child: ListTile(
         title: Text(
@@ -117,40 +121,45 @@ class SearchResultScreen extends StatelessWidget {
         backgroundColor: appBarColor,
         title: "Search Results",
       ),
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: searchResultController.stream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // Show a loading indicator while data is being fetched
-            return  const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              physics: const ClampingScrollPhysics(),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return _buildInstructorTile(snapshot.data![index]);
-              },
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text(
-                'Error occurred',
-                style: TextStyle(color: Colors.black),
-              ),
-            );
-          } else {
-            return const Center(
-              child: Text(
-                'No results found',
-                style: TextStyle(color: Colors.black),
-              ),
-            );
-          }
-        },
+      body: SingleChildScrollView(
+        child: StreamBuilder<List<Map<String, dynamic>>>(
+          stream: searchResultController.stream,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Show a loading indicator while data is being fetched
+              return  const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                physics: const ClampingScrollPhysics(),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return _buildInstructorTile(snapshot.data![index]);
+                },
+              );
+            } else if (snapshot.hasError) {
+              return const Center(
+                child: Text(
+                  'Error occurred',
+                  style: TextStyle(color: Colors.black),
+                ),
+              );
+            } else {
+              return  Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 360.h),
+                  child: const Text(
+                    'No results found',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

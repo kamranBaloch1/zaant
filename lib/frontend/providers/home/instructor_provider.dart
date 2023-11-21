@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:zaanth/server/home/instructor_methods.dart';
@@ -33,16 +33,7 @@ class InstructorProviders extends ChangeNotifier {
     }
   }
 
-  // Get a stream of instructors based on a query
-  Stream<QuerySnapshot> getInstructorsStreamProvider({required String query}) {
-    try {
-      return _instructorMethods.getInstructorsStream(query: query);
-    } catch (e) {
-      // Handle errors gracefully and show a custom toast
-      print("An error occurred.");
-      return const Stream.empty();
-    }
-  }
+  
 
   // Update instructor subjects' days
   Future<void> updateInstructorSubjectsDaysProvider({

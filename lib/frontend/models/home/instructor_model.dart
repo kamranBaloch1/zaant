@@ -23,6 +23,8 @@ class InstructorModel {
   String profilePicUrl;
   String city;
   String gender;
+    DateTime? dob;
+
 
   InstructorModel({
     required this.uid,
@@ -42,6 +44,7 @@ class InstructorModel {
     required this.name,
     required this.profilePicUrl,
     required this.gender,
+    required this.dob,
   });
 
   Map<String, dynamic> toMap() {
@@ -68,6 +71,7 @@ class InstructorModel {
       'city': city,
       'profilePicUrl': profilePicUrl,
       'gender': gender,
+      'dob': dob!.toIso8601String(),
     };
   }
 
@@ -134,6 +138,7 @@ class InstructorModel {
       city: map['city'] as String,
       profilePicUrl: map['profilePicUrl'] as String,
       gender: map['gender'] as String,
+      dob:  DateTime.parse(map['dob'] as String),
     );
   }
 

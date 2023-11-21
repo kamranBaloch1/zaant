@@ -34,8 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         Scaffold(
           appBar: const CustomAppBar(
-            backgroundColor: appBarColor,
-            title: "Search Instructor",
+            backgroundColor: appBarColor,            title: "Search Instructor",
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -250,6 +249,8 @@ class _SearchScreenState extends State<SearchScreen> {
           StreamController<List<Map<String, dynamic>>>();
 
       List<Map<String, dynamic>> searchResults =
+
+      
           await InstructorMethods().searchInstructors(
         address: address,
         gender: gender,

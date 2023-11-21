@@ -43,25 +43,27 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: const MyDrawer(),
       body: accountType == "instructor"
           ? ShowInstructorDetailsScreen()
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 70.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.w),
-                  child: const SearchField(),
-                ),
-                SizedBox(
-                  height: 40.h,
-                ),
-                Image.asset(
-                  homeBannerImg,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  height: 400.h,
-                ),
-              ],
-            ),
+          : SingleChildScrollView(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 70.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.w),
+                    child: const SearchField(),
+                  ),
+                  SizedBox(
+                    height: 40.h,
+                  ),
+                  Image.asset(
+                    homeBannerImg,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    height: 400.h,
+                  ),
+                ],
+              ),
+          ),
     );
   }
 }
