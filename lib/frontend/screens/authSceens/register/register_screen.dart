@@ -98,6 +98,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String name = _nameController.text.trim();
     String password = _passwordController.text.trim();
     String location = _locationController.text.trim();
+    
+   if(_selectedImage==null){
+    showCustomToast("please select an profile image");
+    return;
+   }
 
     if (selectedDate != null && selectedGender != null) {
       final DateTime now = DateTime.now();

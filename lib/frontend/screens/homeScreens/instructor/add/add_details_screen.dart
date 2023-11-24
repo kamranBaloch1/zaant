@@ -76,7 +76,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Become an instructor",
           ),

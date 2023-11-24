@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
 import 'package:zaanth/frontend/screens/homeScreens/instructor/add/select_timings_screen.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
@@ -15,6 +14,7 @@ class SelectSubjectDaysScreen extends StatefulWidget {
   final String? selectedQualification;
   final String? phoneNumber;
   final int? feesPerHour;
+ final List<String>? selectedGrades;
 
   const SelectSubjectDaysScreen({
     Key? key,
@@ -22,6 +22,7 @@ class SelectSubjectDaysScreen extends StatefulWidget {
     required this.selectedQualification,
     required this.phoneNumber,
     required this.feesPerHour,
+    required this.selectedGrades,
   }) : super(key: key);
 
   @override
@@ -64,7 +65,9 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
           selectedSubjects: widget.selectedSubjects,
           selectedQualification: widget.selectedQualification,
           phoneNumber: widget.phoneNumber,
-          feesPerHour: widget.feesPerHour));
+          feesPerHour: widget.feesPerHour,
+          selectedGrades: widget.selectedGrades,
+          ));
     } else {
       // Show a custom toast message
       showCustomToast("Please select at least one day for each subject.");
@@ -76,7 +79,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(
+          appBar: const CustomAppBar(
             backgroundColor: appBarColor,
             title: "Select Subject Days",
           ),

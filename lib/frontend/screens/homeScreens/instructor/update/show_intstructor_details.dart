@@ -120,6 +120,15 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
           content: "PKR : ${instructorModel.feesPerHour.toString()}",
         ),
         SizedBox(height: 16.h),
+       
+        BuildInfoCardWidget(
+          icon: Icons.grade,
+          title: "Grade Level",
+          content: instructorModel.selectedGradesLevel.isNotEmpty
+              ? instructorModel.selectedGradesLevel.join(", ")
+              : "No Grade Level specified",
+        ),
+        SizedBox(height: 16.h),
          BuildInfoCardWidget(
                   icon: instructorModel.gender == "male"
                       ? Icons.boy

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zaanth/frontend/models/home/instructor_model.dart';
@@ -30,6 +31,7 @@ Future<void> addNewInstructor({
   required Map<String, Map<String, Map<String, String>>>
       selectedTimingsForSubjects,
   required Map<String, List<String>> selectedDaysForSubjects,
+   required List<String>? selectedGrades,
 }) async {
   try {
     final user = FirebaseAuth.instance.currentUser;
@@ -76,6 +78,7 @@ DateTime? dob = dobString.isNotEmpty ? DateTime.tryParse(dobString) : null;
       profilePicUrl: profilePicUrl,
       gender: gender,
       dob: dob,
+      selectedGradesLevel: selectedGrades!
     );
 
     await FirebaseFirestore.instance
@@ -207,42 +210,40 @@ Future<List<Map<String, dynamic>>> searchInstructors({
   required int minPrice,
   required int maxPrice,
   required List<String> subjects,
+  required List<String> selectedGradesLevel,
 }) async {
   CollectionReference instructors =
       FirebaseFirestore.instance.collection(_collectionNamesFields.instructorsCollection);
 
   try {
-    // Construct a single query with multiple conditions
+    // Construct a single query with basic conditions
     Query query = instructors;
 
-    // Add conditions based on the provided parameters
     if (gender.isNotEmpty) {
       query = query.where('gender', isEqualTo: gender);
     }
 
     if (minPrice > 0 || maxPrice < double.infinity) {
-      // Use range filtering for feesPerHour
       query = query.where('feesPerHour', isGreaterThanOrEqualTo: minPrice);
 
-      // If maxPrice is less than double.infinity, add an additional filter
       if (maxPrice < double.infinity) {
         query = query.where('feesPerHour', isLessThanOrEqualTo: maxPrice);
       }
     }
 
-    // Check if subjects list is not empty before adding array-contains filter
-    if (subjects.isNotEmpty) {
-      // Combine array-contains and range filters using logical AND
-      query = query.where('subjects', arrayContainsAny: subjects);
-    }
-
-    // Execute the query and retrieve the documents
     QuerySnapshot querySnapshot = await query.get();
 
     // Convert documents to a list of Map<String, dynamic>
     List<Map<String, dynamic>> searchResults = querySnapshot.docs
         .map((doc) => doc.data() as Map<String, dynamic>)
         .toList();
+
+    // Apply additional filtering for subjects and grades locally
+    searchResults = searchResults.where((doc) {
+      bool subjectFilter = subjects.isEmpty || subjects.any((subject) => doc['subjects'].contains(subject));
+      bool gradeFilter = selectedGradesLevel.isEmpty || selectedGradesLevel.any((grade) => doc['selectedGradesLevel'].contains(grade));
+      return subjectFilter && gradeFilter;
+    }).toList();
 
     // If addressing is provided, filter the results based on Levenshtein distance
     if (address.isNotEmpty) {
@@ -254,13 +255,11 @@ Future<List<Map<String, dynamic>>> searchInstructors({
     return searchResults;
   } catch (e) {
     // Handle errors, e.g., show an error message
-   
-    showCustomToast('Error during search');
-   
+    
+    showCustomToast('Error during search ');
     return [];
   }
 }
-
 
 // part of  searchInstructors method code 
 bool _isAddressFuzzyMatch(String userInput, String actualAddress, int maxDistance) {

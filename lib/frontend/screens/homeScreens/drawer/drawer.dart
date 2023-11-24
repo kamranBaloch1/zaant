@@ -186,6 +186,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   ),
                   onTap: () {
                     Get.to(() => const AddDetailsScreen());
+                   
                   },
                 )
               : accountType == "instructor"

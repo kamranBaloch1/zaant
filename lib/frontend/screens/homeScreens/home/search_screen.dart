@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zaanth/frontend/screens/homeScreens/home/search_result_screen.dart';
 
-import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/pick_subejcts_dropdown.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/pick_subejcts_dropdown.dart';// Import the new PickGradeLevelsDropdown widget
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
@@ -22,19 +22,21 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   List<String> _selectedSubjects = [];
   String? _selectedGender;
+  List<String> _selectedGradeLevels = [];
   final TextEditingController _minPriceController = TextEditingController();
   final TextEditingController _maxPriceController = TextEditingController();
   final TextEditingController _searchFieldController = TextEditingController();
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
-
+ List<String> selectedGrades = [];
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Scaffold(
           appBar: const CustomAppBar(
-            backgroundColor: appBarColor,            title: "Search Instructor",
+            backgroundColor: appBarColor,
+            title: "Search Instructor",
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -129,6 +131,41 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                     ),
+                Card(
+                      elevation: 5.0,
+                      margin: EdgeInsets.symmetric(vertical: 10.h),
+                      child: Padding(
+                        padding: EdgeInsets.all(16.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Grade Levels:',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            Wrap(
+                              spacing: 10.0,
+                              runSpacing: 10.0,
+                              children: [
+                                 _buildGradeLevelOption("playGroup to nursery"),
+                                _buildGradeLevelOption("1st to 5th"),
+                                _buildGradeLevelOption("6th to 8th"),
+                                _buildGradeLevelOption("6th to 10th"),
+                                _buildGradeLevelOption("9th to 10th"),
+                                _buildGradeLevelOption("11th to 12th"),
+                                _buildGradeLevelOption("1st to 12th"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                   
                     Card(
                       elevation: 5.0,
                       margin: EdgeInsets.symmetric(vertical: 10.h),
@@ -182,9 +219,9 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           bottomNavigationBar: ElevatedButton(
             onPressed: () async {
-               if(_formKey.currentState!.validate()){
-                 await _performSearch(context);
-               }
+              if (_formKey.currentState!.validate()) {
+                await _performSearch(context);
+              }
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -232,9 +269,58 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+ Widget _buildGradeLevelOption(String gradeLevel) {
+  bool isSelected = _selectedGradeLevels.contains(gradeLevel);
+  bool isDisabled = _selectedGradeLevels.length >= 1 && !isSelected;
+
+  return InkWell(
+    onTap: () {
+      setState(() {
+        if (isDisabled) {
+          // User is trying to select more than two grades, do nothing
+          return;
+        }
+
+        if (isSelected) {
+          // Deselect the grade if it's already selected
+          _selectedGradeLevels.remove(gradeLevel);
+        } else {
+          // Select the grade
+          _selectedGradeLevels.add(gradeLevel);
+        }
+      });
+    },
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.blueAccent : (isDisabled ? Colors.grey[300] : Colors.grey[200]),
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: isSelected ? Colors.blueAccent.withOpacity(0.3) : Colors.transparent,
+            spreadRadius: 2.r,
+            blurRadius: 5.r,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Text(
+        gradeLevel,
+        style: TextStyle(
+          color: isSelected ? Colors.white : (isDisabled ? Colors.grey[600] : Colors.black),
+          fontSize: 16.sp,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
+}
+
+
   Future<void> _performSearch(BuildContext context) async {
     String address = _searchFieldController.text.trim();
     String gender = _selectedGender ?? "";
+   
     int minPrice = int.tryParse(_minPriceController.text.trim()) ?? 0;
     int maxPrice =
         int.tryParse(_maxPriceController.text.trim()) ?? (1 << 63) - 1;
@@ -249,14 +335,13 @@ class _SearchScreenState extends State<SearchScreen> {
           StreamController<List<Map<String, dynamic>>>();
 
       List<Map<String, dynamic>> searchResults =
-
-      
           await InstructorMethods().searchInstructors(
         address: address,
         gender: gender,
         minPrice: minPrice,
         maxPrice: maxPrice,
         subjects: _selectedSubjects,
+        selectedGradesLevel: _selectedGradeLevels,
       );
 
       // Update the stream with the search results

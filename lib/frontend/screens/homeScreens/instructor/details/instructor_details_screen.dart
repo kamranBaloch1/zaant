@@ -243,6 +243,14 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                       "PKR : ${widget.instructorModel.feesPerHour.toString()}",
                 ),
                 SizedBox(height: 16.h),
+                 BuildInfoCardWidget(
+          icon: Icons.grade,
+          title: "Grade Level",
+          content: widget.instructorModel.selectedGradesLevel.isNotEmpty
+              ? widget.instructorModel.selectedGradesLevel.join(", ")
+              : "No Grade Level specified",
+        ),
+        SizedBox(height: 16.h),
                 BuildInfoCardWidget(
                   icon: Icons.phone,
                   title: "Phone Number",

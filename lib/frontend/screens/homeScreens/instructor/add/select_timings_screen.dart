@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
 import 'package:zaanth/frontend/providers/home/instructor_provider.dart';
 import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/custom_time_picker.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
@@ -17,6 +16,7 @@ class SelectTimingsScreen extends StatefulWidget {
   final String? phoneNumber;
   final int? feesPerHour;
   final Map<String, List<String>> selectedDaysForSubjects;
+  final List<String>? selectedGrades;
 
   const SelectTimingsScreen({
     Key? key,
@@ -25,6 +25,7 @@ class SelectTimingsScreen extends StatefulWidget {
     required this.phoneNumber,
     required this.feesPerHour,
     required this.selectedDaysForSubjects,
+    required this.selectedGrades,
   }) : super(key: key);
 
   @override
@@ -106,6 +107,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
         feesPerHour: widget.feesPerHour!,
         selectedTimingsForSubjects: selectedTimings,
         selectedDaysForSubjects: widget.selectedDaysForSubjects,
+        selectedGrades: widget.selectedGrades
       );
 
       setState(() {
