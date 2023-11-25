@@ -77,6 +77,7 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
                           feesPerHour: instructor.feesPerHour,
                           selectedDaysOfSubjects:
                               instructor.selectedDaysForSubjects,
+                              selectedGradeLevel: instructor.selectedGradesLevel,
                         ));
                   },
                   width: 300,

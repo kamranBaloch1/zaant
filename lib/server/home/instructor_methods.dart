@@ -23,90 +23,91 @@ class InstructorMethods {
 
 // method to add new instructor
 // method to add new instructor
-Future<void> addNewInstructor({
-  required String phoneNumber,
-  required String qualification,
-  required List<String> subjects,
-  required int feesPerHour,
-  required Map<String, Map<String, Map<String, String>>>
-      selectedTimingsForSubjects,
-  required Map<String, List<String>> selectedDaysForSubjects,
-   required List<String>? selectedGrades,
-}) async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception("User not authenticated.");
-    }
+  Future<void> addNewInstructor({
+    required String phoneNumber,
+    required String qualification,
+    required List<String> subjects,
+    required int feesPerHour,
+    required Map<String, Map<String, Map<String, String>>>
+        selectedTimingsForSubjects,
+    required Map<String, List<String>> selectedDaysForSubjects,
+    required List<String>? selectedGrades,
+  }) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception("User not authenticated.");
+      }
 
-    final uid = user.uid;
-    final name = UserPreferences.getName() ?? "";
-    final city = UserPreferences.getCity() ?? "";
-    final profilePicUrl = UserPreferences.getProfileUrl() ?? "";
-    final gender = UserPreferences.getGender() ?? "";
-    final address = UserPreferences.getAddress() ?? "";
-    String dobString = UserPreferences.getDob().toString();// Replace with your logic
+      final uid = user.uid;
+      final name = UserPreferences.getName() ?? "";
+      final city = UserPreferences.getCity() ?? "";
+      final profilePicUrl = UserPreferences.getProfileUrl() ?? "";
+      final gender = UserPreferences.getGender() ?? "";
+      final address = UserPreferences.getAddress() ?? "";
+      String dobString =
+          UserPreferences.getDob().toString(); // Replace with your logic
 
 // Convert the String to DateTime
-DateTime? dob = dobString.isNotEmpty ? DateTime.tryParse(dobString) : null;
+      DateTime? dob =
+          dobString.isNotEmpty ? DateTime.tryParse(dobString) : null;
 
-    final userDocRef = FirebaseFirestore.instance
-        .collection(_collectionNamesFields.userCollection)
-        .doc(uid);
+      final userDocRef = FirebaseFirestore.instance
+          .collection(_collectionNamesFields.userCollection)
+          .doc(uid);
 
-    final userDoc = await userDocRef.get();
-    if (!userDoc.exists) {
-      throw Exception("User document not found.");
+      final userDoc = await userDocRef.get();
+      if (!userDoc.exists) {
+        throw Exception("User document not found.");
+      }
+
+      final instructorModel = InstructorModel(
+          uid: uid,
+          phoneNumber: phoneNumber,
+          isPhoneNumberVerified: true,
+          qualification: qualification,
+          feesPerHour: feesPerHour,
+          ratings: 1,
+          subjects: subjects,
+          selectedTimingsForSubjects: selectedTimingsForSubjects,
+          accountType: AccountTypeEnum.instructor,
+          createdOn: Timestamp.fromDate(DateTime.now()),
+          selectedDaysForSubjects: selectedDaysForSubjects,
+          enrollments: [],
+          address: address,
+          city: city,
+          name: name,
+          profilePicUrl: profilePicUrl,
+          gender: gender,
+          dob: dob,
+          selectedGradesLevel: selectedGrades!);
+
+      await FirebaseFirestore.instance
+          .collection(_collectionNamesFields.instructorsCollection)
+          .doc(uid)
+          .set(instructorModel.toMap());
+
+      await userDocRef.update({
+        "accountType": AccountTypeEnum.instructor.value,
+        "phoneNumber": phoneNumber,
+        "isPhoneNumberVerified": true,
+      });
+
+      await UserPreferences.setAccountType(
+          AccountTypeEnum.instructor.toString().split('.').last);
+      await UserPreferences.setPhoneNumber(phoneNumber);
+      await UserPreferences.setIsPhoneNumberVerified(true);
+
+      showCustomToast("You have successfully become an instructor");
+
+      Get.offAll(() => const HomeScreen());
+    } catch (e) {
+      showCustomToast(
+          "An error occurred while becoming an instructor. Please try again later. $e");
+      print(
+          "An error occurred while becoming an instructor. Please try again later. $e");
     }
-
-    final instructorModel = InstructorModel(
-      uid: uid,
-      phoneNumber: phoneNumber,
-      isPhoneNumberVerified: true,
-      qualification: qualification,
-      feesPerHour: feesPerHour,
-      ratings: 1,
-      subjects: subjects,
-      selectedTimingsForSubjects: selectedTimingsForSubjects,
-      accountType: AccountTypeEnum.instructor,
-      createdOn: Timestamp.fromDate(DateTime.now()),
-      selectedDaysForSubjects: selectedDaysForSubjects,
-      enrollments: [],
-      address: address,
-      city: city,
-      name: name,
-      profilePicUrl: profilePicUrl,
-      gender: gender,
-      dob: dob,
-      selectedGradesLevel: selectedGrades!
-    );
-
-    await FirebaseFirestore.instance
-        .collection(_collectionNamesFields.instructorsCollection)
-        .doc(uid)
-        .set(instructorModel.toMap());
-
-    await userDocRef.update({
-      "accountType": AccountTypeEnum.instructor.value,
-      "phoneNumber": phoneNumber,
-      "isPhoneNumberVerified": true,
-    });
-
-    await UserPreferences.setAccountType(
-        AccountTypeEnum.instructor.toString().split('.').last);
-    await UserPreferences.setPhoneNumber(phoneNumber);
-    await UserPreferences.setIsPhoneNumberVerified(true);
-
-    showCustomToast("You have successfully become an instructor");
-
-    Get.offAll(() => const HomeScreen());
-  } catch (e) {
-    showCustomToast(
-        "An error occurred while becoming an instructor. Please try again later. $e");
-    print(
-        "An error occurred while becoming an instructor. Please try again later. $e");
   }
-}
 
 // method to verify instructor phone number
   Future<void> verifyPhoneNumber({
@@ -204,104 +205,106 @@ DateTime? dob = dobString.isNotEmpty ? DateTime.tryParse(dobString) : null;
 
 // method to fecth the instrctors for user search
 
-Future<List<Map<String, dynamic>>> searchInstructors({
-  required String address,
-  required String gender,
-  required int minPrice,
-  required int maxPrice,
-  required List<String> subjects,
-  required List<String> selectedGradesLevel,
-}) async {
-  CollectionReference instructors =
-      FirebaseFirestore.instance.collection(_collectionNamesFields.instructorsCollection);
+  Future<List<Map<String, dynamic>>> searchInstructors({
+    required String address,
+    required String gender,
+    required int minPrice,
+    required int maxPrice,
+    required List<String> subjects,
+    required List<String> selectedGradesLevel,
+  }) async {
+    CollectionReference instructors = FirebaseFirestore.instance
+        .collection(_collectionNamesFields.instructorsCollection);
 
-  try {
-    // Construct a single query with basic conditions
-    Query query = instructors;
+    try {
+      // Construct a single query with basic conditions
+      Query query = instructors;
 
-    if (gender.isNotEmpty) {
-      query = query.where('gender', isEqualTo: gender);
-    }
-
-    if (minPrice > 0 || maxPrice < double.infinity) {
-      query = query.where('feesPerHour', isGreaterThanOrEqualTo: minPrice);
-
-      if (maxPrice < double.infinity) {
-        query = query.where('feesPerHour', isLessThanOrEqualTo: maxPrice);
+      if (gender.isNotEmpty) {
+        query = query.where('gender', isEqualTo: gender);
       }
-    }
 
-    QuerySnapshot querySnapshot = await query.get();
+      if (minPrice > 0 || maxPrice < double.infinity) {
+        query = query.where('feesPerHour', isGreaterThanOrEqualTo: minPrice);
 
-    // Convert documents to a list of Map<String, dynamic>
-    List<Map<String, dynamic>> searchResults = querySnapshot.docs
-        .map((doc) => doc.data() as Map<String, dynamic>)
-        .toList();
+        if (maxPrice < double.infinity) {
+          query = query.where('feesPerHour', isLessThanOrEqualTo: maxPrice);
+        }
+      }
 
-    // Apply additional filtering for subjects and grades locally
-    searchResults = searchResults.where((doc) {
-      bool subjectFilter = subjects.isEmpty || subjects.any((subject) => doc['subjects'].contains(subject));
-      bool gradeFilter = selectedGradesLevel.isEmpty || selectedGradesLevel.any((grade) => doc['selectedGradesLevel'].contains(grade));
-      return subjectFilter && gradeFilter;
-    }).toList();
+      QuerySnapshot querySnapshot = await query.get();
 
-    // If addressing is provided, filter the results based on Levenshtein distance
-    if (address.isNotEmpty) {
-      searchResults = searchResults
-          .where((doc) => _isAddressFuzzyMatch(address, doc['address'], 3))
+      // Convert documents to a list of Map<String, dynamic>
+      List<Map<String, dynamic>> searchResults = querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
+
+      // Apply additional filtering for subjects and grades locally
+      searchResults = searchResults.where((doc) {
+        bool subjectFilter = subjects.isEmpty ||
+            subjects.any((subject) => doc['subjects'].contains(subject));
+        bool gradeFilter = selectedGradesLevel.isEmpty ||
+            selectedGradesLevel
+                .any((grade) => doc['selectedGradesLevel'].contains(grade));
+        return subjectFilter && gradeFilter;
+      }).toList();
+
+      // If addressing is provided, filter the results based on Levenshtein distance
+      if (address.isNotEmpty) {
+        searchResults = searchResults
+            .where((doc) => _isAddressFuzzyMatch(address, doc['address'], 3))
+            .toList();
+      }
+
+      return searchResults;
+    } catch (e) {
+      // Handle errors, e.g., show an error message
+
+      showCustomToast('Error during search ');
+      return [];
     }
-
-    return searchResults;
-  } catch (e) {
-    // Handle errors, e.g., show an error message
-    
-    showCustomToast('Error during search ');
-    return [];
   }
-}
 
-// part of  searchInstructors method code 
-bool _isAddressFuzzyMatch(String userInput, String actualAddress, int maxDistance) {
-  userInput = userInput.toLowerCase();
-  actualAddress = actualAddress.toLowerCase();
+// part of  searchInstructors method code
+  bool _isAddressFuzzyMatch(
+      String userInput, String actualAddress, int maxDistance) {
+    userInput = userInput.toLowerCase();
+    actualAddress = actualAddress.toLowerCase();
 
-  final int distance = _calculateLevenshteinDistance(userInput, actualAddress);
+    final int distance =
+        _calculateLevenshteinDistance(userInput, actualAddress);
 
-  return distance <= maxDistance;
-}
-// part of  searchInstructors method code 
-int _calculateLevenshteinDistance(String a, String b) {
-  final int lenA = a.length;
-  final int lenB = b.length;
+    return distance <= maxDistance;
+  }
 
-  final List<List<int>> dp = List.generate(lenA + 1, (i) => List<int>.filled(lenB + 1, 0));
+// part of  searchInstructors method code
+  int _calculateLevenshteinDistance(String a, String b) {
+    final int lenA = a.length;
+    final int lenB = b.length;
 
-  for (int i = 0; i <= lenA; i++) {
-    for (int j = 0; j <= lenB; j++) {
-      if (i == 0) {
-        dp[i][j] = j;
-      } else if (j == 0) {
-        dp[i][j] = i;
-      } else {
-        dp[i][j] = _min(dp[i - 1][j - 1] + (a[i - 1] != b[j - 1] ? 1 : 0),
-            _min(dp[i - 1][j] + 1, dp[i][j - 1] + 1));
+    final List<List<int>> dp =
+        List.generate(lenA + 1, (i) => List<int>.filled(lenB + 1, 0));
+
+    for (int i = 0; i <= lenA; i++) {
+      for (int j = 0; j <= lenB; j++) {
+        if (i == 0) {
+          dp[i][j] = j;
+        } else if (j == 0) {
+          dp[i][j] = i;
+        } else {
+          dp[i][j] = _min(dp[i - 1][j - 1] + (a[i - 1] != b[j - 1] ? 1 : 0),
+              _min(dp[i - 1][j] + 1, dp[i][j - 1] + 1));
+        }
       }
     }
+
+    return dp[lenA][lenB];
   }
 
-  return dp[lenA][lenB];
-}
-// part of  searchInstructors method code 
-int _min(int a, int b) {
-  return a < b ? a : b;
-}
-
-
-
-
-
-
+// part of  searchInstructors method code
+  int _min(int a, int b) {
+    return a < b ? a : b;
+  }
 
 // method to update instructor subjects
   Future<void> updateInstructorSubjectsDays({
@@ -790,6 +793,120 @@ int _min(int a, int b) {
       }
     } catch (e) {
       showCustomToast("error occurred while deleting the reply");
+    }
+  }
+
+// method to remove instrctor grade level
+
+  Future<void> removeSelectedGrades(
+      {required List<String> selectedGrades}) async {
+    try {
+      // Access the Firestore instance
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Reference to the instructor collection
+      CollectionReference instructors =
+          firestore.collection(_collectionNamesFields.instructorsCollection);
+
+      // Update the document with the specified user ID
+      DocumentReference instructorDoc =
+          instructors.doc(FirebaseAuth.instance.currentUser!.uid);
+
+      // Get the current data
+      DocumentSnapshot instructorSnapshot = await instructorDoc.get();
+      Map<String, dynamic>? userData =
+          instructorSnapshot.data() as Map<String, dynamic>?;
+
+      // Check if the user data exists
+      if (userData != null) {
+        // Get the current selectedGradeLevel list
+        List<String> currentSelectedGrades =
+            List<String>.from(userData['selectedGradesLevel'] ?? []);
+
+        // Check if the list is empty before removal
+        if (currentSelectedGrades.isEmpty) {
+          showCustomToast("At least one grade level must be selected.");
+          return; // Stop execution if no grade levels are selected
+        }
+// Check if there is only one grade level after removal
+        if (currentSelectedGrades.length == 1) {
+          showCustomToast("At least one grade level must be present at your profile.");
+          return; // Stop execution if trying to remove all values
+        }
+
+        // Remove selected grades
+        currentSelectedGrades
+            .removeWhere((grade) => selectedGrades.contains(grade));
+
+        // Update the selectedGradeLevel list in the document
+        await instructorDoc
+            .update({'selectedGradesLevel': currentSelectedGrades});
+
+        showCustomToast("Grade level updated");
+        // Navigate to the HomeScreen if more than one grade level remains
+        Get.offAll(() => const HomeScreen());
+      }
+    } catch (e) {
+     
+      showCustomToast('Error removing grades');
+      // Handle errors as needed
+    }
+  }
+
+// method to update instrctor grade level
+  Future<void> updateSelectedGrades(
+      {required List<String> selectedNewGrades}) async {
+    try {
+      // Access the Firestore instance
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Reference to the instructor collection
+      CollectionReference instructors =
+          firestore.collection(_collectionNamesFields.instructorsCollection);
+
+      // Update the document with the specified user ID
+      DocumentReference instructorDoc =
+          instructors.doc(FirebaseAuth.instance.currentUser!.uid);
+
+      // Get the current data
+      DocumentSnapshot instructorSnapshot = await instructorDoc.get();
+      Map<String, dynamic>? userData =
+          instructorSnapshot.data() as Map<String, dynamic>?;
+
+      // Check if the user data exists
+      if (userData != null) {
+        // Get the current selectedGradesLevel list
+        List<String> currentSelectedGrades =
+            List<String>.from(userData['selectedGradesLevel'] ?? []);
+
+        // Check if the selectedGradesLevel list already has two values
+        if (currentSelectedGrades.length == 2) {
+          showCustomToast("You can only add up to two grade levels.");
+          return; // Stop execution if two grade levels are already present
+        }
+
+        // Check for duplicates
+        for (String grade in selectedNewGrades) {
+          if (currentSelectedGrades.contains(grade)) {
+            showCustomToast("Grade level '$grade' is already present.");
+            return; // Stop execution if a duplicate grade level is found
+          }
+        }
+
+        // Add selected grades to the current list
+        currentSelectedGrades.addAll(selectedNewGrades);
+
+        // Update the selectedGradesLevel list in the document
+        await instructorDoc
+            .update({'selectedGradesLevel': currentSelectedGrades});
+
+        showCustomToast("Grade levels added successfully");
+        Get.offAll(() => const HomeScreen());
+      }
+    } catch (e) {
+     
+      showCustomToast('Error adding grades');
+      
     }
   }
 }

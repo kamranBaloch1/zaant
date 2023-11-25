@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_charges_per_hour.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_grade_level_Screen.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_qualification.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_subjects.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_subjects_days.dart';
@@ -18,6 +19,8 @@ class UpdateInstrctorOptionsScreen extends StatefulWidget {
   final int feesPerHour;
   final String qualification;
   final Map<String, List<String>> selectedDaysOfSubjects;
+   final List<String>? selectedGradeLevel;
+
   const UpdateInstrctorOptionsScreen({
     Key? key,
     required this.subjectList,
@@ -25,6 +28,7 @@ class UpdateInstrctorOptionsScreen extends StatefulWidget {
     required this.feesPerHour,
     required this.qualification,
     required this.selectedDaysOfSubjects,
+    required this.selectedGradeLevel,
   }) : super(key: key);
 
   @override
@@ -67,6 +71,9 @@ class _UpdateInstrctorOptionsScreenState
               }),
               _buildListTile(Icons.school, 'Change Qualification', () {
                 Get.to(() => UpdateQualificationScreen(selectedQualification: widget.qualification));
+              }),
+              _buildListTile(Icons.grade, 'Change Grade Level', () {
+                Get.to(() => UpdateGradeLevelScreen(selectedGradeLevel: widget.selectedGradeLevel,));
               }),
             ],
           ),

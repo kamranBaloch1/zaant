@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:zaanth/server/home/instructor_methods.dart';
@@ -19,14 +18,13 @@ class InstructorProviders extends ChangeNotifier {
   }) async {
     try {
       await _instructorMethods.addNewInstructor(
-        phoneNumber: phoneNumber,
-        qualification: qualification,
-        subjects: subjects,
-        feesPerHour: feesPerHour,
-        selectedTimingsForSubjects: selectedTimingsForSubjects,
-        selectedDaysForSubjects: selectedDaysForSubjects,
-        selectedGrades: selectedGrades
-      );
+          phoneNumber: phoneNumber,
+          qualification: qualification,
+          subjects: subjects,
+          feesPerHour: feesPerHour,
+          selectedTimingsForSubjects: selectedTimingsForSubjects,
+          selectedDaysForSubjects: selectedDaysForSubjects,
+          selectedGrades: selectedGrades);
       // Notify listeners to update the UI
       notifyListeners();
     } catch (e) {
@@ -34,8 +32,6 @@ class InstructorProviders extends ChangeNotifier {
       print("An error occurred while adding the instructor.");
     }
   }
-
-  
 
   // Update instructor subjects' days
   Future<void> updateInstructorSubjectsDaysProvider({
@@ -145,8 +141,7 @@ class InstructorProviders extends ChangeNotifier {
       return reviewsData;
     } catch (e) {
       // Handle errors gracefully and show a custom toast
-      print(
-          "An error occurred while fetching reviews with user details: $e");
+      print("An error occurred while fetching reviews with user details: $e");
       return [];
     }
   }
@@ -158,50 +153,45 @@ class InstructorProviders extends ChangeNotifier {
     required String reviewId,
     required String replyText,
   }) async {
-   try {
+    try {
       await _instructorMethods.addInstructorReviewReply(
-        instructorUid: instructorUid, reviewId: reviewId, replyText: replyText);
-        ChangeNotifier();
-   } catch (e) {
-       print("error accoured while adding reply text");
-   }
+          instructorUid: instructorUid,
+          reviewId: reviewId,
+          replyText: replyText);
+      ChangeNotifier();
+    } catch (e) {
+      print("error accoured while adding reply text");
+    }
   }
-
 
 // Fetch reviews replies
   Future<List<Map<String, dynamic>>> fetchReviewsRepliesProvider(
-    { required String instructorUid,
-    required String reviewId}) async {
+      {required String instructorUid, required String reviewId}) async {
     try {
-      final replyData = await _instructorMethods.fetchRepliesForReview(instructorUid: instructorUid, reviewId: reviewId);
+      final replyData = await _instructorMethods.fetchRepliesForReview(
+          instructorUid: instructorUid, reviewId: reviewId);
       return replyData;
     } catch (e) {
       // Handle errors gracefully and show a custom toast
-      print(
-          "An error occurred while fetching reviews: $e");
+      print("An error occurred while fetching reviews: $e");
       return [];
     }
   }
 
-
-
 //  provider to delete reviews reply
-Future<void> deleteReviewReplyProvider({
-  required String instructorUid,
-  required String reviewId,
-  required String replyId,
-})async{
- try {
-      await _instructorMethods.deleteReviewReply(instructorUid: instructorUid, reviewId: reviewId, replyId: replyId);
-        ChangeNotifier();
-   } catch (e) {
-     print("error accoured while deleting reply text");
-   }
-}
-
-
-
-
+  Future<void> deleteReviewReplyProvider({
+    required String instructorUid,
+    required String reviewId,
+    required String replyId,
+  }) async {
+    try {
+      await _instructorMethods.deleteReviewReply(
+          instructorUid: instructorUid, reviewId: reviewId, replyId: replyId);
+      ChangeNotifier();
+    } catch (e) {
+      print("error accoured while deleting reply text");
+    }
+  }
 
 // provider to verfiy the phone number method
 
@@ -246,6 +236,29 @@ Future<void> deleteReviewReplyProvider({
       // Handle errors gracefully and show a custom toast
       print("An error occurred during OTP verification.");
       return false;
+    }
+  }
+
+// provider for removing instructor selected grades
+  Future<void> removeSelectedGradesProvider(
+      {required List<String> selectedGrades}) async {
+    try {
+      await _instructorMethods.removeSelectedGrades(
+          selectedGrades: selectedGrades);
+      ChangeNotifier();
+    } catch (e) {
+      print("Error removing grades");
+    }
+  } // provider for updating instructor selected grades
+
+  Future<void> updateSelectedGradesProvider(
+      {required List<String> selectedNewGrades}) async {
+    try {
+      await _instructorMethods.updateSelectedGrades(
+          selectedNewGrades: selectedNewGrades);
+      ChangeNotifier();
+    } catch (e) {
+      print("Error adding grades");
     }
   }
 }
