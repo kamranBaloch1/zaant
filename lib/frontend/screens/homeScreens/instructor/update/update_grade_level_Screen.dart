@@ -37,34 +37,39 @@ class _UpdateGradeLevelScreenState extends State<UpdateGradeLevelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
-        backgroundColor: appBarColor,
-        title: "Change your Grade level",
-      ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 20.h),
-                _buildPanel(
-                  index: 0,
-                  title: "Remove a Grade Level",
-                  body: _buildRemoveGradeLevelPanel,
-                ),
-                SizedBox(height: 10.h),
-                _buildPanel(
-                  index: 1,
-                  title: "Add new Grade Level",
-                  body: _buildAddGradeLevelPanel,
-                ),
-              ],
-            ),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: const CustomAppBar(
+            backgroundColor: appBarColor,
+            title: "Change your Grade level",
           ),
-          if (_isLoading) const CustomLoadingOverlay(),
-        ],
-      ),
+          body: 
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    _buildPanel(
+                      index: 0,
+                      title: "Remove a Grade Level",
+                      body: _buildRemoveGradeLevelPanel,
+                    ),
+                    SizedBox(height: 10.h),
+                    _buildPanel(
+                      index: 1,
+                      title: "Add new Grade Level",
+                      body: _buildAddGradeLevelPanel,
+                    ),
+                  ],
+                ),
+              ),
+              
+        
+        ),
+
+        // loading bar when isLoading is true
+        if (_isLoading) const CustomLoadingOverlay(),
+      ],
     );
   }
 
@@ -140,7 +145,7 @@ class _UpdateGradeLevelScreenState extends State<UpdateGradeLevelScreen> {
         spacing: 16.w,
         runSpacing: 16.w,
         children: [
-          _buildGradeLevelOption("PlayGroup to Nursery"),
+          _buildGradeLevelOption("playGroup to nursery"),
           _buildGradeLevelOption("1st to 5th"),
           _buildGradeLevelOption("6th to 8th"),
           _buildGradeLevelOption("6th to 10th"),
@@ -260,11 +265,14 @@ class _UpdateGradeLevelScreenState extends State<UpdateGradeLevelScreen> {
 
       await InstructorMethods().updateSelectedGrades(
           selectedNewGrades: selectedNewGrades);
+if(mounted){
 
+  
       setState(() {
         selectedNewGrades.clear();
         _isLoading = false;
       });
+}
     } else {
       showCustomToast("Please select at least one grade.");
     }
