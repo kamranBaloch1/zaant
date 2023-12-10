@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zaanth/frontend/screens/homeScreens/drawer/drawer.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/calculate_user_age.dart';
 
 import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/show_full_image_dilog.dart';
 import 'package:zaanth/frontend/screens/homeScreens/profile/edit_options_screen.dart';
@@ -68,23 +69,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: appBarColor,
-        title: name![0].toUpperCase() + name!.substring(1),
+        title: name!,
       ),
       drawer: const MyDrawer(),
       body: Stack(
         children: [
           Container(
-           
-            decoration:   BoxDecoration(
-                borderRadius: BorderRadius.only(
-      topLeft: Radius.circular(5.r),  
-      topRight: Radius.circular(5..r), 
-     
-    ),
-              gradient:  LinearGradient(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(5.r),
+                topRight: Radius.circular(5..r),
+              ),
+              gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-               colors: [Colors.grey[200]!, Colors.black26],
+                colors: [Colors.grey[200]!, Colors.black26],
               ),
             ),
             child: Column(
@@ -130,15 +129,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         _buildUserInfoRow("Name", name!),
                         _buildUserInfoRow("Email", email!),
-                        _buildUserInfoRow("Date of Birth", formattedDate!),
+                        _buildUserInfoRow(
+                            "Date of Birth",
+                            formattedDate! +
+                                (" (${CalculateUserAge.calculateAge(dob)?.toString()} Years)")),
                         _buildUserInfoRow(
                           "Phone Number",
                           phoneNumber != "" ? phoneNumber! : "Empty",
                         ),
-                         SizedBox(height: 24.h),
+                        SizedBox(height: 24.h),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.blue,
+                            backgroundColor: Colors.blue,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.r),
                             ),
@@ -163,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          if (_isLoading) const CustomLoadingOverlay(),  
+          if (_isLoading) const CustomLoadingOverlay(),
         ],
       ),
     );

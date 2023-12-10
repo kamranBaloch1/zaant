@@ -91,6 +91,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
 
     String name = _nameC.text.trim();
+     // Capitalize the first letter of the name
+    name = name.substring(0, 1).toUpperCase() + name.substring(1);
     String address = _address.text.trim();
     
 

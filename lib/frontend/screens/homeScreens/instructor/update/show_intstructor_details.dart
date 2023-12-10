@@ -74,7 +74,7 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
                           selectedTimingsForSubjects:
                               instructor.selectedTimingsForSubjects,
                           qualification: instructor.qualification,
-                          feesPerHour: instructor.feesPerHour,
+                          feesPerMonth: instructor.feesPerMonth,
                           selectedDaysOfSubjects:
                               instructor.selectedDaysForSubjects,
                               selectedGradeLevel: instructor.selectedGradesLevel,
@@ -117,8 +117,8 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
         SizedBox(height: 16.h),
         BuildInfoCardWidget(
           icon: Icons.money,
-          title: "Fees per Hour",
-          content: "PKR : ${instructorModel.feesPerHour.toString()}",
+          title: "Fees per Month",
+          content: "PKR : ${instructorModel.feesPerMonth.toString()}",
         ),
         SizedBox(height: 16.h),
        

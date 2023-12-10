@@ -13,11 +13,11 @@ import 'package:zaanth/global/colors.dart';
 
 class PhoneNumberScreen extends StatefulWidget {
   final String? selectedQualification;
-  final int? feesPerHour;
+  final int? feesPerMonth;
   const PhoneNumberScreen({
     Key? key,
     this.selectedQualification,
-    this.feesPerHour,
+    this.feesPerMonth,
   }) : super(key: key);
 
   @override
@@ -49,7 +49,7 @@ final instructorProvider = Provider.of<InstructorProviders>(context,listen: fals
     await instructorProvider.verifyPhoneNumberProvider(
         phoneNumber: formattedNumber,
         selectedQualification: widget.selectedQualification,
-        feesPerHour: widget.feesPerHour);
+        feesPerMonth: widget.feesPerMonth);
 
     setState(() {
       _isLoading = false;

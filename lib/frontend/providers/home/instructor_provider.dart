@@ -10,7 +10,7 @@ class InstructorProviders extends ChangeNotifier {
     required String phoneNumber,
     required String qualification,
     required List<String> subjects,
-    required int feesPerHour,
+    required int feesPerMonth,
     required Map<String, Map<String, Map<String, String>>>
         selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
@@ -21,7 +21,7 @@ class InstructorProviders extends ChangeNotifier {
           phoneNumber: phoneNumber,
           qualification: qualification,
           subjects: subjects,
-          feesPerHour: feesPerHour,
+          feesPerMonth: feesPerMonth,
           selectedTimingsForSubjects: selectedTimingsForSubjects,
           selectedDaysForSubjects: selectedDaysForSubjects,
           selectedGrades: selectedGrades);
@@ -62,10 +62,10 @@ class InstructorProviders extends ChangeNotifier {
 
   // Update instructor fees charges
   Future<void> updateInstructorFeesChargesProvider(
-      {required int feesPerHour}) async {
+      {required int feesPerMonth}) async {
     try {
       await _instructorMethods.updateInstructorFeesCharges(
-          feesPerHour: feesPerHour);
+          feesPerMonth: feesPerMonth);
       notifyListeners();
     } catch (e) {
       print("An error occurred while updating fees charges.");
@@ -198,13 +198,13 @@ class InstructorProviders extends ChangeNotifier {
   Future<void> verifyPhoneNumberProvider({
     required String? phoneNumber,
     required String? selectedQualification,
-    required int? feesPerHour,
+    required int? feesPerMonth,
   }) async {
     try {
       await _instructorMethods.verifyPhoneNumber(
           phoneNumber: phoneNumber,
           selectedQualification: selectedQualification,
-          feesPerHour: feesPerHour);
+          feesPerMonth: feesPerMonth);
 
       // Notify listeners to update the UI
       notifyListeners();

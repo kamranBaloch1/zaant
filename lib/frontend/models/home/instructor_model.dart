@@ -10,7 +10,7 @@ class InstructorModel {
   String phoneNumber;
   bool isPhoneNumberVerified;
   String qualification;
-  int feesPerHour;
+  int feesPerMonth;
   double ratings;
   List<String> subjects;
   Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects;
@@ -32,7 +32,7 @@ class InstructorModel {
     required this.phoneNumber,
     required this.isPhoneNumberVerified,
     required this.qualification,
-    required this.feesPerHour,
+    required this.feesPerMonth,
     required this.ratings,
     required this.subjects,
     required this.selectedTimingsForSubjects,
@@ -56,7 +56,7 @@ class InstructorModel {
       'isPhoneNumberVerified': isPhoneNumberVerified,
       'qualification': qualification,
 
-      'feesPerHour': feesPerHour,
+      'feesPerMonth': feesPerMonth,
 
       'ratings': ratings,
       'subjects': subjects,
@@ -84,7 +84,7 @@ class InstructorModel {
       phoneNumber: map['phoneNumber'] as String,
       isPhoneNumberVerified: map['isPhoneNumberVerified'] as bool,
       qualification: map['qualification'] as String,
-      feesPerHour: map['feesPerHour'] as int,
+      feesPerMonth: map['feesPerMonth'] as int,
 
       ratings: map['ratings'] as double,
       subjects: List<String>.from(map['subjects'] as List<dynamic>),

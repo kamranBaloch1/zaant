@@ -95,7 +95,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
                 SizedBox(height: 15.h),
                 Text(
-                  name![0].toUpperCase() + name!.substring(1),
+                  name!,
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,

@@ -10,13 +10,13 @@ import 'package:zaanth/global/colors.dart';
 class GradeLevelScreen extends StatefulWidget {
   final String? selectedQualification;
   final String? phoneNumber;
-  final int? feesPerHour;
+  final int? feesPerMonth;
 
   const GradeLevelScreen({
     Key? key,
     this.selectedQualification,
     this.phoneNumber,
-    this.feesPerHour,
+    this.feesPerMonth,
   }) : super(key: key);
 
   @override
@@ -66,7 +66,7 @@ class _GradeLevelScreenState extends State<GradeLevelScreen> {
                       Get.to(() => SelectSubjectsScreen(
                             selectedQualification: widget.selectedQualification,
                             phoneNumber: widget.phoneNumber,
-                            feesPerHour: widget.feesPerHour,
+                            feesPerMonth: widget.feesPerMonth,
                             selectedGrades: selectedGrades, // Join selected grades
                           ));
                     } else {

@@ -27,7 +27,7 @@ class InstructorMethods {
     required String phoneNumber,
     required String qualification,
     required List<String> subjects,
-    required int feesPerHour,
+    required int feesPerMonth,
     required Map<String, Map<String, Map<String, String>>>
         selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
@@ -66,7 +66,7 @@ class InstructorMethods {
           phoneNumber: phoneNumber,
           isPhoneNumberVerified: true,
           qualification: qualification,
-          feesPerHour: feesPerHour,
+          feesPerMonth: feesPerMonth,
           ratings: 1,
           subjects: subjects,
           selectedTimingsForSubjects: selectedTimingsForSubjects,
@@ -113,7 +113,7 @@ class InstructorMethods {
   Future<void> verifyPhoneNumber({
     required String? phoneNumber,
     required String? selectedQualification,
-    required int? feesPerHour,
+    required int? feesPerMonth,
   }) async {
     try {
       // Check if the phone number is already associated with a user
@@ -147,7 +147,7 @@ class InstructorMethods {
           Get.offAll(() => PhoneNumberOTPScreen(
                 verificationId: verificationId,
                 phoneNumber: phoneNumber,
-                feesPerHour: feesPerHour,
+                feesPerMonth: feesPerMonth,
                 selectedQualification: selectedQualification,
               ));
         },
@@ -225,10 +225,10 @@ class InstructorMethods {
       }
 
       if (minPrice > 0 || maxPrice < double.infinity) {
-        query = query.where('feesPerHour', isGreaterThanOrEqualTo: minPrice);
+        query = query.where('feesPerMonth', isGreaterThanOrEqualTo: minPrice);
 
         if (maxPrice < double.infinity) {
-          query = query.where('feesPerHour', isLessThanOrEqualTo: maxPrice);
+          query = query.where('feesPerMonth', isLessThanOrEqualTo: maxPrice);
         }
       }
 
@@ -403,18 +403,18 @@ class InstructorMethods {
 
   // method to update instructor fees charges
 
-  Future<void> updateInstructorFeesCharges({required int feesPerHour}) async {
+  Future<void> updateInstructorFeesCharges({required int feesPerMonth}) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       await FirebaseFirestore.instance
           .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid)
-          .update({"feesPerHour": feesPerHour});
-      showCustomToast("Charges updated");
+          .update({"feesPerMonth": feesPerMonth});
+      showCustomToast("Fees updated");
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      showCustomToast("error accoured while updating the charges");
+      showCustomToast("error accoured while updating the fees");
     }
   }
 
@@ -830,7 +830,8 @@ class InstructorMethods {
         }
 // Check if there is only one grade level after removal
         if (currentSelectedGrades.length == 1) {
-          showCustomToast("At least one grade level must be present at your profile.");
+          showCustomToast(
+              "At least one grade level must be present at your profile.");
           return; // Stop execution if trying to remove all values
         }
 
@@ -847,7 +848,6 @@ class InstructorMethods {
         Get.offAll(() => const HomeScreen());
       }
     } catch (e) {
-     
       showCustomToast('Error removing grades');
       // Handle errors as needed
     }
@@ -904,9 +904,7 @@ class InstructorMethods {
         Get.offAll(() => const HomeScreen());
       }
     } catch (e) {
-     
       showCustomToast('Error adding grades');
-      
     }
   }
 }

@@ -9,26 +9,26 @@ import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/colors.dart';
 
-class UpdateChargesPerHour extends StatefulWidget {
-  final int feesPerHour;
+class UpdateChargesPerMonth extends StatefulWidget {
+  final int feesPerMonth;
 
-  const UpdateChargesPerHour({
+  const UpdateChargesPerMonth({
     Key? key,
-    required this.feesPerHour,
+    required this.feesPerMonth,
   }) : super(key: key);
 
   @override
-  State<UpdateChargesPerHour> createState() => _UpdateChargesPerHourState();
+  State<UpdateChargesPerMonth> createState() => _UpdateChargesPerMonthState();
 }
 
-class _UpdateChargesPerHourState extends State<UpdateChargesPerHour> {
-  late final TextEditingController _feesPerHour;
+class _UpdateChargesPerMonthState extends State<UpdateChargesPerMonth> {
+  late final TextEditingController _feesPerMonth;
   bool _isLoading = false;
 
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-    _feesPerHour.dispose();
+    _feesPerMonth.dispose();
     super.dispose();
   }
 
@@ -36,7 +36,7 @@ class _UpdateChargesPerHourState extends State<UpdateChargesPerHour> {
   void initState() {
     super.initState();
     // Initialize the TextEditingController with the initial feesPerHour value.
-    _feesPerHour = TextEditingController(text: widget.feesPerHour.toString());
+    _feesPerMonth = TextEditingController(text: widget.feesPerMonth.toString());
   }
 
   // Function to update the charges per hour
@@ -45,13 +45,13 @@ class _UpdateChargesPerHourState extends State<UpdateChargesPerHour> {
       _isLoading = true;
     });
 
-    String charges = _feesPerHour.text.trim();
+    String charges = _feesPerMonth.text.trim();
     if (charges.isNotEmpty) {
       // Call the backend method to update the fees per hour
       final instructorProvider =
           Provider.of<InstructorProviders>(context, listen: false);
       await instructorProvider.updateInstructorFeesChargesProvider(
-        feesPerHour: int.parse(charges),
+        feesPerMonth: int.parse(charges),
       );
 
       setState(() {
@@ -72,7 +72,7 @@ class _UpdateChargesPerHourState extends State<UpdateChargesPerHour> {
         Scaffold(
           appBar: const  CustomAppBar(
             backgroundColor: appBarColor,
-            title:  "Update Fees Per Hour",
+            title:  "Update Fees Per Month",
           ),
           body: Column(
             children: [
@@ -80,8 +80,8 @@ class _UpdateChargesPerHourState extends State<UpdateChargesPerHour> {
                 height: 40.h,
               ),
               HomeCustomTextField(
-                controller: _feesPerHour,
-                labelText: "Update per hour",
+                controller: _feesPerMonth,
+                labelText: "Update per month",
                 icon: Icons.money,
                 keyBoardType: TextInputType.number,
               ),

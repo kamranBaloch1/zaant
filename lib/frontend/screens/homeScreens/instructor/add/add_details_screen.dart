@@ -19,7 +19,7 @@ class AddDetailsScreen extends StatefulWidget {
 }
 
 class _AddDetailsScreenState extends State<AddDetailsScreen> {
-  final TextEditingController _feesPerHour = TextEditingController();
+  final TextEditingController _feesPerMonth = TextEditingController();
 
   String? selectedQualification;
 
@@ -36,7 +36,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
   @override
   void dispose() {
     super.dispose();
-    _feesPerHour.dispose();
+    _feesPerMonth.dispose();
   }
 
   Future<void> _moveToNextScreenMethod() async {
@@ -46,9 +46,9 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
 
     // Get input values
 
-    String feesPerHour = _feesPerHour.text.trim();
+    String feesPerMonth = _feesPerMonth.text.trim();
 
-    if (feesPerHour.isNotEmpty &&
+    if (feesPerMonth.isNotEmpty &&
         selectedQualification != null &&
         selectedQualification!.isNotEmpty) {
       // Input validation successful
@@ -59,7 +59,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
       // Navigate to the next screen with collected data
 
       Get.to(() => PhoneNumberScreen(
-            feesPerHour: int.parse(feesPerHour),
+            feesPerMonth: int.parse(feesPerMonth),
             selectedQualification: selectedQualification,
           ));
     } else {
@@ -90,8 +90,8 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                   height: 20.h,
                 ),
                 HomeCustomTextField(
-                  controller: _feesPerHour,
-                  labelText: "Fees per hour",
+                  controller: _feesPerMonth,
+                  labelText: "Fees per month",
                   icon: Icons.money,
                   keyBoardType: TextInputType.number,
                 ),

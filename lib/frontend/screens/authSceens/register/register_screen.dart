@@ -96,6 +96,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     String email = _emailController.text.trim();
     String name = _nameController.text.trim();
+     // Capitalize the first letter of the name
+    name = name.substring(0, 1).toUpperCase() + name.substring(1);
     String password = _passwordController.text.trim();
     String location = _locationController.text.trim();
     

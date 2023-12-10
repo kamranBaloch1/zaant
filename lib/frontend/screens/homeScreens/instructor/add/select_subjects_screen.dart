@@ -13,14 +13,14 @@ import 'package:zaanth/global/colors.dart';
 class SelectSubjectsScreen extends StatefulWidget {
   final String? selectedQualification;
   final String? phoneNumber;
-  final int? feesPerHour;
+  final int? feesPerMonth;
   final List<String>? selectedGrades;
 
   const SelectSubjectsScreen({
     Key? key,
     required this.selectedQualification,
     required this.phoneNumber,
-    required this.feesPerHour,
+    required this.feesPerMonth,
     required this.selectedGrades,
   }) : super(key: key);
 
@@ -50,7 +50,7 @@ class _SelectSubjectsScreenState extends State<SelectSubjectsScreen> {
           selectedSubjects: _selectedSubjects,
           selectedQualification: widget.selectedQualification,
           phoneNumber: widget.phoneNumber,
-          feesPerHour: widget.feesPerHour,
+          feesPerMonth: widget.feesPerMonth,
           selectedGrades: widget.selectedGrades,
           ));
     } else {

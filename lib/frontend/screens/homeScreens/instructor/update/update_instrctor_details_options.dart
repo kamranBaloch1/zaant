@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_charges_per_hour.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_charges_per_month.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_grade_level_Screen.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_qualification.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_subjects.dart';
@@ -16,7 +16,7 @@ import 'package:zaanth/global/colors.dart';
 class UpdateInstrctorOptionsScreen extends StatefulWidget {
   final List<String> subjectList;
   final Map<String, Map<String, Map<String, String>>> selectedTimingsForSubjects;
-  final int feesPerHour;
+  final int feesPerMonth;
   final String qualification;
   final Map<String, List<String>> selectedDaysOfSubjects;
    final List<String>? selectedGradeLevel;
@@ -25,7 +25,7 @@ class UpdateInstrctorOptionsScreen extends StatefulWidget {
     Key? key,
     required this.subjectList,
     required this.selectedTimingsForSubjects,
-    required this.feesPerHour,
+    required this.feesPerMonth,
     required this.qualification,
     required this.selectedDaysOfSubjects,
     required this.selectedGradeLevel,
@@ -66,8 +66,8 @@ class _UpdateInstrctorOptionsScreenState
                   selectedTimingsForSubjects: widget.selectedTimingsForSubjects,
                 ));
               }),
-              _buildListTile(Icons.money, 'Change charges per hour', () {
-                Get.to(() => UpdateChargesPerHour(feesPerHour: widget.feesPerHour));
+              _buildListTile(Icons.money, 'Change charges per month', () {
+                Get.to(() => UpdateChargesPerMonth(feesPerMonth: widget.feesPerMonth));
               }),
               _buildListTile(Icons.school, 'Change Qualification', () {
                 Get.to(() => UpdateQualificationScreen(selectedQualification: widget.qualification));

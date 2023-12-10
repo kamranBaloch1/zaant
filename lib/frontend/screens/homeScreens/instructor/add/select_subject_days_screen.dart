@@ -13,7 +13,7 @@ class SelectSubjectDaysScreen extends StatefulWidget {
   final List<String> selectedSubjects;
   final String? selectedQualification;
   final String? phoneNumber;
-  final int? feesPerHour;
+  final int? feesPerMonth;
  final List<String>? selectedGrades;
 
   const SelectSubjectDaysScreen({
@@ -21,7 +21,7 @@ class SelectSubjectDaysScreen extends StatefulWidget {
     required this.selectedSubjects,
     required this.selectedQualification,
     required this.phoneNumber,
-    required this.feesPerHour,
+    required this.feesPerMonth,
     required this.selectedGrades,
   }) : super(key: key);
 
@@ -65,7 +65,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
           selectedSubjects: widget.selectedSubjects,
           selectedQualification: widget.selectedQualification,
           phoneNumber: widget.phoneNumber,
-          feesPerHour: widget.feesPerHour,
+          feesPerMonth: widget.feesPerMonth,
           selectedGrades: widget.selectedGrades,
           ));
     } else {

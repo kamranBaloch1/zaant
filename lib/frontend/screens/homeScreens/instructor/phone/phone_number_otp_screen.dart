@@ -14,14 +14,14 @@ class PhoneNumberOTPScreen extends StatefulWidget {
   final String? verificationId;
   final String? phoneNumber;
   final String? selectedQualification;
-  final int? feesPerHour;
+  final int? feesPerMonth;
 
   const PhoneNumberOTPScreen({
     Key? key,
     required this.verificationId,
     required this.phoneNumber,
     required this.selectedQualification,
-    required this.feesPerHour,
+    required this.feesPerMonth,
   }) : super(key: key);
 
   @override
@@ -67,7 +67,7 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
         Get.offAll(() => GradeLevelScreen(
             selectedQualification: widget.selectedQualification,
             phoneNumber: widget.phoneNumber,
-            feesPerHour: widget.feesPerHour
+            feesPerMonth: widget.feesPerMonth
             
             ));
        

@@ -14,7 +14,7 @@ class SelectTimingsScreen extends StatefulWidget {
   final List<String> selectedSubjects;
   final String? selectedQualification;
   final String? phoneNumber;
-  final int? feesPerHour;
+  final int? feesPerMonth;
   final Map<String, List<String>> selectedDaysForSubjects;
   final List<String>? selectedGrades;
 
@@ -23,7 +23,7 @@ class SelectTimingsScreen extends StatefulWidget {
     required this.selectedSubjects,
     required this.selectedQualification,
     required this.phoneNumber,
-    required this.feesPerHour,
+    required this.feesPerMonth,
     required this.selectedDaysForSubjects,
     required this.selectedGrades,
   }) : super(key: key);
@@ -104,7 +104,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
         phoneNumber: widget.phoneNumber!,
         qualification: widget.selectedQualification!,
         subjects: widget.selectedSubjects,
-        feesPerHour: widget.feesPerHour!,
+        feesPerMonth: widget.feesPerMonth!,
         selectedTimingsForSubjects: selectedTimings,
         selectedDaysForSubjects: widget.selectedDaysForSubjects,
         selectedGrades: widget.selectedGrades
