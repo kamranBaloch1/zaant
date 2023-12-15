@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -20,6 +21,8 @@ import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class InstructorDetailScreen extends StatefulWidget {
   final InstructorModel instructorModel;
@@ -33,6 +36,7 @@ class InstructorDetailScreen extends StatefulWidget {
 }
 
 class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
+  
   bool isEnrolled = false;
   bool _isLoading = false;
   double rating = 0;
@@ -124,6 +128,17 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     });
   }
 
+
+void _callInstructor(String phoneNumber) async {
+  String url = 'tel:$phoneNumber';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    showCustomToast("Could not launch dialer");
+  }
+}
+
+
   void _showRatingDialog() {
     showDialog(
       context: context,
@@ -176,6 +191,8 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
       },
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -243,6 +260,16 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                       "PKR : ${widget.instructorModel.feesPerMonth.toString()}",
                 ),
                 SizedBox(height: 16.h),
+                
+                     BuildInfoCardWidget(
+          icon: Icons.book,
+          title: "Syllabus Type",
+          content: widget.instructorModel.selectedSyllabusTypes.isNotEmpty
+              ? widget.instructorModel.selectedSyllabusTypes.join(", ")
+              : "No Syllabus Type specified",
+        ),
+        SizedBox(height: 16.h),
+                
                  BuildInfoCardWidget(
           icon: Icons.grade,
           title: "Grade Level",
@@ -251,6 +278,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
               : "No Grade Level specified",
         ),
         SizedBox(height: 16.h),
+            
                 BuildInfoCardWidget(
                   icon: Icons.phone,
                   title: "Phone Number",
@@ -311,7 +339,21 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                   },
                   child: const Text('Reviews'),
                 ),
-                SizedBox(height: 30.h),
+              
+                  SizedBox(height: 30.h),
+                isEnrolled
+                    ? Align(
+                        alignment: Alignment.bottomLeft,
+                        child: CustomButton(
+                            onTap: (){
+                              _callInstructor(widget.instructorModel.phoneNumber);
+                            },
+                            width: 180,
+                            height: 40,
+                            text: "Call",
+                            bgColor: Colors.blue))
+                    : Container(),
+                      SizedBox(height: 20.h),
                 isEnrolled
                     ? Align(
                         alignment: Alignment.bottomLeft,
@@ -321,7 +363,8 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                             height: 40,
                             text: "Remove",
                             bgColor: Colors.red))
-                    : Container()
+                    : Container(),
+                     
               ],
             ),
           ),

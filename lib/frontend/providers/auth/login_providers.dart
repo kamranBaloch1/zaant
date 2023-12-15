@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+
 import 'package:zaanth/server/auth/login_methods.dart';
 
 class LoginProviders extends ChangeNotifier {
@@ -13,6 +14,7 @@ class LoginProviders extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print("An error occurred. Please try again.");
+      
     }
   }
 

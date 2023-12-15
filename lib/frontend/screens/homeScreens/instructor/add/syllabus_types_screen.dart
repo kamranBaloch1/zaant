@@ -1,37 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zaanth/frontend/screens/homeScreens/instructor/add/select_subjects_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/add/grade_level_screen.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/colors.dart';
 
-class GradeLevelScreen extends StatefulWidget {
+class SyllabusTypeScreen extends StatefulWidget {
   final String? selectedQualification;
   final String? phoneNumber;
   final int? feesPerMonth;
-  final List<String>? selectedSyllabusTypes;
 
-  const GradeLevelScreen({
+  const SyllabusTypeScreen({
     Key? key,
-   required this.selectedQualification,
-   required this.phoneNumber,
-   required this.feesPerMonth,
-   required this.selectedSyllabusTypes,
+    this.selectedQualification,
+    this.phoneNumber,
+    this.feesPerMonth,
   }) : super(key: key);
 
   @override
-  State<GradeLevelScreen> createState() => _GradeLevelScreenState();
+  State<SyllabusTypeScreen> createState() => _SyllabusTypeScreenState();
 }
 
-class _GradeLevelScreenState extends State<GradeLevelScreen> {
-  List<String> selectedGrades = [];
+class _SyllabusTypeScreenState extends State<SyllabusTypeScreen> {
+  List<String> selectedSyllabusTypes = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:const CustomAppBar(backgroundColor: appBarColor, title: "Choose your Grade level"),
+      appBar:const CustomAppBar(backgroundColor: appBarColor, title: "Select your syllabus Type"),
       body: Center(
         child: Padding(
           padding:  EdgeInsets.all(16.w),
@@ -54,24 +52,22 @@ class _GradeLevelScreenState extends State<GradeLevelScreen> {
               spacing: 16.w,
               runSpacing: 16.w,
               children: [
-                _buildGradeLevelOption("playGroup to nursery"),
-                _buildGradeLevelOption("1st to 5th"),
-                _buildGradeLevelOption("6th to 8th"),
-                _buildGradeLevelOption("6th to 10th"),
-                _buildGradeLevelOption("9th to 10th"),
-                _buildGradeLevelOption("11th to 12th"),
-                _buildGradeLevelOption("1st to 12th"),
+                _buildSyllabusTypeOption("O Level"),
+                _buildSyllabusTypeOption("Balochistan Borad"),
+                _buildSyllabusTypeOption("Karachi Board"),
+                _buildSyllabusTypeOption("Punjab Board"),
+    
 
                 CustomButton(
                   onTap: () {
-                    if (selectedGrades.isNotEmpty && selectedGrades.length <= 2) {
-                      Get.to(() => SelectSubjectsScreen(
+                    if (selectedSyllabusTypes.isNotEmpty && selectedSyllabusTypes.length <= 2) {
+                      Get.to(() => GradeLevelScreen(
                             selectedQualification: widget.selectedQualification,
                             phoneNumber: widget.phoneNumber,
                             feesPerMonth: widget.feesPerMonth,
-                            selectedGrades: selectedGrades, 
-                            selectedSyllabusTypes: widget.selectedSyllabusTypes,
+                           selectedSyllabusTypes: selectedSyllabusTypes, 
                           ));
+
                     } else {
                       // Display an error message or take appropriate action
                       showCustomToast("Please select at least one and at most two grades.");
@@ -92,9 +88,9 @@ class _GradeLevelScreenState extends State<GradeLevelScreen> {
     );
   }
 
-  Widget _buildGradeLevelOption(String gradeLevel) {
-    bool isSelected = selectedGrades.contains(gradeLevel);
-    bool isDisabled = selectedGrades.length >= 2 && !isSelected;
+  Widget _buildSyllabusTypeOption(String syllabusType) {
+    bool isSelected = selectedSyllabusTypes.contains(syllabusType);
+    bool isDisabled = selectedSyllabusTypes.length >= 2 && !isSelected;
 
     return InkWell(
       onTap: () {
@@ -106,10 +102,10 @@ class _GradeLevelScreenState extends State<GradeLevelScreen> {
 
           if (isSelected) {
             // Deselect the grade if it's already selected
-            selectedGrades.remove(gradeLevel);
+            selectedSyllabusTypes.remove(syllabusType);
           } else {
             // Select the grade
-            selectedGrades.add(gradeLevel);
+            selectedSyllabusTypes.add(syllabusType);
           }
         });
       },
@@ -128,7 +124,7 @@ class _GradeLevelScreenState extends State<GradeLevelScreen> {
           ],
         ),
         child: Text(
-          gradeLevel,
+          syllabusType,
           style: TextStyle(
             color: isSelected ? Colors.white : (isDisabled ? Colors.grey[600] : Colors.black),
             fontSize: 16.sp,

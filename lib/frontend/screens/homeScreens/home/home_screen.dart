@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zaanth/frontend/notifications/notifications_system.dart';
-import 'package:zaanth/frontend/screens/homeScreens/instructor/update/show_intstructor_details.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/details/show_intstructor_details.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/global/colors.dart';
 import 'package:zaanth/frontend/screens/homeScreens/drawer/drawer.dart';

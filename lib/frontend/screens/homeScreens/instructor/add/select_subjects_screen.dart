@@ -15,6 +15,7 @@ class SelectSubjectsScreen extends StatefulWidget {
   final String? phoneNumber;
   final int? feesPerMonth;
   final List<String>? selectedGrades;
+  final List<String>? selectedSyllabusTypes;
 
   const SelectSubjectsScreen({
     Key? key,
@@ -22,6 +23,7 @@ class SelectSubjectsScreen extends StatefulWidget {
     required this.phoneNumber,
     required this.feesPerMonth,
     required this.selectedGrades,
+    required this.selectedSyllabusTypes,
   }) : super(key: key);
 
   @override
@@ -52,6 +54,7 @@ class _SelectSubjectsScreenState extends State<SelectSubjectsScreen> {
           phoneNumber: widget.phoneNumber,
           feesPerMonth: widget.feesPerMonth,
           selectedGrades: widget.selectedGrades,
+          selectedSyllabusTypes: widget.selectedSyllabusTypes,
           ));
     } else {
       showCustomToast("Please select at least one subject.");

@@ -32,6 +32,7 @@ class InstructorMethods {
         selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
     required List<String>? selectedGrades,
+    required List<String>? selectedSyllabusTypes,
   }) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -80,7 +81,9 @@ class InstructorMethods {
           profilePicUrl: profilePicUrl,
           gender: gender,
           dob: dob,
-          selectedGradesLevel: selectedGrades!);
+          selectedGradesLevel: selectedGrades!,
+          selectedSyllabusTypes: selectedSyllabusTypes!
+          );
 
       await FirebaseFirestore.instance
           .collection(_collectionNamesFields.instructorsCollection)
@@ -212,6 +215,7 @@ class InstructorMethods {
     required int maxPrice,
     required List<String> subjects,
     required List<String> selectedGradesLevel,
+    required List<String> selectedSyllabusTypes
   }) async {
     CollectionReference instructors = FirebaseFirestore.instance
         .collection(_collectionNamesFields.instructorsCollection);
@@ -239,14 +243,17 @@ class InstructorMethods {
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
 
-      // Apply additional filtering for subjects and grades locally
+      // Apply additional filtering for subjects and grades and syllabus type locally
       searchResults = searchResults.where((doc) {
         bool subjectFilter = subjects.isEmpty ||
             subjects.any((subject) => doc['subjects'].contains(subject));
         bool gradeFilter = selectedGradesLevel.isEmpty ||
             selectedGradesLevel
                 .any((grade) => doc['selectedGradesLevel'].contains(grade));
-        return subjectFilter && gradeFilter;
+        bool syllabusTypeFilter = selectedSyllabusTypes.isEmpty ||
+            selectedSyllabusTypes
+                .any((syllabus) => doc['selectedSyllabusTypes'].contains(syllabus));
+        return subjectFilter && gradeFilter && syllabusTypeFilter;
       }).toList();
 
       // If addressing is provided, filter the results based on Levenshtein distance
@@ -259,8 +266,9 @@ class InstructorMethods {
       return searchResults;
     } catch (e) {
       // Handle errors, e.g., show an error message
-
-      showCustomToast('Error during search ');
+      
+      showCustomToast('Error during search');
+    
       return [];
     }
   }

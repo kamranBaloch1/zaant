@@ -12,7 +12,6 @@ import 'package:zaanth/frontend/screens/homeScreens/profile/profile_screen.dart'
 import 'package:zaanth/frontend/screens/homeScreens/home/home_screen.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/add/add_details_screen.dart';
 import 'package:zaanth/global/colors.dart';
-
 import 'package:zaanth/sharedprefences/userPref.dart';
 import 'package:provider/provider.dart';
 
@@ -129,6 +128,7 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             onTap: () {
               Get.to(() => const ProfileScreen());
+             
             },
           ),
           ListTile(

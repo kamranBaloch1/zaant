@@ -13,6 +13,7 @@ import 'package:zaanth/frontend/providers/home/enrollmens_provider.dart';
 import 'package:zaanth/frontend/providers/home/instructor_provider.dart';
 import 'package:zaanth/frontend/providers/home/notification_provider.dart';
 import 'package:zaanth/frontend/providers/home/profile_providers.dart';
+import 'package:zaanth/frontend/screens/authSceens/register/goolge_map.dart';
 import 'package:zaanth/frontend/screens/authSceens/splash/start_loading_bar.dart';
 import 'package:zaanth/frontend/screens/authSceens/splash/splash_screen.dart';
 import 'package:zaanth/frontend/screens/homeScreens/home/home_screen.dart';

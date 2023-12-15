@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zaanth/frontend/screens/homeScreens/home/search_result_screen.dart';
 
-import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/pick_subejcts_dropdown.dart';// Import the new PickGradeLevelsDropdown widget
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/pick_subejcts_dropdown.dart'; // Import the new PickGradeLevelsDropdown widget
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
@@ -13,7 +13,7 @@ import 'package:zaanth/global/colors.dart';
 import 'package:zaanth/server/home/instructor_methods.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}): super(key: key);
+  const SearchScreen({Key? key}) : super(key: key);
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -23,12 +23,13 @@ class _SearchScreenState extends State<SearchScreen> {
   List<String> _selectedSubjects = [];
   String? _selectedGender;
   List<String> _selectedGradeLevels = [];
+  List<String> _selectedSyllabusTypes = [];
   final TextEditingController _minPriceController = TextEditingController();
   final TextEditingController _maxPriceController = TextEditingController();
   final TextEditingController _searchFieldController = TextEditingController();
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
- List<String> selectedGrades = [];
+  List<String> selectedGrades = [];
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -131,7 +132,38 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                     ),
-                Card(
+                    Card(
+                      elevation: 5.0,
+                      margin: EdgeInsets.symmetric(vertical: 10.h),
+                      child: Padding(
+                        padding: EdgeInsets.all(16.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Select Board Type',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            Wrap(
+                              spacing: 10.0,
+                              runSpacing: 10.0,
+                              children: [
+                                _buildSyllabusTypesWidget("O Level"),
+                                _buildSyllabusTypesWidget("Karachi Board"),
+                                _buildSyllabusTypesWidget("Balochistan Borad"),
+                                _buildSyllabusTypesWidget("Punjab Board"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
                       elevation: 5.0,
                       margin: EdgeInsets.symmetric(vertical: 10.h),
                       child: Padding(
@@ -152,20 +184,19 @@ class _SearchScreenState extends State<SearchScreen> {
                               spacing: 10.0,
                               runSpacing: 10.0,
                               children: [
-                                 _buildGradeLevelOption("playGroup to nursery"),
-                                _buildGradeLevelOption("1st to 5th"),
-                                _buildGradeLevelOption("6th to 8th"),
-                                _buildGradeLevelOption("6th to 10th"),
-                                _buildGradeLevelOption("9th to 10th"),
-                                _buildGradeLevelOption("11th to 12th"),
-                                _buildGradeLevelOption("1st to 12th"),
+                                _buildGradeLevelWidget("playGroup to nursery"),
+                                _buildGradeLevelWidget("1st to 5th"),
+                                _buildGradeLevelWidget("6th to 8th"),
+                                _buildGradeLevelWidget("6th to 10th"),
+                                _buildGradeLevelWidget("9th to 10th"),
+                                _buildGradeLevelWidget("11th to 12th"),
+                                _buildGradeLevelWidget("1st to 12th"),
                               ],
                             ),
                           ],
                         ),
                       ),
                     ),
-                   
                     Card(
                       elevation: 5.0,
                       margin: EdgeInsets.symmetric(vertical: 10.h),
@@ -269,58 +300,123 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
- Widget _buildGradeLevelOption(String gradeLevel) {
-  bool isSelected = _selectedGradeLevels.contains(gradeLevel);
-  bool isDisabled = _selectedGradeLevels.length >= 1 && !isSelected;
+  Widget _buildGradeLevelWidget(String gradeLevel) {
+    bool isSelected = _selectedGradeLevels.contains(gradeLevel);
+    bool isDisabled = _selectedGradeLevels.length >= 1 && !isSelected;
 
-  return InkWell(
-    onTap: () {
-      setState(() {
-        if (isDisabled) {
-          // User is trying to select more than two grades, do nothing
-          return;
-        }
+    return InkWell(
+      onTap: () {
+        setState(() {
+          if (isDisabled) {
+            // User is trying to select more than two grades, do nothing
+            return;
+          }
 
-        if (isSelected) {
-          // Deselect the grade if it's already selected
-          _selectedGradeLevels.remove(gradeLevel);
-        } else {
-          // Select the grade
-          _selectedGradeLevels.add(gradeLevel);
-        }
-      });
-    },
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.blueAccent : (isDisabled ? Colors.grey[300] : Colors.grey[200]),
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: isSelected ? Colors.blueAccent.withOpacity(0.3) : Colors.transparent,
-            spreadRadius: 2.r,
-            blurRadius: 5.r,
-            offset: const Offset(0, 3),
+   if(_selectedSyllabusTypes.isEmpty){
+              showCustomToast("Please select an syllabus Type");
+              return;
+          }
+          if (isSelected) {
+            // Deselect the grade if it's already selected
+            _selectedGradeLevels.remove(gradeLevel);
+          } else {
+            // Select the grade
+            _selectedGradeLevels.add(gradeLevel);
+          }
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.blueAccent
+              : (isDisabled ? Colors.grey[300] : Colors.grey[200]),
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected
+                  ? Colors.blueAccent.withOpacity(0.3)
+                  : Colors.transparent,
+              spreadRadius: 2.r,
+              blurRadius: 5.r,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Text(
+          gradeLevel,
+          style: TextStyle(
+            color: isSelected
+                ? Colors.white
+                : (isDisabled ? Colors.grey[600] : Colors.black),
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
           ),
-        ],
-      ),
-      child: Text(
-        gradeLevel,
-        style: TextStyle(
-          color: isSelected ? Colors.white : (isDisabled ? Colors.grey[600] : Colors.black),
-          fontSize: 16.sp,
-          fontWeight: FontWeight.bold,
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
+  Widget _buildSyllabusTypesWidget(String syllabusType) {
+    bool isSelected = _selectedSyllabusTypes.contains(syllabusType);
+    bool isDisabled = _selectedSyllabusTypes.length >= 1 && !isSelected;
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          if (isDisabled) {
+            // User is trying to select more than two grades, do nothing
+            return;
+          }
+
+         
+        
+
+          if (isSelected) {
+            // Deselect the grade if it's already selected
+            _selectedSyllabusTypes.remove(syllabusType);
+          } else {
+            // Select the grade
+            _selectedSyllabusTypes.add(syllabusType);
+          }
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.blueAccent
+              : (isDisabled ? Colors.grey[300] : Colors.grey[200]),
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected
+                  ? Colors.blueAccent.withOpacity(0.3)
+                  : Colors.transparent,
+              spreadRadius: 2.r,
+              blurRadius: 5.r,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Text(
+          syllabusType,
+          style: TextStyle(
+            color: isSelected
+                ? Colors.white
+                : (isDisabled ? Colors.grey[600] : Colors.black),
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
 
   Future<void> _performSearch(BuildContext context) async {
     String address = _searchFieldController.text.trim();
     String gender = _selectedGender ?? "";
-   
+
     int minPrice = int.tryParse(_minPriceController.text.trim()) ?? 0;
     int maxPrice =
         int.tryParse(_maxPriceController.text.trim()) ?? (1 << 63) - 1;
@@ -342,6 +438,7 @@ class _SearchScreenState extends State<SearchScreen> {
         maxPrice: maxPrice,
         subjects: _selectedSubjects,
         selectedGradesLevel: _selectedGradeLevels,
+        selectedSyllabusTypes: _selectedSyllabusTypes,
       );
 
       // Update the stream with the search results

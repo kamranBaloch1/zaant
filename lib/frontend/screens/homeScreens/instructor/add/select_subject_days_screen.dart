@@ -15,6 +15,7 @@ class SelectSubjectDaysScreen extends StatefulWidget {
   final String? phoneNumber;
   final int? feesPerMonth;
  final List<String>? selectedGrades;
+ final List<String>? selectedSyllabusTypes;
 
   const SelectSubjectDaysScreen({
     Key? key,
@@ -23,6 +24,7 @@ class SelectSubjectDaysScreen extends StatefulWidget {
     required this.phoneNumber,
     required this.feesPerMonth,
     required this.selectedGrades,
+    required this.selectedSyllabusTypes,
   }) : super(key: key);
 
   @override
@@ -67,6 +69,7 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
           phoneNumber: widget.phoneNumber,
           feesPerMonth: widget.feesPerMonth,
           selectedGrades: widget.selectedGrades,
+          selectedSyllabusTypes: widget.selectedSyllabusTypes,
           ));
     } else {
       // Show a custom toast message

@@ -315,6 +315,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
+                 
+                 
+                 
                   GestureDetector(
                     onTap: () {
                       Get.to(() => const LoginScreen());

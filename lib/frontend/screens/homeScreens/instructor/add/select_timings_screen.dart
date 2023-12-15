@@ -17,6 +17,7 @@ class SelectTimingsScreen extends StatefulWidget {
   final int? feesPerMonth;
   final Map<String, List<String>> selectedDaysForSubjects;
   final List<String>? selectedGrades;
+  final List<String>? selectedSyllabusTypes;
 
   const SelectTimingsScreen({
     Key? key,
@@ -26,6 +27,7 @@ class SelectTimingsScreen extends StatefulWidget {
     required this.feesPerMonth,
     required this.selectedDaysForSubjects,
     required this.selectedGrades,
+    required this.selectedSyllabusTypes,
   }) : super(key: key);
 
   @override
@@ -107,7 +109,8 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
         feesPerMonth: widget.feesPerMonth!,
         selectedTimingsForSubjects: selectedTimings,
         selectedDaysForSubjects: widget.selectedDaysForSubjects,
-        selectedGrades: widget.selectedGrades
+        selectedGrades: widget.selectedGrades,
+        selectedSyllabusTypes: widget.selectedSyllabusTypes
       );
 
       setState(() {

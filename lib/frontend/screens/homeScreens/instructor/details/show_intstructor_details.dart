@@ -130,6 +130,14 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
               : "No Grade Level specified",
         ),
         SizedBox(height: 16.h),
+        BuildInfoCardWidget(
+          icon: Icons.book,
+          title: "Syllabus Types",
+          content: instructorModel.selectedSyllabusTypes.isNotEmpty
+              ? instructorModel.selectedSyllabusTypes.join(", ")
+              : "No Syllabus Types specified",
+        ),
+        SizedBox(height: 16.h),
          BuildInfoCardWidget(
                   icon: instructorModel.gender == "male"
                       ? Icons.boy

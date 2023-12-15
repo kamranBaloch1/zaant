@@ -25,6 +25,7 @@ class InstructorModel {
   String gender;
   DateTime? dob;
   List<String> selectedGradesLevel;
+  List<String> selectedSyllabusTypes;
 
 
   InstructorModel({
@@ -47,6 +48,7 @@ class InstructorModel {
     required this.gender,
     required this.dob,
     required this.selectedGradesLevel,
+    required this.selectedSyllabusTypes,
   });
 
   Map<String, dynamic> toMap() {
@@ -75,6 +77,7 @@ class InstructorModel {
       'gender': gender,
       'dob': dob!.toIso8601String(),
       'selectedGradesLevel': selectedGradesLevel,
+      'selectedSyllabusTypes': selectedSyllabusTypes,
     };
   }
 
@@ -142,7 +145,8 @@ class InstructorModel {
       profilePicUrl: map['profilePicUrl'] as String,
       gender: map['gender'] as String,
       dob:  DateTime.parse(map['dob'] as String),
-      selectedGradesLevel: List<String>.from(map['selectedGradesLevel'] as List<dynamic>),
+      selectedGradesLevel: List<String>.from(map['selectedGradesLevel'] as List<dynamic>), 
+      selectedSyllabusTypes: List<String>.from(map['selectedSyllabusTypes'] as List<dynamic>), 
     );
   }
 

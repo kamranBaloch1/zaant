@@ -62,6 +62,7 @@ class LoginMethods {
         showCustomToast("No user found for that email.");
       } else if (e.code == 'wrong-password') {
         showCustomToast("Wrong password provided for that user.");
+       
       }
     }
   }

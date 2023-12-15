@@ -12,6 +12,7 @@ import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/colors.dart';
 import 'package:zaanth/global/constant_values.dart';
 
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -50,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
         String password = _passwordController.text.trim();
 
         await loginProvider.loginWithEmailAndPasswordProvider(email, password);
+       
 
         setState(() {
           _isLoading = false;

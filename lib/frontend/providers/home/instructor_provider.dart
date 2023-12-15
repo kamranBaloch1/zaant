@@ -15,6 +15,7 @@ class InstructorProviders extends ChangeNotifier {
         selectedTimingsForSubjects,
     required Map<String, List<String>> selectedDaysForSubjects,
     required List<String>? selectedGrades,
+    required List<String>? selectedSyllabusTypes,
   }) async {
     try {
       await _instructorMethods.addNewInstructor(
@@ -24,7 +25,9 @@ class InstructorProviders extends ChangeNotifier {
           feesPerMonth: feesPerMonth,
           selectedTimingsForSubjects: selectedTimingsForSubjects,
           selectedDaysForSubjects: selectedDaysForSubjects,
-          selectedGrades: selectedGrades);
+          selectedGrades: selectedGrades,
+          selectedSyllabusTypes: selectedSyllabusTypes
+          );
       // Notify listeners to update the UI
       notifyListeners();
     } catch (e) {

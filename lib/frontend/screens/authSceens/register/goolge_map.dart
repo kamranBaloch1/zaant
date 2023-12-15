@@ -1,115 +1,50 @@
-// import 'dart:convert';
-// import 'package:flutter/material.dart';
-// import 'package:uuid/uuid.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:geocoding/geocoding.dart';
 
-// class GoogleSearchPlacesApi extends StatefulWidget {
-//   @override
-//   _GoogleSearchPlacesApiState createState() => _GoogleSearchPlacesApiState();
-// }
 
-// class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
-//   var _controller = TextEditingController();
-//   var uuid = new Uuid();
-//   String _sessionToken = '1234567890';
-//   List<dynamic> _placeList = [];
+import 'package:flutter/material.dart';
+import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
+import 'package:zaanth/global/colors.dart';
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _controller.addListener(() {
-//       _onChanged();
-//     });
-//   }
+class OpenStreetPickLocation extends StatefulWidget {
+  const OpenStreetPickLocation({super.key});
 
-//   _onChanged() {
-//     if (_sessionToken == null) {
-//       setState(() {
-//         _sessionToken = uuid.v4();
-//       });
-//     }
-//     getSuggestion(_controller.text);
-//   }
+  @override
+  State<OpenStreetPickLocation> createState() => _OpenStreetPickLocationState();
+}
 
-//   void getSuggestion(String input) async {
-//     String kPLACES_API_KEY = "AIzaSyCMBZ4-r-Y2Ir70hyA4Xw_gZwqKFOhBIaE";
-//     String type = '(regions)';
+class _OpenStreetPickLocationState extends State<OpenStreetPickLocation> {
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
+      appBar: const CustomAppBar(backgroundColor: appBarColor, title: "Pick your location"),
+      body: Column(
+        children: [
+           
+           Expanded(
+             child: Container(
+              color: Colors.black,
+               child: OpenStreetMapSearchAndPick(
+                hintText: "Kamran",
+                
+                     center: LatLong(23, 89),
+                     locationPinTextStyle: TextStyle(color: Colors.black),
+                     buttonColor: Colors.black,
+                     
+                     buttonText: 'Set Current Location',
+                     onPicked: (pickedData) {
+                       print(pickedData.latLong.latitude);
+                       print(pickedData.latLong.longitude);
+                       print(pickedData.address);
+                     },
+                     
+                     ),
+             ),
+           )
 
-//     try {
-//       String baseURL =
-//           'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-//       String request =
-//           '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
-//       var response = await http.get(Uri.parse(request));
-//       var data = json.decode(response.body);
-//       print('mydata');
-//       print(data);
-//       if (response.statusCode == 200) {
-//         setState(() {
-//           _placeList = json.decode(response.body)['predictions'];
-//         });
-//       } else {
-//         throw Exception('Failed to load predictions');
-//       }
-//     } catch (e) {
-//       // toastMessage('success');
-//     }
-//   }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         elevation: 0,
-//         title: Text(
-//           'Google Map Search places Api',
-//         ),
-//       ),
-//       body: Column(
-//         mainAxisAlignment: MainAxisAlignment.start,
-//         children: <Widget>[
-//           Align(
-//             alignment: Alignment.topCenter,
-//             child: TextField(
-//               controller: _controller,
-//               decoration: InputDecoration(
-//                 hintText: "Seek your location here",
-//                 focusColor: Colors.white,
-//                 floatingLabelBehavior: FloatingLabelBehavior.never,
-//                 prefixIcon: Icon(Icons.map),
-//                 suffixIcon: IconButton(
-//                   icon: Icon(Icons.cancel),
-//                   onPressed: () {
-//                     _controller.clear();
-//                   },
-//                 ),
-//               ),
-//             ),
-//           ),
-//           Expanded(
-//             child: ListView.builder(
-//               physics: NeverScrollableScrollPhysics(),
-//               shrinkWrap: true,
-//               itemCount: _placeList.length,
-//               itemBuilder: (context, index) {
-//                 return GestureDetector(
-//                   onTap: () async {
-//                  List<Location> locations = await locationFromAddress("Gronausestraat 710, Enschede");
-//                   print("this is the lat ${locations.last.latitude}");
-//                   print("this is the long ${locations.last.longitude}");
 
-//                   },
-//                   child: ListTile(
-                   
-//                     title: Text(_placeList[index]["description"]),
-//                   ),
-//                 );
-//               },
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
+        ],
+      ),
+    );
+  }
+}

@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:zaanth/frontend/providers/home/instructor_provider.dart';
-import 'package:zaanth/frontend/screens/homeScreens/instructor/add/grade_level_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/add/syllabus_types_screen.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/global/colors.dart';
@@ -64,7 +64,13 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
       if (isVerified) {
         // Navigate to the next screen after successful OTP verification
 
-        Get.offAll(() => GradeLevelScreen(
+        // Get.offAll(() => GradeLevelScreen(
+        //     selectedQualification: widget.selectedQualification,
+        //     phoneNumber: widget.phoneNumber,
+        //     feesPerMonth: widget.feesPerMonth
+            
+        //     ));
+        Get.offAll(() => SyllabusTypeScreen(
             selectedQualification: widget.selectedQualification,
             phoneNumber: widget.phoneNumber,
             feesPerMonth: widget.feesPerMonth
