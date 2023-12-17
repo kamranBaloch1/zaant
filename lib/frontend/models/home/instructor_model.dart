@@ -26,7 +26,9 @@ class InstructorModel {
   DateTime? dob;
   List<String> selectedGradesLevel;
   List<String> selectedSyllabusTypes;
-
+  String teachingExperience;
+  String tuitionType;
+  String degreeCompletionStatus;
 
   InstructorModel({
     required this.uid,
@@ -49,6 +51,9 @@ class InstructorModel {
     required this.dob,
     required this.selectedGradesLevel,
     required this.selectedSyllabusTypes,
+    required this.teachingExperience,
+    required this.tuitionType,
+    required this.degreeCompletionStatus,
   });
 
   Map<String, dynamic> toMap() {
@@ -78,6 +83,9 @@ class InstructorModel {
       'dob': dob!.toIso8601String(),
       'selectedGradesLevel': selectedGradesLevel,
       'selectedSyllabusTypes': selectedSyllabusTypes,
+      'teachingExperience': teachingExperience,
+      'tuitionType': tuitionType,
+      'degreeCompletionStatus': degreeCompletionStatus,
     };
   }
 
@@ -147,6 +155,9 @@ class InstructorModel {
       dob:  DateTime.parse(map['dob'] as String),
       selectedGradesLevel: List<String>.from(map['selectedGradesLevel'] as List<dynamic>), 
       selectedSyllabusTypes: List<String>.from(map['selectedSyllabusTypes'] as List<dynamic>), 
+      teachingExperience: map['teachingExperience'] as String,
+      tuitionType: map['tuitionType'] as String,
+      degreeCompletionStatus: map['degreeCompletionStatus'] as String,
     );
   }
 

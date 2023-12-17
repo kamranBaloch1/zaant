@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class CustomCitiesDropdown extends StatefulWidget {
   final String? selectedCity;
@@ -13,13 +15,12 @@ class CustomCitiesDropdown extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CustomCitiesDropdownState createState() =>
-      _CustomCitiesDropdownState();
+  _CustomCitiesDropdownState createState() => _CustomCitiesDropdownState();
 }
 
 class _CustomCitiesDropdownState extends State<CustomCitiesDropdown> {
 
- List<String> _citiesList = [
+ final List<String> _citiesList = [
     // Balochistan
     "Quetta",
     "Gwadar",
@@ -127,8 +128,6 @@ class _CustomCitiesDropdownState extends State<CustomCitiesDropdown> {
   ];
 
 
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -136,33 +135,55 @@ class _CustomCitiesDropdownState extends State<CustomCitiesDropdown> {
       children: [
         if (widget.labelText != null)
           Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding:  EdgeInsets.only(bottom: 8.h),
             child: Text(
               widget.labelText!,
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold,color: Colors.black),
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
             ),
           ),
-        DropdownButtonFormField<String>(
-          value: widget.selectedCity,
-          onChanged: (value) {
-            setState(() {
-              widget.onChanged(value);
-            });
+        TypeAheadFormField<String>(
+          textFieldConfiguration: TextFieldConfiguration(
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[200],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              hintText: 'Search for a city',
+              contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            ),
+            controller: TextEditingController(text: widget.selectedCity),
+
+            style: const TextStyle(color: Colors.black)
+          ),
+          suggestionsCallback: (pattern) {
+            return _citiesList
+                .where((city) => city.toLowerCase().contains(pattern.toLowerCase()));
           },
-          items: _citiesList.map((city) {
-            return DropdownMenuItem<String>(
-              value: city,
-              child: Text(
-                city,
-                style: TextStyle(fontSize: 16, color: Colors.black),
+          itemBuilder: (context, suggestion) {
+            return ListTile(
+              title: Text(
+                suggestion,
+                style: TextStyle(
+                  color: suggestion == widget.selectedCity ? Colors.black : Colors.black,
+                ),
               ),
             );
-          }).toList(),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey[200],
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          ),
+          },
+          transitionBuilder: (context, suggestionsBox, controller) {
+            return suggestionsBox;
+          },
+          onSuggestionSelected: (suggestion) {
+            widget.onChanged(suggestion);
+          },
+          noItemsFoundBuilder: (context) {
+            return const ListTile(
+              title: Text('No cities found',style: TextStyle(color: Colors.black),),
+            );
+          },
         ),
       ],
     );

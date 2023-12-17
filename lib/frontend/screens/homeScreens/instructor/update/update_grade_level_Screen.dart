@@ -42,7 +42,7 @@ class _UpdateGradeLevelScreenState extends State<UpdateGradeLevelScreen> {
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Change your Grade level",
+            title: "Update your grade level",
           ),
           body: 
               SingleChildScrollView(

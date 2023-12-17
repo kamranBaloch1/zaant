@@ -13,7 +13,6 @@ import 'package:zaanth/frontend/providers/home/enrollmens_provider.dart';
 import 'package:zaanth/frontend/providers/home/instructor_provider.dart';
 import 'package:zaanth/frontend/providers/home/notification_provider.dart';
 import 'package:zaanth/frontend/providers/home/profile_providers.dart';
-import 'package:zaanth/frontend/screens/authSceens/register/goolge_map.dart';
 import 'package:zaanth/frontend/screens/authSceens/splash/start_loading_bar.dart';
 import 'package:zaanth/frontend/screens/authSceens/splash/splash_screen.dart';
 import 'package:zaanth/frontend/screens/homeScreens/home/home_screen.dart';
@@ -63,7 +62,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
-          home: FutureBuilder<Widget>(
+          home:FutureBuilder<Widget>(
             future: _buildHomeScreen(),
             builder: (context, AsyncSnapshot<Widget> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

@@ -95,7 +95,7 @@ class ProfileMethods {
         UserPreferences.setName(userData['name']);
         UserPreferences.setProfileUrl(userData['profilePicUrl']);
         UserPreferences.setCity(userData['city']);
-        UserPreferences.setAddress(userData['address']);
+       
       }
 
       // Show a success message

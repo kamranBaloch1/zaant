@@ -1,50 +1,140 @@
+// import 'package:flutter/material.dart';
+// import 'package:geocoding/geocoding.dart';
 
+// class SearchPlaces extends StatefulWidget {
+//   const SearchPlaces({Key? key}) : super(key: key);
 
-import 'package:flutter/material.dart';
-import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
-import 'package:zaanth/global/colors.dart';
-import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
+//   @override
+//   State<SearchPlaces> createState() => _SearchPlacesState();
+// }
 
-class OpenStreetPickLocation extends StatefulWidget {
-  const OpenStreetPickLocation({super.key});
+// class _SearchPlacesState extends State<SearchPlaces> {
+//   final TextEditingController _searchController = TextEditingController();
+//   List<String> searchResults = [];
+//   String selectedProvince = '';
+//   String selectedCity = '';
 
-  @override
-  State<OpenStreetPickLocation> createState() => _OpenStreetPickLocationState();
-}
+//   // Define the provinces and cities
+//   List<String> provinces = ['Punjab', 'Sindh', 'Khyber Pakhtunkhwa', 'Balochistan'];
+//   Map<String, List<String>> cities = {
+//     'Punjab': ['Lahore', 'Rawalpindi', 'Faisalabad'],
+//     'Sindh': ['Karachi', 'Hyderabad', 'Sukkur'],
+//     'Khyber Pakhtunkhwa': ['Peshawar', 'Abbottabad', 'Swat'],
+//     'Balochistan': ['Quetta', 'Gwadar', 'Chaman'],
+//   };
 
-class _OpenStreetPickLocationState extends State<OpenStreetPickLocation> {
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: const CustomAppBar(backgroundColor: appBarColor, title: "Pick your location"),
-      body: Column(
-        children: [
-           
-           Expanded(
-             child: Container(
-              color: Colors.black,
-               child: OpenStreetMapSearchAndPick(
-                hintText: "Kamran",
-                
-                     center: LatLong(23, 89),
-                     locationPinTextStyle: TextStyle(color: Colors.black),
-                     buttonColor: Colors.black,
-                     
-                     buttonText: 'Set Current Location',
-                     onPicked: (pickedData) {
-                       print(pickedData.latLong.latitude);
-                       print(pickedData.latLong.longitude);
-                       print(pickedData.address);
-                     },
-                     
-                     ),
-             ),
-           )
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Search Places'),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.stretch,
+//           children: [
+//             // Province Dropdown
+//             DropdownButton<String>(
+//               value: selectedProvince,
+//               hint: Text('Select Province'),
+//               items: provinces.map((province) {
+//                 return DropdownMenuItem<String>(
+//                   value: province,
+//                   child: Text(province),
+//                 );
+//               }).toList(),
+//               onChanged: (value) {
+//                 setState(() {
+//                   selectedProvince = value!;
+//                   selectedCity = '';
+//                   _searchController.clear();
+//                   searchResults.clear();
+//                 });
+//               },
+//             ),
+//             SizedBox(height: 16),
 
+//             // City Dropdown
+//             DropdownButton<String>(
+//               value: selectedCity,
+//               hint: Text('Select City'),
+//               items: cities[selectedProvince]?.map((city) {
+//                 return DropdownMenuItem<String>(
+//                   value: city,
+//                   child: Text(city),
+//                 );
+//               }).toList() ?? [],
+//               onChanged: (value) {
+//                 setState(() {
+//                   selectedCity = value!;
+//                   _searchController.clear();
+//                   searchResults.clear();
+//                 });
+//               },
+//             ),
+//             SizedBox(height: 16),
 
+//             // Search TextField
+//             TextField(
+//               controller: _searchController,
+//               onChanged: (value) {
+//                 searchLocation(value);
+//               },
+//               enabled: selectedCity.isNotEmpty,
+//               decoration: InputDecoration(
+//                 hintText: 'Enter an area name',
+//               ),
+//             ),
+//             SizedBox(height: 16),
 
-        ],
-      ),
-    );
-  }
-}
+//             // Search Results
+//             Text(
+//               'Search Results:',
+//               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//             ),
+//             Expanded(
+//               child: ListView.builder(
+//                 itemCount: searchResults.length,
+//                 itemBuilder: (context, index) {
+//                   return ListTile(
+//                     title: Text(
+//                       searchResults[index],
+//                       style: TextStyle(color: Colors.black),
+//                     ),
+//                   );
+//                 },
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Future<void> searchLocation(String query) async {
+//     try {
+//       if (selectedCity.isNotEmpty) {
+//         List<Location> locations = await locationFromAddress('$query, $selectedCity, $selectedProvince, Pakistan');
+//         setState(() {
+//           searchResults = locations.map((location) => location.formattedAddress ?? '').toList();
+//         });
+//       } else {
+//         setState(() {
+//           searchResults = ['Please select a city'];
+//         });
+//       }
+//     } catch (e) {
+//       print('Error: $e');
+//       setState(() {
+//         searchResults = ['Error fetching location'];
+//       });
+//     }
+//   }
+// }
+
+// void main() {
+//   runApp(MaterialApp(
+//     home: SearchPlaces(),
+//   ));
+// }

@@ -13,7 +13,7 @@ class RegisterProviders extends ChangeNotifier {
       required String name,
       required String? gender,
       required DateTime? dob,
-      required String city,required String location   }) async {
+      required String city,   }) async {
     try {
       await _registerMethod.registerWithEmailAndPassword(
           email: email,
@@ -23,7 +23,6 @@ class RegisterProviders extends ChangeNotifier {
           gender: gender,
           dob: dob,
           city: city,
-          address: location
           );
 
       notifyListeners();

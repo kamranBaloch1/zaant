@@ -128,6 +128,7 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             onTap: () {
               Get.to(() => const ProfileScreen());
+           
              
             },
           ),

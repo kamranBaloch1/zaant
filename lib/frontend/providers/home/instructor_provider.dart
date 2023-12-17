@@ -16,6 +16,10 @@ class InstructorProviders extends ChangeNotifier {
     required Map<String, List<String>> selectedDaysForSubjects,
     required List<String>? selectedGrades,
     required List<String>? selectedSyllabusTypes,
+    required String address,
+    required String teachingExperience,
+    required String tuitionType,
+    required String degreeCompletionStatus,
   }) async {
     try {
       await _instructorMethods.addNewInstructor(
@@ -26,7 +30,11 @@ class InstructorProviders extends ChangeNotifier {
           selectedTimingsForSubjects: selectedTimingsForSubjects,
           selectedDaysForSubjects: selectedDaysForSubjects,
           selectedGrades: selectedGrades,
-          selectedSyllabusTypes: selectedSyllabusTypes
+          selectedSyllabusTypes: selectedSyllabusTypes,
+          address: address,
+          teachingExperience: teachingExperience,
+          tuitionType: tuitionType,
+          degreeCompletionStatus: degreeCompletionStatus
           );
       // Notify listeners to update the UI
       notifyListeners();
@@ -74,16 +82,38 @@ class InstructorProviders extends ChangeNotifier {
       print("An error occurred while updating fees charges.");
     }
   }
+  // Update instructor teaching Experience
+  Future<void> updateTeachingExperienceProvider(
+      {required String teachingExperience}) async {
+    try {
+      await _instructorMethods.updateTeachingExperience(
+          teachingExperience: teachingExperience);
+      notifyListeners();
+    } catch (e) {
+      print("An error occurred while updating teaching experience.");
+    }
+  }
 
   // Update instructor qualification
   Future<void> updateInstructorQualificationProvider(
-      {required String qualification}) async {
+      {required String qualification, required String degreeCompletionStatus})async {
     try {
       await _instructorMethods.updateInstructorQualification(
-          qualification: qualification);
+          qualification: qualification,degreeCompletionStatus: degreeCompletionStatus);
       notifyListeners();
     } catch (e) {
       print("An error occurred while updating qualification.");
+    }
+  }
+  // Update instructor tuition type
+  Future<void> updateInstructorTuitionTypeProvider(
+      {required String tuitionType})async {
+    try {
+      await _instructorMethods.updateInstructorTuitionType(
+         tuitionType: tuitionType);
+      notifyListeners();
+    } catch (e) {
+      print("An error occurred while updating tuition type.");
     }
   }
 
@@ -201,13 +231,20 @@ class InstructorProviders extends ChangeNotifier {
   Future<void> verifyPhoneNumberProvider({
     required String? phoneNumber,
     required String? selectedQualification,
+    required String? teachingExperience,
+    required String? tuitionType,
     required int? feesPerMonth,
+    required String? degreeCompletionStatus,
   }) async {
     try {
       await _instructorMethods.verifyPhoneNumber(
           phoneNumber: phoneNumber,
           selectedQualification: selectedQualification,
-          feesPerMonth: feesPerMonth);
+          feesPerMonth: feesPerMonth,
+          teachingExperience: teachingExperience,
+          tuitionType: tuitionType,
+          degreeCompletionStatus: degreeCompletionStatus
+          );
 
       // Notify listeners to update the UI
       notifyListeners();

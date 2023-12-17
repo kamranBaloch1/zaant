@@ -18,6 +18,10 @@ class SelectTimingsScreen extends StatefulWidget {
   final Map<String, List<String>> selectedDaysForSubjects;
   final List<String>? selectedGrades;
   final List<String>? selectedSyllabusTypes;
+  final String? address;
+  final String? tuitionType;
+  final String? teachingExperience;
+  final String? degreeCompletionStatus;
 
   const SelectTimingsScreen({
     Key? key,
@@ -28,6 +32,10 @@ class SelectTimingsScreen extends StatefulWidget {
     required this.selectedDaysForSubjects,
     required this.selectedGrades,
     required this.selectedSyllabusTypes,
+    required this.address,
+    required this.teachingExperience,
+    required this.tuitionType,
+    required this.degreeCompletionStatus,
   }) : super(key: key);
 
   @override
@@ -110,7 +118,12 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
         selectedTimingsForSubjects: selectedTimings,
         selectedDaysForSubjects: widget.selectedDaysForSubjects,
         selectedGrades: widget.selectedGrades,
-        selectedSyllabusTypes: widget.selectedSyllabusTypes
+        selectedSyllabusTypes: widget.selectedSyllabusTypes,
+        address: widget.address!,
+        teachingExperience: widget.teachingExperience!,
+        tuitionType: widget.tuitionType!,
+        degreeCompletionStatus: widget.degreeCompletionStatus!
+
       );
 
       setState(() {

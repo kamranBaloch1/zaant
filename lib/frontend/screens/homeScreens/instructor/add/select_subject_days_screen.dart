@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import 'package:zaanth/frontend/screens/homeScreens/instructor/add/select_timings_screen.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
@@ -16,6 +17,10 @@ class SelectSubjectDaysScreen extends StatefulWidget {
   final int? feesPerMonth;
  final List<String>? selectedGrades;
  final List<String>? selectedSyllabusTypes;
+   final String? address;
+    final String? tuitionType;
+  final String? teachingExperience;
+  final String? degreeCompletionStatus;
 
   const SelectSubjectDaysScreen({
     Key? key,
@@ -25,6 +30,10 @@ class SelectSubjectDaysScreen extends StatefulWidget {
     required this.feesPerMonth,
     required this.selectedGrades,
     required this.selectedSyllabusTypes,
+    required this.address,
+    required this.tuitionType,
+    required this.teachingExperience,
+    required this.degreeCompletionStatus,
   }) : super(key: key);
 
   @override
@@ -70,6 +79,10 @@ class _SelectSubjectDaysScreenState extends State<SelectSubjectDaysScreen> {
           feesPerMonth: widget.feesPerMonth,
           selectedGrades: widget.selectedGrades,
           selectedSyllabusTypes: widget.selectedSyllabusTypes,
+          address: widget.address,
+          teachingExperience: widget.teachingExperience,
+          tuitionType: widget.tuitionType,
+          degreeCompletionStatus: widget.degreeCompletionStatus,
           ));
     } else {
       // Show a custom toast message

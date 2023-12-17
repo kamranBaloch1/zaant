@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zaanth/frontend/screens/authSceens/login/login_screen.dart';
-import 'package:zaanth/frontend/screens/authSceens/register/register_screen.dart';
+import 'package:zaanth/frontend/screens/authSceens/register/select_profile_pic_screen.dart';
 import 'package:zaanth/global/colors.dart';
 import 'package:zaanth/global/constant_values.dart';
 
@@ -148,7 +148,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                           SizedBox(width: 18.w), 
                           TextButton(
                             onPressed: () {
-                               Get.to(() => const  RegisterScreen());
+                               Get.to(() => const  SelectProfilePicScreen());
                             },
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,

@@ -1,23 +1,30 @@
-import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zaanth/frontend/providers/auth/register_providers.dart';
+import 'package:zaanth/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
 import 'package:zaanth/frontend/screens/authSceens/login/login_screen.dart';
 import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_dropdown.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
-import 'package:zaanth/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/colors.dart';
-import 'package:zaanth/global/constant_values.dart';
+
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+
+  final XFile? profilePicImg;
+
+
+  const RegisterScreen({
+    Key? key,
+    required this.profilePicImg,
+  }) : super(key: key);
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -38,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
+ 
 
   @override
   void dispose() {
@@ -47,20 +54,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _dobController.dispose();
-    _locationController.dispose();
     super.dispose();
   }
 
-  XFile? _selectedImage;
-
-  Future<void> _pickImageFromGallery() async {
-    final imagePicker = ImagePicker();
-    final pickedImg = await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _selectedImage = pickedImg;
-    });
-  }
-
+ 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -99,28 +96,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
      // Capitalize the first letter of the name
     name = name.substring(0, 1).toUpperCase() + name.substring(1);
     String password = _passwordController.text.trim();
-    String location = _locationController.text.trim();
     
-   if(_selectedImage==null){
-    showCustomToast("please select an profile image");
-    return;
-   }
+   
 
     if (selectedDate != null && selectedGender != null) {
       final DateTime now = DateTime.now();
       final DateTime minDate = DateTime(now.year - 4, now.month, now.day);
 
       if (selectedDate!.isBefore(minDate)) {
+
+       if(selectedCity==null){
+        showCustomToast("please select your city");
+        return;
+
+       }
+
         await registerProvider
             .registerWithEmailAndPasswordProvider(
                 email: email,
                 password: password,
-                photoUrl: _selectedImage,
+                photoUrl: widget.profilePicImg,
                 name: name,
                 gender: selectedGender,
                 dob: selectedDate,
                 city: selectedCity!,
-                location: location)
+          )
             .then((value) => {
                   setState(() {
                     _isLoading = false;
@@ -153,24 +153,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 children: <Widget>[
                   SizedBox(
-                    height: 20.h,
+                    height: 80.h,
                   ),
-                  GestureDetector(
-                    onTap: _pickImageFromGallery,
-                    child: Center(
-                      child: _selectedImage != null
-                          ? CircleAvatar(
-                              backgroundImage:
-                                  FileImage(File(_selectedImage!.path)),
-                              radius: 60.r,
-                            )
-                          : CircleAvatar(
-                              backgroundImage: AssetImage(assetDefaultImg),
-                              radius: 60.r,
-                            ),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
+                 
+                
+                
                   CustomAuthTextField(
                     hintText: "Name",
                     icon: const Icon(Icons.person),
@@ -261,31 +248,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icons.person,
                   ),
                   SizedBox(height: 20.h),
-                  CustomAuthTextField(
-                      controller: _locationController,
-                      hintText: "write your full address",
-                      icon: const Icon(Icons.house),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'please write your address';
-                        }
-                        return null;
-                      },
-                      obSecure: false,
-                      keyBoardType: TextInputType.text),
-                  SizedBox(height: 20.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: CustomCitiesDropdown(
-                        selectedCity: selectedCity,
-                        labelText: "Select your city",
-                        onChanged: (value) {
-                          setState(() {
-                            selectedCity = value;
-                          });
-                        }),
-                  ),
-                  SizedBox(height: 20.h),
+                 
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 30.w),
                     decoration: BoxDecoration(
@@ -315,7 +278,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-                 
+                    SizedBox(height: 20.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: CustomCitiesDropdown(
+                        selectedCity: selectedCity,
+                        labelText: "Select your city",
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCity = value;
+                          });
+                        }),
+                  ),
                  
                  
                   GestureDetector(
@@ -335,7 +309,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 20.h),
                   CustomButton(
                     onTap: () {
                       if (_formKey.currentState!.validate()) {

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:zaanth/frontend/providers/auth/login_providers.dart';
 import 'package:zaanth/frontend/screens/authSceens/authWidgets/custom_auth_field.dart';
 import 'package:zaanth/frontend/screens/authSceens/login/forgot_password.dart';
-import 'package:zaanth/frontend/screens/authSceens/register/register_screen.dart';
+import 'package:zaanth/frontend/screens/authSceens/register/select_profile_pic_screen.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 20.h),
                     GestureDetector(
                       onTap: () {
-                        Get.to(() => const RegisterScreen());
+                        Get.to(() => const SelectProfilePicScreen());
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 15.w, top: 15.h),

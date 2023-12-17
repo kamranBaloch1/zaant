@@ -3,13 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_charges_per_month.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_grade_level_Screen.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_qualification.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_subjects.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_subjects_days.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_subjects_timings.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_teaching_experience.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_tuition_type.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/global/colors.dart';
 
@@ -19,7 +20,10 @@ class UpdateInstrctorOptionsScreen extends StatefulWidget {
   final int feesPerMonth;
   final String qualification;
   final Map<String, List<String>> selectedDaysOfSubjects;
-   final List<String>? selectedGradeLevel;
+  final List<String>? selectedGradeLevel;
+  final String? teachingExperience;
+  final String? degreeCompletionStatus; 
+  final String? tuitionType; 
 
   const UpdateInstrctorOptionsScreen({
     Key? key,
@@ -29,6 +33,9 @@ class UpdateInstrctorOptionsScreen extends StatefulWidget {
     required this.qualification,
     required this.selectedDaysOfSubjects,
     required this.selectedGradeLevel,
+    required this.teachingExperience,
+    required this.degreeCompletionStatus, 
+    required this.tuitionType, 
   }) : super(key: key);
 
   @override
@@ -69,11 +76,17 @@ class _UpdateInstrctorOptionsScreenState
               _buildListTile(Icons.money, 'Change charges per month', () {
                 Get.to(() => UpdateChargesPerMonth(feesPerMonth: widget.feesPerMonth));
               }),
-              _buildListTile(Icons.school, 'Change Qualification', () {
-                Get.to(() => UpdateQualificationScreen(selectedQualification: widget.qualification));
+              _buildListTile(Icons.school, 'Change qualification', () {
+                Get.to(() => UpdateQualificationScreen(selectedQualification: widget.qualification,degreeCompletionStatus: widget.degreeCompletionStatus,));
               }),
-              _buildListTile(Icons.grade, 'Change Grade Level', () {
+              _buildListTile(Icons.grade, 'Change grade Level', () {
                 Get.to(() => UpdateGradeLevelScreen(selectedGradeLevel: widget.selectedGradeLevel,));
+              }),
+              _buildListTile(Icons.grade, 'Change teaching experience ', () {
+                Get.to(() => UpdateTeachingExperienceScreen( teachingExperience: widget.teachingExperience,));
+              }),
+              _buildListTile(Icons.grade, 'Change tuition type ', () {
+                Get.to(() => UpdateTuitionTypeScreen( tuitionType: widget.tuitionType,));
               }),
             ],
           ),

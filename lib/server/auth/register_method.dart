@@ -47,7 +47,7 @@ class RegisterMethod {
       required String? gender,
       required DateTime? dob,
       required String city,
-      required String address}) async {
+     }) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -73,7 +73,6 @@ class RegisterMethod {
             profilePicUrl: downloadUrl,
             dob: dob!,
             gender: gender,
-            address: address, 
             phoneNumber: "",
             isEmailVerified: false,
             isPhoneNumberVerified: false,
@@ -100,7 +99,6 @@ class RegisterMethod {
         await UserPreferences.setDob(dob);
         await UserPreferences.setGender(gender!);
         await UserPreferences.setIsPhoneNumberVerified(false);
-        await UserPreferences.setAddress(address);
         await UserPreferences.setPhoneNumber("");
         await UserPreferences.setAccountType(
             AccountTypeEnum.user.toString().split('.').last);

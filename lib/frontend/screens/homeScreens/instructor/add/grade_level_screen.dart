@@ -12,6 +12,11 @@ class GradeLevelScreen extends StatefulWidget {
   final String? phoneNumber;
   final int? feesPerMonth;
   final List<String>? selectedSyllabusTypes;
+  final String? address;
+   final String? tuitionType;
+  final String? teachingExperience;
+  final String? degreeCompletionStatus;
+  
 
   const GradeLevelScreen({
     Key? key,
@@ -19,6 +24,11 @@ class GradeLevelScreen extends StatefulWidget {
    required this.phoneNumber,
    required this.feesPerMonth,
    required this.selectedSyllabusTypes,
+   required this.address,
+   required this.teachingExperience,
+   required this.tuitionType,
+   required this.degreeCompletionStatus,
+  
   }) : super(key: key);
 
   @override
@@ -71,6 +81,10 @@ class _GradeLevelScreenState extends State<GradeLevelScreen> {
                             feesPerMonth: widget.feesPerMonth,
                             selectedGrades: selectedGrades, 
                             selectedSyllabusTypes: widget.selectedSyllabusTypes,
+                            address:widget.address,
+                            teachingExperience:widget.teachingExperience,
+                            tuitionType:widget.tuitionType,
+                            degreeCompletionStatus:widget.degreeCompletionStatus,
                           ));
                     } else {
                       // Display an error message or take appropriate action

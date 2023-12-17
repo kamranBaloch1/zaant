@@ -34,9 +34,6 @@ class UserPreferences {
     await _prefs!.setString('gender', value);
   }
 
-  static Future<void> setAddress(String value) async {
-    await _prefs!.setString('address', value);
-  }
 
   static Future<void> setIsEmailVerified(bool value) async {
     await _prefs!.setBool('isEmailVerified', value);
@@ -93,9 +90,6 @@ class UserPreferences {
     return _prefs!.getString('gender');
   }
 
-  static String? getAddress() {
-    return _prefs!.getString('address');
-  }
 
   static bool? getIsEmailVerified() {
     return _prefs!.getBool('isEmailVerified');

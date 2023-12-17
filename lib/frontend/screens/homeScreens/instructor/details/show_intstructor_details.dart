@@ -78,6 +78,9 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
                           selectedDaysOfSubjects:
                               instructor.selectedDaysForSubjects,
                               selectedGradeLevel: instructor.selectedGradesLevel,
+                              teachingExperience: instructor.teachingExperience,
+                              degreeCompletionStatus: instructor.degreeCompletionStatus,
+                              tuitionType: instructor.tuitionType,
                         ));
                   },
                   width: 300,
@@ -152,22 +155,38 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
   content:" ${ CalculateUserAge.calculateAge(instructorModel.dob)?.toString()} Years" ,
 ),
         SizedBox(height: 16.h),
+          BuildInfoCardWidget(
+          icon: Icons.location_city,
+          title: "City",
+          content: instructorModel.city,
+        ),
+         SizedBox(height: 16.h),
         BuildInfoCardWidget(
           icon: Icons.location_on,
           title: "Address",
           content: instructorModel.address,
         ),
         SizedBox(height: 16.h),
-        BuildInfoCardWidget(
-          icon: Icons.location_city,
-          title: "City",
-          content: instructorModel.city,
-        ),
-        SizedBox(height: 16.h),
+       
         BuildInfoCardWidget(
           icon: Icons.school,
           title: "Qualification",
-          content: instructorModel.qualification,
+          content: "${instructorModel.qualification} (${instructorModel.degreeCompletionStatus})",
+        ),
+        SizedBox(height: 16.h),
+      BuildInfoCardWidget(
+  icon: Icons.work,
+  title: "Teaching Experience",
+  content: instructorModel.teachingExperience == "Fresher"
+      ? instructorModel.teachingExperience
+      : "${instructorModel.teachingExperience} Years",
+),
+
+        SizedBox(height: 16.h),
+        BuildInfoCardWidget(
+          icon: Icons.book_online,
+          title: "Tuition Type",
+          content: instructorModel.tuitionType,
         ),
       ],
     );

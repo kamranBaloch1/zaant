@@ -7,7 +7,6 @@ import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_dropdown.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/custom_home_text_field.dart';
-
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/colors.dart';
 
@@ -20,23 +19,31 @@ class AddDetailsScreen extends StatefulWidget {
 
 class _AddDetailsScreenState extends State<AddDetailsScreen> {
   final TextEditingController _feesPerMonth = TextEditingController();
+  final TextEditingController _teachingExperience = TextEditingController();
 
   String? selectedQualification;
+  String? selectedTuitionType;
+  String? selectedExperienceType;
+  String? selectedCompletionStatus="";
 
   bool _isLoading = false;
 
-  List<String> qualificationList = [
+  final List<String> _qualificationList = [
     "Matric",
     "PhD",
     "Bachelor",
     "School Student",
     "Master"
   ];
+  final List<String> _tuitionTypeList = ["online", "offline"];
+  final List<String> _experiencedTypeList = ["Experienced", "Fresher"];
+  final List<String> _completionStatusList = ["Completed", "Not Completed"];
 
   @override
   void dispose() {
     super.dispose();
     _feesPerMonth.dispose();
+    _teachingExperience.dispose();
   }
 
   Future<void> _moveToNextScreenMethod() async {
@@ -45,23 +52,36 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
     });
 
     // Get input values
-
     String feesPerMonth = _feesPerMonth.text.trim();
 
     if (feesPerMonth.isNotEmpty &&
         selectedQualification != null &&
-        selectedQualification!.isNotEmpty) {
-      // Input validation successful
-      setState(() {
-        _isLoading = false;
-      });
+        selectedQualification!.isNotEmpty &&
+        selectedTuitionType != null &&
+        selectedTuitionType!.isNotEmpty &&
+        selectedExperienceType != null &&
+        selectedExperienceType!.isNotEmpty) {
+      // Check if job experience is required and not empty when user is "Experienced"
+      if (selectedExperienceType == "Experienced" && _teachingExperience.text.trim().isEmpty) {
+        setState(() {
+          _isLoading = false;
+        });
+        showCustomToast("Please enter teaching experience");
+      } else {
+        // Input validation successful
+        setState(() {
+          _isLoading = false;
+        });
 
-      // Navigate to the next screen with collected data
-
-      Get.to(() => PhoneNumberScreen(
-            feesPerMonth: int.parse(feesPerMonth),
-            selectedQualification: selectedQualification,
-          ));
+        // Navigate to the next screen with collected data
+        Get.to(() => PhoneNumberScreen(
+              feesPerMonth: int.parse(feesPerMonth),
+              selectedQualification: selectedQualification,
+              teachingExperience: selectedExperienceType == "Experienced" ? _teachingExperience.text.trim() : "Fresher",
+              tuitionType: selectedTuitionType,
+              degreeCompletionStatus: selectedCompletionStatus,
+            ));
+      }
     } else {
       // Input validation failed
       setState(() {
@@ -99,25 +119,87 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                   height: 20.h,
                 ),
                 CustomDropdown(
-                    items: qualificationList,
-                    value: selectedQualification,
+                  items: _qualificationList,
+                  value: selectedQualification,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedQualification = value;
+                    });
+
+                    // Check if the selected qualification is a degree, and show the completion status dropdown
+                    if (_isDegree(value)) {
+                      _showCompletionStatusDropdown();
+                    } else {
+                      _hideCompletionStatusDropdown();
+                    }
+                  },
+                  labelText: "Select Qualification",
+                  icon: Icons.book,
+                ),
+                // New dropdown for completion status
+                if (_isDegree(selectedQualification))
+                  CustomDropdown(
+                    items: _completionStatusList,
+                    value: selectedCompletionStatus,
                     onChanged: (value) {
                       setState(() {
-                        selectedQualification =
-                            value; // Store the selected value
+                        selectedCompletionStatus = value;
                       });
                     },
-                    labelText: "Select Qualification",
-                    icon: Icons.book),
+                    labelText: "Select Completion Status",
+                    icon: Icons.check,
+                  ),
+               
+               
+               
                 SizedBox(
-                  height: 70.h,
+                  height: 20.h,
+                ),
+                CustomDropdown(
+                  items: _tuitionTypeList,
+                  value: selectedTuitionType,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedTuitionType = value;
+                    });
+                  },
+                  labelText: "Tuition Type",
+                  icon: Icons.book_online,
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                CustomDropdown(
+                  items: _experiencedTypeList,
+                  value: selectedExperienceType,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedExperienceType = value;
+                    });
+                  },
+                  labelText: "Teaching Experience",
+                  icon: Icons.work,
+                ),
+                if (selectedExperienceType == "Experienced")
+                  SizedBox(
+                    height: 60.h,
+                    child: HomeCustomTextField(
+                      controller: _teachingExperience,
+                      labelText: "Experience (Years)",
+                      icon: Icons.school,
+                      keyBoardType: TextInputType.number,
+                    ),
+                  ),
+                SizedBox(
+                  height: 100.h,
                 ),
                 CustomButton(
-                    onTap: _moveToNextScreenMethod,
-                    width: 200,
-                    height: 40,
-                    text: "Next",
-                    bgColor: Colors.blue)
+                  onTap: _moveToNextScreenMethod,
+                  width: 200,
+                  height: 40,
+                  text: "Next",
+                  bgColor: Colors.blue,
+                )
               ],
             ),
           ),
@@ -126,5 +208,27 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
         if (_isLoading) const CustomLoadingOverlay()
       ],
     );
+  }
+
+  // Helper method to check if the selected qualification is a degree
+  bool _isDegree(String? qualification) {
+    return qualification == "Matric" ||
+        qualification == "PhD" ||
+        qualification == "Bachelor" ||
+        qualification == "Master";
+  }
+
+  // Helper method to show the completion status dropdown
+  void _showCompletionStatusDropdown() {
+    setState(() {
+      selectedCompletionStatus = _completionStatusList.first; // Set default value
+    });
+  }
+
+  // Helper method to hide the completion status dropdown
+  void _hideCompletionStatusDropdown() {
+    setState(() {
+      selectedCompletionStatus = null;
+    });
   }
 }

@@ -11,13 +11,22 @@ class SyllabusTypeScreen extends StatefulWidget {
   final String? selectedQualification;
   final String? phoneNumber;
   final int? feesPerMonth;
+  final String? address;
+  final String? tuitionType;
+  final String? teachingExperience;
+  final String? degreeCompletionStatus;
 
-  const SyllabusTypeScreen({
-    Key? key,
-    this.selectedQualification,
-    this.phoneNumber,
-    this.feesPerMonth,
-  }) : super(key: key);
+  const SyllabusTypeScreen(
+      {Key? key,
+      required this.selectedQualification,
+      required this.phoneNumber,
+      required this.feesPerMonth,
+      required this.address, 
+      required this.teachingExperience, 
+      required this.tuitionType, 
+      required this.degreeCompletionStatus, 
+      })
+      : super(key: key);
 
   @override
   State<SyllabusTypeScreen> createState() => _SyllabusTypeScreenState();
@@ -29,12 +38,13 @@ class _SyllabusTypeScreenState extends State<SyllabusTypeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:const CustomAppBar(backgroundColor: appBarColor, title: "Select your syllabus Type"),
+      appBar: const CustomAppBar(
+          backgroundColor: appBarColor, title: "Select your syllabus Type"),
       body: Center(
         child: Padding(
-          padding:  EdgeInsets.all(16.w),
+          padding: EdgeInsets.all(16.w),
           child: Container(
-            padding:  EdgeInsets.all(16.w),
+            padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16.w),
@@ -56,21 +66,24 @@ class _SyllabusTypeScreenState extends State<SyllabusTypeScreen> {
                 _buildSyllabusTypeOption("Balochistan Borad"),
                 _buildSyllabusTypeOption("Karachi Board"),
                 _buildSyllabusTypeOption("Punjab Board"),
-    
-
                 CustomButton(
                   onTap: () {
-                    if (selectedSyllabusTypes.isNotEmpty && selectedSyllabusTypes.length <= 2) {
+                    if (selectedSyllabusTypes.isNotEmpty &&
+                        selectedSyllabusTypes.length <= 2) {
                       Get.to(() => GradeLevelScreen(
                             selectedQualification: widget.selectedQualification,
                             phoneNumber: widget.phoneNumber,
                             feesPerMonth: widget.feesPerMonth,
-                           selectedSyllabusTypes: selectedSyllabusTypes, 
+                            selectedSyllabusTypes: selectedSyllabusTypes,
+                            address: widget.address,
+                            teachingExperience: widget.teachingExperience,
+                            tuitionType: widget.tuitionType,
+                            degreeCompletionStatus: widget.degreeCompletionStatus,
                           ));
-
                     } else {
                       // Display an error message or take appropriate action
-                      showCustomToast("Please select at least one and at most two grades.");
+                      showCustomToast(
+                          "Please select at least one and at most two grades.");
                     }
                   },
                   width: 300,
@@ -82,8 +95,6 @@ class _SyllabusTypeScreenState extends State<SyllabusTypeScreen> {
             ),
           ),
         ),
-    
-    
       ),
     );
   }
@@ -110,13 +121,17 @@ class _SyllabusTypeScreenState extends State<SyllabusTypeScreen> {
         });
       },
       child: Container(
-        padding:  EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blueAccent : (isDisabled ? Colors.grey[300] : Colors.grey[200]),
+          color: isSelected
+              ? Colors.blueAccent
+              : (isDisabled ? Colors.grey[300] : Colors.grey[200]),
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
-              color: isSelected ? Colors.blueAccent.withOpacity(0.3) : Colors.transparent,
+              color: isSelected
+                  ? Colors.blueAccent.withOpacity(0.3)
+                  : Colors.transparent,
               spreadRadius: 2.r,
               blurRadius: 5.r,
               offset: const Offset(0, 3),
@@ -126,7 +141,9 @@ class _SyllabusTypeScreenState extends State<SyllabusTypeScreen> {
         child: Text(
           syllabusType,
           style: TextStyle(
-            color: isSelected ? Colors.white : (isDisabled ? Colors.grey[600] : Colors.black),
+            color: isSelected
+                ? Colors.white
+                : (isDisabled ? Colors.grey[600] : Colors.black),
             fontSize: 16.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -134,7 +151,4 @@ class _SyllabusTypeScreenState extends State<SyllabusTypeScreen> {
       ),
     );
   }
-
-
-
 }

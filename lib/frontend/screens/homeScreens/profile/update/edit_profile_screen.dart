@@ -22,7 +22,6 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _nameC;
-  late TextEditingController _address;
   late TextEditingController _city;
 
   File? _selectedImage;
@@ -49,7 +48,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void dispose() {
     _nameC.dispose();
-    _address.dispose();
+
     _city.dispose();
     super.dispose();
   }
@@ -57,12 +56,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _fetchUserInfoFromSharedPref() async {
     // Fetch user info from SharedPreferences
     name = UserPreferences.getName();
-    address = UserPreferences.getAddress();
     selectedCity = UserPreferences.getCity();
     profilePicUrl = UserPreferences.getProfileUrl();
     // Initialize the controllers after fetching data from SharedPreferences
     _nameC = TextEditingController(text: name);
-    _address = TextEditingController(text: address);
+   
     _city = TextEditingController(text: selectedCity);
 
     setState(() {
@@ -93,10 +91,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String name = _nameC.text.trim();
      // Capitalize the first letter of the name
     name = name.substring(0, 1).toUpperCase() + name.substring(1);
-    String address = _address.text.trim();
+    
     
 
-    if (name.isNotEmpty && address.isNotEmpty && selectedCity!=null ) {
+    if (name.isNotEmpty && selectedCity!=null ) {
       final accountProvider =
           Provider.of<ProfileProviders>(context, listen: false);
 
@@ -104,7 +102,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           name: name,
           imageUrl: _selectedImage,
           selectedCity: selectedCity!,
-          address: address);
+          address: "");
 
       if (mounted) {
         setState(() {
@@ -162,12 +160,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         keyBoardType: TextInputType.name,
                       ),
                       SizedBox(height: 20.h),
-                      HomeCustomTextField(
-                          controller: _address,
-                          labelText: "write your full address",
-                          icon: Icons.house,
-                          keyBoardType: TextInputType.text),
-                      SizedBox(height: 20.h),
+                  
+                      
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: CustomCitiesDropdown(

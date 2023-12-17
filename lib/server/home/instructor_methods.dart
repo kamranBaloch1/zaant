@@ -33,6 +33,10 @@ class InstructorMethods {
     required Map<String, List<String>> selectedDaysForSubjects,
     required List<String>? selectedGrades,
     required List<String>? selectedSyllabusTypes,
+    required String address,
+    required String teachingExperience,
+    required String tuitionType ,
+    required String degreeCompletionStatus
   }) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -45,7 +49,6 @@ class InstructorMethods {
       final city = UserPreferences.getCity() ?? "";
       final profilePicUrl = UserPreferences.getProfileUrl() ?? "";
       final gender = UserPreferences.getGender() ?? "";
-      final address = UserPreferences.getAddress() ?? "";
       String dobString =
           UserPreferences.getDob().toString(); // Replace with your logic
 
@@ -82,7 +85,10 @@ class InstructorMethods {
           gender: gender,
           dob: dob,
           selectedGradesLevel: selectedGrades!,
-          selectedSyllabusTypes: selectedSyllabusTypes!
+          selectedSyllabusTypes: selectedSyllabusTypes!,
+          teachingExperience: teachingExperience,
+          tuitionType: tuitionType,
+          degreeCompletionStatus:degreeCompletionStatus
           );
 
       await FirebaseFirestore.instance
@@ -116,7 +122,10 @@ class InstructorMethods {
   Future<void> verifyPhoneNumber({
     required String? phoneNumber,
     required String? selectedQualification,
+    required String? teachingExperience,
+    required String? tuitionType,
     required int? feesPerMonth,
+    required String? degreeCompletionStatus,
   }) async {
     try {
       // Check if the phone number is already associated with a user
@@ -152,6 +161,10 @@ class InstructorMethods {
                 phoneNumber: phoneNumber,
                 feesPerMonth: feesPerMonth,
                 selectedQualification: selectedQualification,
+                teachingExperience: teachingExperience,
+                tuitionType: tuitionType,
+                degreeCompletionStatus: degreeCompletionStatus,
+
               ));
         },
         codeAutoRetrievalTimeout: (String verificationId) {
@@ -425,22 +438,66 @@ class InstructorMethods {
       showCustomToast("error accoured while updating the fees");
     }
   }
+  // method to update instructor teaching experience
 
-  // method to update instructor qualification
-
-  Future<void> updateInstructorQualification(
-      {required String qualification}) async {
+  Future<void> updateTeachingExperience({required String teachingExperience}) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       await FirebaseFirestore.instance
           .collection(_collectionNamesFields.instructorsCollection)
           .doc(uid)
-          .update({"qualification": qualification});
-      showCustomToast("Qualification updated");
+          .update({"teachingExperience": teachingExperience});
+      showCustomToast("Experience updated");
       Get.offAll(() => const HomeScreen());
     } catch (e) {
-      showCustomToast("error accoured while updating the qualification");
+      showCustomToast("error accoured while updating the teaching experience");
+    }
+  }
+
+  // method to update instructor qualification
+
+Future<void> updateInstructorQualification({
+  required String qualification,
+  required String degreeCompletionStatus,
+}) async {
+  try {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    CollectionReference instructorsCollection =
+        FirebaseFirestore.instance.collection(_collectionNamesFields.instructorsCollection);
+    
+    // Check if qualification is selected
+    if (qualification.isNotEmpty) {
+      await instructorsCollection.doc(uid).update({"qualification": qualification});
+    }
+
+    // Check if degree completion status is selected
+    if (degreeCompletionStatus.isNotEmpty) {
+      await instructorsCollection.doc(uid).update({"degreeCompletionStatus": degreeCompletionStatus});
+    }
+
+    showCustomToast("Qualification updated");
+    Get.offAll(() => const HomeScreen());
+  } catch (e) {
+    showCustomToast("Error occurred while updating qualification");
+  }
+}
+
+// method to update instructor tuition type
+
+ Future<void> updateInstructorTuitionType(
+      {required String tuitionType}) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      await FirebaseFirestore.instance
+          .collection(_collectionNamesFields.instructorsCollection)
+          .doc(uid)
+          .update({"tuitionType": tuitionType});
+      showCustomToast("Tuition type updated");
+      Get.offAll(() => const HomeScreen());
+    } catch (e) {
+      showCustomToast("error accoured while updating the tuition type");
     }
   }
 

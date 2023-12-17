@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:zaanth/frontend/providers/home/instructor_provider.dart';
-import 'package:zaanth/frontend/screens/homeScreens/instructor/add/syllabus_types_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/add/add_instructor_address_screen.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/global/colors.dart';
@@ -15,6 +15,9 @@ class PhoneNumberOTPScreen extends StatefulWidget {
   final String? phoneNumber;
   final String? selectedQualification;
   final int? feesPerMonth;
+   final String? tuitionType;
+  final String? teachingExperience;
+  final String? degreeCompletionStatus;
 
   const PhoneNumberOTPScreen({
     Key? key,
@@ -22,6 +25,9 @@ class PhoneNumberOTPScreen extends StatefulWidget {
     required this.phoneNumber,
     required this.selectedQualification,
     required this.feesPerMonth,
+    required this.teachingExperience,
+    required this.tuitionType,
+    required this.degreeCompletionStatus,
   }) : super(key: key);
 
   @override
@@ -63,17 +69,14 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
         .then((isVerified) {
       if (isVerified) {
         // Navigate to the next screen after successful OTP verification
-
-        // Get.offAll(() => GradeLevelScreen(
-        //     selectedQualification: widget.selectedQualification,
-        //     phoneNumber: widget.phoneNumber,
-        //     feesPerMonth: widget.feesPerMonth
             
-        //     ));
-        Get.offAll(() => SyllabusTypeScreen(
+        Get.offAll(() => AddInstructorAddressScreen(
             selectedQualification: widget.selectedQualification,
             phoneNumber: widget.phoneNumber,
-            feesPerMonth: widget.feesPerMonth
+            feesPerMonth: widget.feesPerMonth,
+            teachingExperience: widget.teachingExperience,
+            tuitionType: widget.tuitionType,
+            degreeCompletionStatus: widget.degreeCompletionStatus,
             
             ));
        

@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -23,7 +22,6 @@ import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class InstructorDetailScreen extends StatefulWidget {
   final InstructorModel instructorModel;
 
@@ -31,12 +29,10 @@ class InstructorDetailScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<InstructorDetailScreen> createState() =>
-      _InstructorDetailScreenState();
+  State<InstructorDetailScreen> createState() => _InstructorDetailScreenState();
 }
 
 class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
-  
   bool isEnrolled = false;
   bool _isLoading = false;
   double rating = 0;
@@ -75,9 +71,6 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
       showCustomToast("please give a rating");
     }
   }
-
- 
-
 
   @override
   void initState() {
@@ -128,16 +121,14 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
     });
   }
 
-
-void _callInstructor(String phoneNumber) async {
-  String url = 'tel:$phoneNumber';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    showCustomToast("Could not launch dialer");
+  void _callInstructor(String phoneNumber) async {
+    String url = 'tel:$phoneNumber';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      showCustomToast("Could not launch dialer");
+    }
   }
-}
-
 
   void _showRatingDialog() {
     showDialog(
@@ -192,8 +183,6 @@ void _callInstructor(String phoneNumber) async {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -236,9 +225,9 @@ void _callInstructor(String phoneNumber) async {
                 ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
-                  icon: Icons.school,
-                  title: "Qualification",
-                  content: widget.instructorModel.qualification,
+                  icon: Icons.location_city,
+                  title: "City",
+                  content: widget.instructorModel.city,
                 ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
@@ -248,37 +237,49 @@ void _callInstructor(String phoneNumber) async {
                 ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
-                  icon: Icons.location_city,
-                  title: "City",
-                  content: widget.instructorModel.city,
-                ),
-                SizedBox(height: 16.h),
-                BuildInfoCardWidget(
                   icon: Icons.money,
                   title: "Fees per month",
                   content:
                       "PKR : ${widget.instructorModel.feesPerMonth.toString()}",
                 ),
                 SizedBox(height: 16.h),
-                
-                     BuildInfoCardWidget(
-          icon: Icons.book,
-          title: "Syllabus Type",
-          content: widget.instructorModel.selectedSyllabusTypes.isNotEmpty
-              ? widget.instructorModel.selectedSyllabusTypes.join(", ")
-              : "No Syllabus Type specified",
-        ),
-        SizedBox(height: 16.h),
-                
-                 BuildInfoCardWidget(
-          icon: Icons.grade,
-          title: "Grade Level",
-          content: widget.instructorModel.selectedGradesLevel.isNotEmpty
-              ? widget.instructorModel.selectedGradesLevel.join(", ")
-              : "No Grade Level specified",
-        ),
-        SizedBox(height: 16.h),
-            
+                BuildInfoCardWidget(
+                  icon: Icons.book,
+                  title: "Syllabus Type",
+                  content: widget
+                          .instructorModel.selectedSyllabusTypes.isNotEmpty
+                      ? widget.instructorModel.selectedSyllabusTypes.join(", ")
+                      : "No Syllabus Type specified",
+                ),
+                SizedBox(height: 16.h),
+                BuildInfoCardWidget(
+                  icon: Icons.grade,
+                  title: "Grade Level",
+                  content: widget.instructorModel.selectedGradesLevel.isNotEmpty
+                      ? widget.instructorModel.selectedGradesLevel.join(", ")
+                      : "No Grade Level specified",
+                ),
+                SizedBox(height: 16.h),
+                BuildInfoCardWidget(
+                  icon: Icons.school,
+                  title: "Qualification ",
+                  content:
+                      "${widget.instructorModel.qualification} (${widget.instructorModel.degreeCompletionStatus})",
+                ),
+                SizedBox(height: 16.h),
+                BuildInfoCardWidget(
+                  icon: Icons.work,
+                  title: "Teaching Experience",
+                  content:  widget.instructorModel.teachingExperience == "Fresher"
+      ? widget.instructorModel.teachingExperience
+      : "${widget.instructorModel.teachingExperience} Years",
+                ),
+                SizedBox(height: 16.h),
+                BuildInfoCardWidget(
+                  icon: Icons.book_online,
+                  title: "Tuition Type",
+                  content: widget.instructorModel.tuitionType,
+                ),
                 BuildInfoCardWidget(
                   icon: Icons.phone,
                   title: "Phone Number",
@@ -293,12 +294,12 @@ void _callInstructor(String phoneNumber) async {
                   content: widget.instructorModel.gender,
                 ),
                 SizedBox(height: 16.h),
-               BuildInfoCardWidget(
-  icon: Icons.cake,
-  title: "Age",
-  content:" ${ CalculateUserAge.calculateAge(widget.instructorModel.dob)?.toString()} Years" ,
-),
-
+                BuildInfoCardWidget(
+                  icon: Icons.cake,
+                  title: "Age",
+                  content:
+                      " ${CalculateUserAge.calculateAge(widget.instructorModel.dob)?.toString()} Years",
+                ),
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
                   icon: Icons.subject,
@@ -339,21 +340,21 @@ void _callInstructor(String phoneNumber) async {
                   },
                   child: const Text('Reviews'),
                 ),
-              
-                  SizedBox(height: 30.h),
+                SizedBox(height: 30.h),
                 isEnrolled
                     ? Align(
                         alignment: Alignment.bottomLeft,
                         child: CustomButton(
-                            onTap: (){
-                              _callInstructor(widget.instructorModel.phoneNumber);
+                            onTap: () {
+                              _callInstructor(
+                                  widget.instructorModel.phoneNumber);
                             },
                             width: 180,
                             height: 40,
                             text: "Call",
                             bgColor: Colors.blue))
                     : Container(),
-                      SizedBox(height: 20.h),
+                SizedBox(height: 20.h),
                 isEnrolled
                     ? Align(
                         alignment: Alignment.bottomLeft,
@@ -364,7 +365,6 @@ void _callInstructor(String phoneNumber) async {
                             text: "Remove",
                             bgColor: Colors.red))
                     : Container(),
-                     
               ],
             ),
           ),

@@ -80,7 +80,6 @@ class LoginMethods {
     await UserPreferences.setGender(userModel.gender!);
     await UserPreferences.setIsPhoneNumberVerified(
         userModel.isPhoneNumberVerified!);
-    await UserPreferences.setAddress(userModel.address!);
     await UserPreferences.setPhoneNumber(userModel.phoneNumber.toString());
  
 
