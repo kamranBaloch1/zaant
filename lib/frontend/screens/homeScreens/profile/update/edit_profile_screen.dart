@@ -80,8 +80,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _updateUserInfo() async {
     String name = _nameC.text.trim();
-    // Capitalize the first letter of the name
-    name = name.substring(0, 1).toUpperCase() + name.substring(1);
+   // Capitalize each word in the name
+name = name.split(' ').map((word) => word.substring(0, 1).toUpperCase() + word.substring(1)).join(' ');
+
 
     if (name.isNotEmpty) {
       if (selectedCity == null) {

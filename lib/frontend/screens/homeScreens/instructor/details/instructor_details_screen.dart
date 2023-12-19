@@ -223,6 +223,7 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
                     color: Colors.black,
                   ),
                 ),
+                
                 SizedBox(height: 16.h),
                 BuildInfoCardWidget(
                   icon: Icons.location_city,

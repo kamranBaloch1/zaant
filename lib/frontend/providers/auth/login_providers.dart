@@ -8,9 +8,9 @@ class LoginProviders extends ChangeNotifier {
 
   // Method to handle user login with email and password
   Future<void> loginWithEmailAndPasswordProvider(
-      String email, String password) async {
+     {required String email, required String password}) async {
     try {
-      await _loginMethods.loginWithEmailAndPassword(email, password);
+      await _loginMethods.loginWithEmailAndPassword(email: email,password: password);
       notifyListeners();
     } catch (e) {
       print("An error occurred. Please try again.");

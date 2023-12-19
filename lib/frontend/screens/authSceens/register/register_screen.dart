@@ -79,14 +79,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _registerUser() async {
-    
     final registerProvider =
         Provider.of<RegisterProviders>(context, listen: false);
 
     String email = _emailController.text.trim();
     String name = _nameController.text.trim();
-    // Capitalize the first letter of the name
-    name = name.substring(0, 1).toUpperCase() + name.substring(1);
+    // Capitalize each word in the name
+    name = name
+        .split(' ')
+        .map((word) => word.substring(0, 1).toUpperCase() + word.substring(1))
+        .join(' ');
+
     String password = _passwordController.text.trim();
 
     if (selectedDate != null && selectedGender != null) {
@@ -100,8 +103,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
 
         setState(() {
-      _isLoading = true;
-    });
+          _isLoading = true;
+        });
 
         await registerProvider.registerWithEmailAndPasswordProvider(
           email: email,
@@ -273,11 +276,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           });
                         }),
                   ),
-                
-                
-                
-                
-                
                   GestureDetector(
                     onTap: () {
                       Get.to(() => const LoginScreen());

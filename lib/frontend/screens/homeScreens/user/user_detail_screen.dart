@@ -87,14 +87,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   content: widget.userModel.email!,
                 ),
                 SizedBox(height: 16.h),
-                 BuildInfoCardWidget(
-                  icon: widget.userModel.gender == "male"
-                      ? Icons.boy
-                      : Icons.girl,
-                  title: "Gender",
-                  content: widget.userModel.gender.toString(),
-                ),
-         SizedBox(height: 16.h),
+                
           BuildInfoCardWidget(
   icon: Icons.cake,
   title: "Age",

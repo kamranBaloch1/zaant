@@ -10,8 +10,10 @@ import 'package:zaanth/sharedprefences/userPref.dart';
 class LoginMethods {
   // Method to handle user login with email and password
 
- final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
-  Future<void> loginWithEmailAndPassword(String email, String password) async {
+  final FirebaseCollectionNamesFields _collectionNamesFields =
+      FirebaseCollectionNamesFields();
+  Future<void> loginWithEmailAndPassword(
+      {required String email, required String password}) async {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
@@ -34,7 +36,8 @@ class LoginMethods {
             if (userModel.accountStatus!) {
               // Save user information to Shared Preferences
               await saveUserInfoToSharedPref(userModel);
-              await UserPreferences.setAccountType(userSnapshot.data()!["accountType"]);
+              await UserPreferences.setAccountType(
+                  userSnapshot.data()!["accountType"]);
 
               showCustomToast("Welcome back ${userModel.name}");
 
@@ -57,13 +60,8 @@ class LoginMethods {
           showCustomToast("No user found for this account");
         }
       }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        showCustomToast("No user found for that email.");
-      } else if (e.code == 'wrong-password') {
-        showCustomToast("Wrong password provided for that user.");
-       
-      }
+    } on FirebaseAuthException {
+      showCustomToast(" Invalid login credentials");
     }
   }
 
@@ -81,26 +79,20 @@ class LoginMethods {
     await UserPreferences.setIsPhoneNumberVerified(
         userModel.isPhoneNumberVerified!);
     await UserPreferences.setPhoneNumber(userModel.phoneNumber.toString());
- 
-
+    await UserPreferences.setCity(userModel.city!);
   }
 
- 
- // Method to reset user password
-Future<void> resetUserPassword(String email) async {
-  try {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  // Method to reset user password
+  Future<void> resetUserPassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
-    showCustomToast("We have sent a password reset link to this email address");
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      showCustomToast("No user found with this email address.");
-    } else {
+      showCustomToast(
+          "We have sent a password reset link to this email address");
+    } on FirebaseAuthException  {
+      showCustomToast("Invalid login credentials");
+    } catch (e) {
       showCustomToast("An error occurred. Please try again later.");
     }
-  } catch (e) {
-    showCustomToast("An error occurred. Please try again later.");
   }
-}
-
 }
