@@ -97,7 +97,7 @@ class _UpdateTeachingExperienceScreenState
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Update Teaching Experience",
+            title: "Change teaching experience",
           ),
           body: Column(
             children: [

@@ -157,7 +157,7 @@ class _UpdateSubjectsTimingsScreenState
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title:"Update timings for subjects",
+            title:"Change timings for subjects",
           ),
           body:  widget.selectedTimingsForSubjects.isEmpty
               ? Center(

@@ -65,6 +65,11 @@ class _UpdateChargesPerMonthState extends State<UpdateChargesPerMonth> {
     }
   }
 
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -72,7 +77,7 @@ class _UpdateChargesPerMonthState extends State<UpdateChargesPerMonth> {
         Scaffold(
           appBar: const  CustomAppBar(
             backgroundColor: appBarColor,
-            title:  "Update Fees Per Month",
+            title:  "Change fees per month",
           ),
           body: Column(
             children: [

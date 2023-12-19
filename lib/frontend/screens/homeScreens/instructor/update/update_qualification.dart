@@ -79,7 +79,7 @@ class _UpdateQualificationScreenState extends State<UpdateQualificationScreen> {
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Update Qualification",
+            title: "Change qualification",
           ),
           body: Column(
             children: [

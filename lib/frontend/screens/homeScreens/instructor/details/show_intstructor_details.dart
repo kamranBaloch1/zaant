@@ -81,6 +81,8 @@ class ShowInstructorDetailsScreen extends StatelessWidget {
                               teachingExperience: instructor.teachingExperience,
                               degreeCompletionStatus: instructor.degreeCompletionStatus,
                               tuitionType: instructor.tuitionType,
+                              address: instructor.address,
+                              selectedsyllabusTypes: instructor.selectedSyllabusTypes,
                         ));
                   },
                   width: 300,

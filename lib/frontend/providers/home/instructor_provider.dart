@@ -116,6 +116,20 @@ class InstructorProviders extends ChangeNotifier {
       print("An error occurred while updating tuition type.");
     }
   }
+  
+  // Update instructor address
+  Future<void> updateInstructorAddressProvider(
+      {required String address})async {
+    try {
+      await _instructorMethods.updateInstructorAddress(
+         address: address);
+      notifyListeners();
+    } catch (e) {
+      print("An error occurred while updating address");
+    }
+  }
+
+
 
   // Add new subjects
   Future<void> addNewSubjectsProvider({
@@ -289,7 +303,9 @@ class InstructorProviders extends ChangeNotifier {
     } catch (e) {
       print("Error removing grades");
     }
-  } // provider for updating instructor selected grades
+  } 
+  
+  // provider for updating instructor selected grades
 
   Future<void> updateSelectedGradesProvider(
       {required List<String> selectedNewGrades}) async {
@@ -301,4 +317,33 @@ class InstructorProviders extends ChangeNotifier {
       print("Error adding grades");
     }
   }
+// provider for removing instructor selected syllabus types
+  Future<void> removeSelectedSyllabusTypesProvider(
+      {required List<String> selectedSyllabusTypes}) async {
+    try {
+      await _instructorMethods.removeSelectedSyllabusTypes(
+          selectedSyllabusTypes: selectedSyllabusTypes);
+      ChangeNotifier();
+    } catch (e) {
+      print("Error removing syllabus types");
+    }
+  } 
+  
+  // provider for updating instructor selected grades
+  
+  Future<void> updateSelectedSyllabusTypesProvider(
+      {required List<String> selectedSyllabusTypes}) async {
+    try {
+      await _instructorMethods.updateSelectedSyllabusTypes(
+          selectedNewSyllabusTypes: selectedSyllabusTypes);
+      ChangeNotifier();
+    } catch (e) {
+      print("Error adding syllabus types");
+    }
+  }
+
+
+
+
+
 }

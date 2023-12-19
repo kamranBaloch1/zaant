@@ -49,7 +49,7 @@ class _RemoveSubjectsState extends State<RemoveSubjects> {
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Remove Subjects",
+            title: "Remove subjects",
           ),
           body: widget.subjectList.isEmpty
               ? Center(

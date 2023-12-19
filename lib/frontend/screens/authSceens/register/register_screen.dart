@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -15,11 +14,8 @@ import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/colors.dart';
 
-
 class RegisterScreen extends StatefulWidget {
-
   final XFile? profilePicImg;
-
 
   const RegisterScreen({
     Key? key,
@@ -45,7 +41,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final TextEditingController _dobController = TextEditingController();
- 
 
   @override
   void dispose() {
@@ -57,7 +52,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
- 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -85,47 +79,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _registerUser() async {
-    setState(() {
-      _isLoading = true;
-    });
+    
     final registerProvider =
         Provider.of<RegisterProviders>(context, listen: false);
 
     String email = _emailController.text.trim();
     String name = _nameController.text.trim();
-     // Capitalize the first letter of the name
+    // Capitalize the first letter of the name
     name = name.substring(0, 1).toUpperCase() + name.substring(1);
     String password = _passwordController.text.trim();
-    
-   
 
     if (selectedDate != null && selectedGender != null) {
       final DateTime now = DateTime.now();
       final DateTime minDate = DateTime(now.year - 4, now.month, now.day);
 
       if (selectedDate!.isBefore(minDate)) {
+        if (selectedCity == null) {
+          showCustomToast("please select your city");
+          return;
+        }
 
-       if(selectedCity==null){
-        showCustomToast("please select your city");
-        return;
+        setState(() {
+      _isLoading = true;
+    });
 
-       }
+        await registerProvider.registerWithEmailAndPasswordProvider(
+          email: email,
+          password: password,
+          photoUrl: widget.profilePicImg,
+          name: name,
+          gender: selectedGender,
+          dob: selectedDate,
+          city: selectedCity!,
+        );
 
-        await registerProvider
-            .registerWithEmailAndPasswordProvider(
-                email: email,
-                password: password,
-                photoUrl: widget.profilePicImg,
-                name: name,
-                gender: selectedGender,
-                dob: selectedDate,
-                city: selectedCity!,
-          )
-            .then((value) => {
-                  setState(() {
-                    _isLoading = false;
-                  })
-                });
+        setState(() {
+          _isLoading = false;
+        });
       } else {
         setState(() {
           _isLoading = false;
@@ -133,9 +123,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         showCustomToast("You must be older than 4 years to register.");
       }
     } else {
-      setState(() {
-        _isLoading = false;
-      });
       showCustomToast("Please select your gender and date of birth");
     }
   }
@@ -155,9 +142,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(
                     height: 80.h,
                   ),
-                 
-                
-                
                   CustomAuthTextField(
                     hintText: "Name",
                     icon: const Icon(Icons.person),
@@ -248,7 +232,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icons.person,
                   ),
                   SizedBox(height: 20.h),
-                 
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 30.w),
                     decoration: BoxDecoration(
@@ -278,7 +261,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-                    SizedBox(height: 20.h),
+                  SizedBox(height: 20.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: CustomCitiesDropdown(
@@ -290,8 +273,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           });
                         }),
                   ),
-                 
-                 
+                
+                
+                
+                
+                
                   GestureDetector(
                     onTap: () {
                       Get.to(() => const LoginScreen());

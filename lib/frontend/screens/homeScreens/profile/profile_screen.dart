@@ -24,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? name;
   String? email;
   String? profileUrl;
+  String? city;
   String? accountType;
   String? phoneNumber;
   bool? isPhoneNumberVerified;
@@ -62,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     formattedDate = DateFormat('yyyy-MM-dd').format(dob!);
     accountType = UserPreferences.getAccountType();
     uid = UserPreferences.getUid();
+    city = UserPreferences.getCity();
   }
 
   @override
@@ -129,6 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         _buildUserInfoRow("Name", name!),
                         _buildUserInfoRow("Email", email!),
+                        _buildUserInfoRow("City", city!),
                         _buildUserInfoRow(
                             "Date of Birth",
                             formattedDate! +

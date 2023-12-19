@@ -39,7 +39,7 @@ class ProfileMethods {
       {required String name,
       required File? imageUrl,
       required String selectedCity,
-      required String address}) async {
+    }) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
@@ -53,7 +53,6 @@ class ProfileMethods {
       Map<String, dynamic> updateData = {
         'name': name,
         'city': selectedCity,
-        'address': address,
       };
 
       if (downloadUrl != null) {

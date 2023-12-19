@@ -221,82 +221,86 @@ class InstructorMethods {
 
 // method to fecth the instrctors for user search
 
-  Future<List<Map<String, dynamic>>> searchInstructors({
-    required String address,
-    required String gender,
-    required int minPrice,
-    required int maxPrice,
-    required List<String> subjects,
-    required List<String> selectedGradesLevel,
-    required List<String> selectedSyllabusTypes
-  }) async {
-    CollectionReference instructors = FirebaseFirestore.instance
-        .collection(_collectionNamesFields.instructorsCollection);
+ Future<List<Map<String, dynamic>>> searchInstructors({
+  required String address,
+  required String gender,
+  required int minPrice,
+  required int maxPrice,
+  required List<String> subjects,
+  required List<String> selectedGradesLevel,
+  required List<String> selectedSyllabusTypes,
+  required String city,
+}) async {
+  CollectionReference instructors =
+      FirebaseFirestore.instance.collection(_collectionNamesFields.instructorsCollection);
 
-    try {
-      // Construct a single query with basic conditions
-      Query query = instructors;
+  try {
+    // Construct a single query with basic conditions
+    Query query = instructors;
 
-      if (gender.isNotEmpty) {
-        query = query.where('gender', isEqualTo: gender);
-      }
-
-      if (minPrice > 0 || maxPrice < double.infinity) {
-        query = query.where('feesPerMonth', isGreaterThanOrEqualTo: minPrice);
-
-        if (maxPrice < double.infinity) {
-          query = query.where('feesPerMonth', isLessThanOrEqualTo: maxPrice);
-        }
-      }
-
-      QuerySnapshot querySnapshot = await query.get();
-
-      // Convert documents to a list of Map<String, dynamic>
-      List<Map<String, dynamic>> searchResults = querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
-
-      // Apply additional filtering for subjects and grades and syllabus type locally
-      searchResults = searchResults.where((doc) {
-        bool subjectFilter = subjects.isEmpty ||
-            subjects.any((subject) => doc['subjects'].contains(subject));
-        bool gradeFilter = selectedGradesLevel.isEmpty ||
-            selectedGradesLevel
-                .any((grade) => doc['selectedGradesLevel'].contains(grade));
-        bool syllabusTypeFilter = selectedSyllabusTypes.isEmpty ||
-            selectedSyllabusTypes
-                .any((syllabus) => doc['selectedSyllabusTypes'].contains(syllabus));
-        return subjectFilter && gradeFilter && syllabusTypeFilter;
-      }).toList();
-
-      // If addressing is provided, filter the results based on Levenshtein distance
-      if (address.isNotEmpty) {
-        searchResults = searchResults
-            .where((doc) => _isAddressFuzzyMatch(address, doc['address'], 3))
-            .toList();
-      }
-
-      return searchResults;
-    } catch (e) {
-      // Handle errors, e.g., show an error message
-      
-      showCustomToast('Error during search');
-    
-      return [];
+    if (gender.isNotEmpty) {
+      query = query.where('gender', isEqualTo: gender);
     }
-  }
 
+    if (minPrice > 0 || maxPrice < double.infinity) {
+      query = query.where('feesPerMonth', isGreaterThanOrEqualTo: minPrice);
+
+      if (maxPrice < double.infinity) {
+        query = query.where('feesPerMonth', isLessThanOrEqualTo: maxPrice);
+      }
+    }
+
+    if (city.isNotEmpty) {
+      query = query.where('city', isEqualTo: city);
+    }
+
+    QuerySnapshot querySnapshot = await query.get();
+
+    // Convert documents to a list of Map<String, dynamic>
+    List<Map<String, dynamic>> searchResults = querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+
+    // Apply additional filtering for subjects and grades and syllabus type locally
+    searchResults = searchResults.where((doc) {
+      bool subjectFilter = subjects.isEmpty || subjects.any((subject) => doc['subjects'].contains(subject));
+      bool gradeFilter = selectedGradesLevel.isEmpty ||
+          selectedGradesLevel.any((grade) => doc['selectedGradesLevel'].contains(grade));
+      bool syllabusTypeFilter = selectedSyllabusTypes.isEmpty ||
+          selectedSyllabusTypes.any((syllabus) => doc['selectedSyllabusTypes'].contains(syllabus));
+      return subjectFilter && gradeFilter && syllabusTypeFilter;
+    }).toList();
+
+    // If addressing is provided, filter the results based on Levenshtein distance
+    if (address.isNotEmpty) {
+      searchResults = searchResults
+          .where((doc) => _isAddressFuzzyMatch(address, doc['address'], 3))
+          .toList();
+    }
+
+    return searchResults;
+  } catch (e) {
+    // Handle errors, e.g., show an error message
+    showCustomToast('Error during search');
+    return [];
+  }
+}
+
+ 
 // part of  searchInstructors method code
-  bool _isAddressFuzzyMatch(
-      String userInput, String actualAddress, int maxDistance) {
-    userInput = userInput.toLowerCase();
-    actualAddress = actualAddress.toLowerCase();
+bool _isAddressFuzzyMatch(String userInput, String actualAddress, int maxDistance) {
+  userInput = userInput.toLowerCase();
+  actualAddress = actualAddress.toLowerCase();
 
-    final int distance =
-        _calculateLevenshteinDistance(userInput, actualAddress);
-
-    return distance <= maxDistance;
+  // Check for partial match
+  if (actualAddress.contains(userInput)) {
+    return true;
   }
+
+  final int distance = _calculateLevenshteinDistance(userInput, actualAddress);
+
+  return distance <= maxDistance;
+}
 
 // part of  searchInstructors method code
   int _calculateLevenshteinDistance(String a, String b) {
@@ -438,6 +442,25 @@ class InstructorMethods {
       showCustomToast("error accoured while updating the fees");
     }
   }
+  
+  // method to update instructor address
+
+  Future<void> updateInstructorAddress({required String address}) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      await FirebaseFirestore.instance
+          .collection(_collectionNamesFields.instructorsCollection)
+          .doc(uid)
+          .update({"address": address});
+      showCustomToast("Address updated");
+      Get.offAll(() => const HomeScreen());
+    } catch (e) {
+      showCustomToast("error accoured while updating the address");
+    }
+  }
+  
+  
   // method to update instructor teaching experience
 
   Future<void> updateTeachingExperience({required String teachingExperience}) async {
@@ -569,7 +592,7 @@ Future<void> updateInstructorQualification({
     } catch (e) {
       if (e.toString().contains("Subject")) {
         showCustomToast(
-            "One or more subjects already exist. Please choose different subjects.");
+            "One or more subjects already exist with same name. Please choose different subjects.");
       } else {
         showCustomToast("error occurred while adding a new subject.");
       }
@@ -577,66 +600,73 @@ Future<void> updateInstructorQualification({
   }
 
 // method to remove instructor subjects
-  Future<void> removeSubjects({
-    required List<String> subjectsToRemove,
-  }) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        throw Exception("User not authenticated.");
-      }
-
-      final uid = user.uid;
-
-      final instructorDocRef = FirebaseFirestore.instance
-          .collection(_collectionNamesFields.instructorsCollection)
-          .doc(uid);
-
-      final instructorDoc = await instructorDocRef.get();
-      final existingSubjects =
-          (instructorDoc.data()?['subjects'] as List<dynamic>)
-              .map((e) => e.toString())
-              .toList();
-
-      final subjectsNotInCollection = subjectsToRemove
-          .where((subject) => !existingSubjects.contains(subject))
-          .toList();
-
-      if (subjectsNotInCollection.isNotEmpty) {
-        throw Exception(
-            "Subjects not found: ${subjectsNotInCollection.join(', ')}");
-      }
-
-      final updatedSubjects = existingSubjects
-          .where((subject) => !subjectsToRemove.contains(subject))
-          .toList();
-
-      final Map<String, dynamic> existingTimings = instructorDoc
-          .data()?['selectedTimingsForSubjects'] as Map<String, dynamic>;
-      final Map<String, dynamic> existingDays = instructorDoc
-          .data()?['selectedDaysForSubjects'] as Map<String, dynamic>;
-
-      for (final subjectToRemove in subjectsToRemove) {
-        existingTimings.remove(subjectToRemove);
-        existingDays.remove(subjectToRemove);
-      }
-
-      await instructorDocRef.update({
-        "subjects": updatedSubjects,
-        "selectedTimingsForSubjects": existingTimings,
-        "selectedDaysForSubjects": existingDays,
-      });
-
-      showCustomToast("Subjects removed successfully");
-      Get.offAll(() => const HomeScreen());
-    } catch (e) {
-      if (e.toString().contains("Subjects not found")) {
-        showCustomToast("$e. Please choose existing subjects.");
-      } else {
-        showCustomToast("error occurred while removing subjects.");
-      }
+Future<void> removeSubjects({
+  required List<String> subjectsToRemove,
+}) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception("User not authenticated.");
     }
+
+    final uid = user.uid;
+
+    final instructorDocRef = FirebaseFirestore.instance
+        .collection(_collectionNamesFields.instructorsCollection)
+        .doc(uid);
+
+    final instructorDoc = await instructorDocRef.get();
+    final existingSubjects =
+        (instructorDoc.data()?['subjects'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+
+    final remainingSubjects = existingSubjects.length - subjectsToRemove.length;
+
+    if (remainingSubjects < 1) {
+      showCustomToast("At least one subject must be present.");
+      return;
+    }
+
+    final subjectsNotInCollection = subjectsToRemove
+        .where((subject) => !existingSubjects.contains(subject))
+        .toList();
+
+    if (subjectsNotInCollection.isNotEmpty) {
+      showCustomToast(
+          "Subjects not found: ${subjectsNotInCollection.join(', ')}");
+      return;
+    }
+
+    final updatedSubjects = existingSubjects
+        .where((subject) => !subjectsToRemove.contains(subject))
+        .toList();
+
+    final Map<String, dynamic> existingTimings =
+        instructorDoc.data()?['selectedTimingsForSubjects'] as Map<String, dynamic>;
+    final Map<String, dynamic> existingDays =
+        instructorDoc.data()?['selectedDaysForSubjects'] as Map<String, dynamic>;
+
+    for (final subjectToRemove in subjectsToRemove) {
+      existingTimings.remove(subjectToRemove);
+      existingDays.remove(subjectToRemove);
+    }
+
+    await instructorDocRef.update({
+      "subjects": updatedSubjects,
+      "selectedTimingsForSubjects": existingTimings,
+      "selectedDaysForSubjects": existingDays,
+    });
+
+    showCustomToast("Subjects removed successfully");
+    Get.offAll(() => const HomeScreen());
+  } catch (e) {
+    showCustomToast("Error occurred while removing subjects.");
   }
+}
+
+
+
 
 // method to add instructor review
   Future<void> addInstructorReview({
@@ -972,4 +1002,135 @@ Future<void> updateInstructorQualification({
       showCustomToast('Error adding grades');
     }
   }
+
+
+  // Method to remove instructor syllabus types
+  Future<void> removeSelectedSyllabusTypes(
+      {required List<String> selectedSyllabusTypes}) async {
+    try {
+      // Access the Firestore instance
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Reference to the instructor collection
+      CollectionReference instructors =
+          firestore.collection(_collectionNamesFields.instructorsCollection);
+
+      // Update the document with the specified user ID
+      DocumentReference instructorDoc =
+          instructors.doc(FirebaseAuth.instance.currentUser!.uid);
+
+      // Get the current data
+      DocumentSnapshot instructorSnapshot = await instructorDoc.get();
+      Map<String, dynamic>? userData =
+          instructorSnapshot.data() as Map<String, dynamic>?;
+
+      // Check if the user data exists
+      if (userData != null) {
+        // Get the current selectedSyllabusTypes list
+        List<String> currentSyllabusTypes =
+            List<String>.from(userData['selectedSyllabusTypes'] ?? []);
+
+        // Check if the list is empty before removal
+        if (currentSyllabusTypes.isEmpty) {
+          showCustomToast("At least one syllabus type must be selected.");
+          return; // Stop execution if no syllabus types are selected
+        }
+
+        // Check if there is only one syllabus type after removal
+        if (currentSyllabusTypes.length == 1) {
+          showCustomToast(
+              "At least one syllabus type must be present in your profile.");
+          return; // Stop execution if trying to remove all values
+        }
+
+        // Remove selected syllabus types
+        currentSyllabusTypes
+            .removeWhere((type) => selectedSyllabusTypes.contains(type));
+
+        // Update the selectedSyllabusTypes list in the document
+        await instructorDoc
+            .update({'selectedSyllabusTypes': currentSyllabusTypes});
+
+        showCustomToast("Syllabus types updated");
+        // Navigate to the HomeScreen if more than one syllabus type remains
+        Get.offAll(() => const HomeScreen());
+      }
+    } catch (e) {
+      showCustomToast('Error removing syllabus types');
+      // Handle errors as needed
+    }
+  }
+
+  // Method to update instructor syllabus types
+  Future<void> updateSelectedSyllabusTypes(
+      {required List<String> selectedNewSyllabusTypes}) async {
+    try {
+      // Access the Firestore instance
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Reference to the instructor collection
+      CollectionReference instructors =
+          firestore.collection(_collectionNamesFields.instructorsCollection);
+
+      // Update the document with the specified user ID
+      DocumentReference instructorDoc =
+          instructors.doc(FirebaseAuth.instance.currentUser!.uid);
+
+      // Get the current data
+      DocumentSnapshot instructorSnapshot = await instructorDoc.get();
+      Map<String, dynamic>? userData =
+          instructorSnapshot.data() as Map<String, dynamic>?;
+
+      // Check if the user data exists
+      if (userData != null) {
+        // Get the current selectedSyllabusTypes list
+        List<String> currentSelectedSyllabusTypes =
+            List<String>.from(userData['selectedSyllabusTypes'] ?? []);
+
+        // Check if the selectedSyllabusTypes list already has two values
+        if (currentSelectedSyllabusTypes.length == 2) {
+          showCustomToast("You can only add up to two syllabus types.");
+          return; // Stop execution if two syllabus types are already present
+        }
+
+        // Check for duplicates
+        for (String syllabusType in selectedNewSyllabusTypes) {
+          if (currentSelectedSyllabusTypes.contains(syllabusType)) {
+            showCustomToast(
+                "Syllabus type '$syllabusType' is already present.");
+            return; // Stop execution if a duplicate syllabus type is found
+          }
+        }
+
+        // Add selected syllabus types to the current list
+        currentSelectedSyllabusTypes.addAll(selectedNewSyllabusTypes);
+
+        // Update the selectedSyllabusTypes list in the document
+        await instructorDoc
+            .update({'selectedSyllabusTypes': currentSelectedSyllabusTypes});
+
+        showCustomToast("New syllabus type added successfully");
+        Get.offAll(() => const HomeScreen());
+      }
+    } catch (e) {
+      showCustomToast('Error adding syllabus types');
+      // Handle errors as needed
+    }
+  }
+
+  // Other methods and class members can be added here
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

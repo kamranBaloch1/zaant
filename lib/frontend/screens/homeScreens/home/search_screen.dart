@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zaanth/frontend/screens/homeScreens/home/search_result_screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
 
 import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/pick_subejcts_dropdown.dart'; // Import the new PickGradeLevelsDropdown widget
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
@@ -22,11 +23,13 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   List<String> _selectedSubjects = [];
   String? _selectedGender;
-  List<String> _selectedGradeLevels = [];
-  List<String> _selectedSyllabusTypes = [];
+  String? selectedCity;
+  final List<String> _selectedGradeLevels = [];
+  final List<String> _selectedSyllabusTypes = [];
   final TextEditingController _minPriceController = TextEditingController();
   final TextEditingController _maxPriceController = TextEditingController();
   final TextEditingController _searchFieldController = TextEditingController();
+
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   List<String> selectedGrades = [];
@@ -47,6 +50,21 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Card(
+                       elevation: 5.0,
+                      margin: EdgeInsets.symmetric(vertical: 10.h),
+                      child: Padding(
+                         padding: EdgeInsets.all(16.w),
+                        child: CustomCitiesDropdown(
+                            selectedCity: selectedCity,
+                            labelText: "Select city",
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCity = value;
+                              });
+                            }),
+                      ),
+                    ),
                     Card(
                       elevation: 5.0,
                       margin: EdgeInsets.symmetric(vertical: 10.h),
@@ -250,9 +268,9 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           bottomNavigationBar: ElevatedButton(
             onPressed: () async {
-              if (_formKey.currentState!.validate()) {
+           
                 await _performSearch(context);
-              }
+            
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -302,7 +320,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildGradeLevelWidget(String gradeLevel) {
     bool isSelected = _selectedGradeLevels.contains(gradeLevel);
-    bool isDisabled = _selectedGradeLevels.length >= 1 && !isSelected;
+    bool isDisabled = _selectedGradeLevels.isNotEmpty && !isSelected;
 
     return InkWell(
       onTap: () {
@@ -312,9 +330,9 @@ class _SearchScreenState extends State<SearchScreen> {
             return;
           }
 
-   if(_selectedSyllabusTypes.isEmpty){
-              showCustomToast("Please select an syllabus Type");
-              return;
+          if (_selectedSyllabusTypes.isEmpty) {
+            showCustomToast("Please select an syllabus Type");
+            return;
           }
           if (isSelected) {
             // Deselect the grade if it's already selected
@@ -369,9 +387,6 @@ class _SearchScreenState extends State<SearchScreen> {
             return;
           }
 
-         
-        
-
           if (isSelected) {
             // Deselect the grade if it's already selected
             _selectedSyllabusTypes.remove(syllabusType);
@@ -421,6 +436,12 @@ class _SearchScreenState extends State<SearchScreen> {
     int maxPrice =
         int.tryParse(_maxPriceController.text.trim()) ?? (1 << 63) - 1;
 
+
+        if(selectedCity==null){
+          showCustomToast("please select an city to search");
+          return;
+        }
+
     try {
       setState(() {
         _isLoading = true;
@@ -439,6 +460,7 @@ class _SearchScreenState extends State<SearchScreen> {
         subjects: _selectedSubjects,
         selectedGradesLevel: _selectedGradeLevels,
         selectedSyllabusTypes: _selectedSyllabusTypes,
+        city: selectedCity!
       );
 
       // Update the stream with the search results

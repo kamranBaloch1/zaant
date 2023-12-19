@@ -66,7 +66,7 @@ class _NewSubjectDaysScreenState extends State<NewSubjectDaysScreen> {
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Select Subject Days",
+            title: "Select subject days",
           ),
           body: ListView.builder(
             itemCount:

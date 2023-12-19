@@ -10,14 +10,14 @@ class ProfileProviders extends ChangeNotifier {
       {required String name,
       required File? imageUrl,
       required String selectedCity,
-      required String address}) async {
+      }) async {
     try {
       // Call the corresponding method from the profile methods class
       await _profileMethods.updateUserInformation(
           name: name,
           imageUrl: imageUrl,
           selectedCity: selectedCity,
-          address: address);
+        );
 
       // Notify any listeners (typically, UI widgets) that the data has changed
       notifyListeners();

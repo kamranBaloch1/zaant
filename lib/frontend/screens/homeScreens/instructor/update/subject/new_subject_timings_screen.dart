@@ -130,7 +130,7 @@ class _AddNewSubjectTimingsScreenState
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Select Timings for Subjects",
+            title: "Select timings for subjects",
           ),
           body: Column(
             children: [

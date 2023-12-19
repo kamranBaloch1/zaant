@@ -3,12 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_address.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_charges_per_month.dart';
-import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_grade_level_Screen.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_grade_level.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_qualification.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_subjects.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_subjects_days.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_subjects_timings.dart';
+import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_syllabus_types.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_teaching_experience.dart';
 import 'package:zaanth/frontend/screens/homeScreens/instructor/update/update_tuition_type.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_appbar.dart';
@@ -24,6 +26,8 @@ class UpdateInstrctorOptionsScreen extends StatefulWidget {
   final String? teachingExperience;
   final String? degreeCompletionStatus; 
   final String? tuitionType; 
+  final String? address; 
+  final List<String>? selectedsyllabusTypes;
 
   const UpdateInstrctorOptionsScreen({
     Key? key,
@@ -36,6 +40,8 @@ class UpdateInstrctorOptionsScreen extends StatefulWidget {
     required this.teachingExperience,
     required this.degreeCompletionStatus, 
     required this.tuitionType, 
+    required this.address, 
+    required this.selectedsyllabusTypes, 
   }) : super(key: key);
 
   @override
@@ -79,14 +85,20 @@ class _UpdateInstrctorOptionsScreenState
               _buildListTile(Icons.school, 'Change qualification', () {
                 Get.to(() => UpdateQualificationScreen(selectedQualification: widget.qualification,degreeCompletionStatus: widget.degreeCompletionStatus,));
               }),
-              _buildListTile(Icons.grade, 'Change grade Level', () {
+              _buildListTile(Icons.grade, 'Change grade level', () {
                 Get.to(() => UpdateGradeLevelScreen(selectedGradeLevel: widget.selectedGradeLevel,));
               }),
-              _buildListTile(Icons.grade, 'Change teaching experience ', () {
+              _buildListTile(Icons.work, 'Change teaching experience ', () {
                 Get.to(() => UpdateTeachingExperienceScreen( teachingExperience: widget.teachingExperience,));
               }),
-              _buildListTile(Icons.grade, 'Change tuition type ', () {
+              _buildListTile(Icons.book_online, 'Change tuition type ', () {
                 Get.to(() => UpdateTuitionTypeScreen( tuitionType: widget.tuitionType,));
+              }),
+              _buildListTile(Icons.location_on, 'Change address ', () {
+                Get.to(() => UpdateAdressScreen( address: widget.address,));
+              }),
+              _buildListTile(Icons.book, 'Change syllabus type ', () {
+                Get.to(() => UpdateSyllabusTypesScreen( selectedsyllabusTypes: widget.selectedsyllabusTypes,));
               }),
             ],
           ),

@@ -7,7 +7,6 @@ import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_loading_overlay.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/colors.dart';
-import 'package:zaanth/server/home/instructor_methods.dart';
 
 class UpdateGradeLevelScreen extends StatefulWidget {
   final List<String>? selectedGradeLevel;
@@ -42,29 +41,26 @@ class _UpdateGradeLevelScreenState extends State<UpdateGradeLevelScreen> {
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Update your grade level",
+            title: "Change your grade level",
           ),
-          body: 
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.h),
-                    _buildPanel(
-                      index: 0,
-                      title: "Remove a Grade Level",
-                      body: _buildRemoveGradeLevelPanel,
-                    ),
-                    SizedBox(height: 10.h),
-                    _buildPanel(
-                      index: 1,
-                      title: "Add new Grade Level",
-                      body: _buildAddGradeLevelPanel,
-                    ),
-                  ],
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 20.h),
+                _buildPanel(
+                  index: 0,
+                  title: "Remove a Grade Level",
+                  body: _buildRemoveGradeLevelPanel,
                 ),
-              ),
-              
-        
+                SizedBox(height: 10.h),
+                _buildPanel(
+                  index: 1,
+                  title: "Add new Grade Level",
+                  body: _buildAddGradeLevelPanel,
+                ),
+              ],
+            ),
+          ),
         ),
 
         // loading bar when isLoading is true
@@ -169,7 +165,7 @@ class _UpdateGradeLevelScreenState extends State<UpdateGradeLevelScreen> {
 
   Widget _buildGradeLevelOption(String gradeLevel) {
     bool isSelected = selectedNewGrades.contains(gradeLevel);
-    bool isDisabled = selectedNewGrades.length >= 1 && !isSelected;
+    bool isDisabled = selectedNewGrades.isNotEmpty && !isSelected;
 
     return InkWell(
       onTap: () {
@@ -263,16 +259,12 @@ class _UpdateGradeLevelScreenState extends State<UpdateGradeLevelScreen> {
       await Provider.of<InstructorProviders>(context, listen: false)
           .updateSelectedGradesProvider(selectedNewGrades: selectedNewGrades);
 
-      await InstructorMethods().updateSelectedGrades(
-          selectedNewGrades: selectedNewGrades);
-if(mounted){
-
-  
-      setState(() {
-        selectedNewGrades.clear();
-        _isLoading = false;
-      });
-}
+      if (mounted) {
+        setState(() {
+          selectedNewGrades.clear();
+          _isLoading = false;
+        });
+      }
     } else {
       showCustomToast("Please select at least one grade.");
     }

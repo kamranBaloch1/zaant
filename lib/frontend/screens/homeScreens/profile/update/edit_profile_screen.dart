@@ -22,17 +22,14 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _nameC;
-  late TextEditingController _city;
 
   File? _selectedImage;
 
   String? profilePicUrl;
   String? name;
-  String? address;
 
   String? selectedCity;
-  bool _isShimmerLoading = true;
-  bool _isLoading = false;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -49,7 +46,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void dispose() {
     _nameC.dispose();
 
-    _city.dispose();
     super.dispose();
   }
 
@@ -58,13 +54,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     name = UserPreferences.getName();
     selectedCity = UserPreferences.getCity();
     profilePicUrl = UserPreferences.getProfileUrl();
+
     // Initialize the controllers after fetching data from SharedPreferences
     _nameC = TextEditingController(text: name);
-   
-    _city = TextEditingController(text: selectedCity);
 
     setState(() {
-      _isShimmerLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -84,25 +79,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _updateUserInfo() async {
-    setState(() {
-      _isLoading = true;
-    });
-
     String name = _nameC.text.trim();
-     // Capitalize the first letter of the name
+    // Capitalize the first letter of the name
     name = name.substring(0, 1).toUpperCase() + name.substring(1);
-    
-    
 
-    if (name.isNotEmpty && selectedCity!=null ) {
+    if (name.isNotEmpty) {
+      if (selectedCity == null) {
+        showCustomToast("please select your city");
+        return;
+      }
+      setState(() {
+        _isLoading = true;
+      });
+
       final accountProvider =
           Provider.of<ProfileProviders>(context, listen: false);
 
       await accountProvider.updateUserInformationProvider(
-          name: name,
-          imageUrl: _selectedImage,
-          selectedCity: selectedCity!,
-          address: "");
+        name: name,
+        imageUrl: _selectedImage,
+        selectedCity: selectedCity!,
+      );
 
       if (mounted) {
         setState(() {
@@ -115,7 +112,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _isLoading = false;
         });
       }
-      showCustomToast("Please fill out all the fields");
+      showCustomToast("Please write your name");
     }
   }
 
@@ -141,10 +138,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       children: [
         Scaffold(
           appBar: const CustomAppBar(
-            title:  "Edit Profile",
+            title: "Edit Profile",
             backgroundColor: appBarColor,
           ),
-          body: _isShimmerLoading
+          body: _isLoading
               ? Container()
               : SingleChildScrollView(
                   padding: EdgeInsets.all(16.w),
@@ -160,23 +157,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         keyBoardType: TextInputType.name,
                       ),
                       SizedBox(height: 20.h),
-                  
-                      
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: CustomCitiesDropdown(
-                            selectedCity: selectedCity,
-                            labelText: "Change your city",
-                            onChanged: (value) {
-                              setState(() {
-                                selectedCity = value;
-                              });
-                            }),
+                          selectedCity: selectedCity,
+                          labelText: "Change your city",
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCity = value;
+                            });
+                          },
+                        ),
                       ),
                       SizedBox(height: 40.h),
                       Center(
                         child: ElevatedButton(
-                          onPressed: _isLoading ? null : _updateUserInfo,
+                          onPressed: _updateUserInfo,
                           child: const Text('Save Changes'),
                         ),
                       ),
@@ -186,7 +182,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         // Show loading overlay if Loading is true
         if (_isLoading) const CustomLoadingOverlay(),
-        if (_isShimmerLoading) const CustomLoadingOverlay(),
       ],
     );
   }

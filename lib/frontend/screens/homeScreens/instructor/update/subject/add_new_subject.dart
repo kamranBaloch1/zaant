@@ -37,7 +37,7 @@ class _AddNewSubjectForInstructorScreenState
     return Scaffold(
       appBar: const  CustomAppBar(
         backgroundColor: appBarColor,
-        title:'Add new Subject',
+        title:'Add new subject',
       ),
       body: Column(
         children: [

@@ -92,7 +92,7 @@ void _updateSelectedDays() {
         Scaffold(
           appBar: const CustomAppBar(
             backgroundColor: appBarColor,
-            title: "Update Subject Days",
+            title: "Change subject days",
           ),
           body: widget.selectedDaysOfSubjects.isEmpty
               ? Center(

@@ -69,7 +69,7 @@ class _UpdateTuitionTypeScreenState extends State<UpdateTuitionTypeScreen> {
       children: [
         Scaffold(
           appBar: const CustomAppBar(
-              backgroundColor: appBarColor, title: "Update tuition type"),
+              backgroundColor: appBarColor, title: "Change tuition type"),
           body: Column(
             children: [
               SizedBox(height: 40.h),

@@ -18,17 +18,19 @@ class SearchResultScreen extends StatelessWidget {
   Widget _buildInstructorTile(Map<String, dynamic> instructorData) {
     // Extract instructor information
     final String instructorName = instructorData['name'];
-    final String instructorLocation = instructorData['address'];
+    final String instructorAddress = instructorData['address'];
     final String instructorProfilePicUrl = instructorData['profilePicUrl'];
     final String city = instructorData['city'];
     final String gender = instructorData['gender'];
     final double instructorRating = instructorData['ratings'] ?? 0.0;
-    final List<String> subjects = List<String>.from(instructorData['subjects'] ?? []);
+    final List<String> subjects =
+        List<String>.from(instructorData['subjects'] ?? []);
 
     return GestureDetector(
       onTap: () {
         // Navigate to the detailed instructor screen
-        Get.to(()=> InstructorDetailScreen(instructorModel: InstructorModel.fromMap(instructorData)));
+        Get.to(() => InstructorDetailScreen(
+            instructorModel: InstructorModel.fromMap(instructorData)));
       },
       child: ListTile(
         title: Text(
@@ -38,18 +40,25 @@ class SearchResultScreen extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              width: 10.w,
+            ),
+            Text(
+              instructorAddress,
+              style: const TextStyle(color: Colors.black45),
+            ),
             Row(
               children: [
+                const Text(
+                  'City: ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Text(
                   city,
-                  style: const TextStyle(color: Colors.black54),
-                ),
-                SizedBox(
-                  width: 10.w,
-                ),
-                Text(
-                  instructorLocation,
-                  style: const TextStyle(color: Colors.black45),
+                  style: const TextStyle(color: Colors.black),
                 ),
               ],
             ),
@@ -127,7 +136,7 @@ class SearchResultScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // Show a loading indicator while data is being fetched
-              return  const Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -148,11 +157,11 @@ class SearchResultScreen extends StatelessWidget {
                 ),
               );
             } else {
-              return  Center(
+              return Center(
                 child: Padding(
                   padding: EdgeInsets.only(top: 360.h),
                   child: const Text(
-                    'No results found',
+                    'No instructor found',
                     style: TextStyle(color: Colors.black),
                   ),
                 ),

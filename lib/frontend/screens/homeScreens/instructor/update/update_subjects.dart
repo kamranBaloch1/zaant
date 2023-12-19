@@ -36,7 +36,7 @@ class _UpdateSubjectsScreenState extends State<UpdateSubjectsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(backgroundColor: appBarColor, title: "Update Subjects"),
+      appBar: const CustomAppBar(backgroundColor: appBarColor, title: "Change subjects"),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
