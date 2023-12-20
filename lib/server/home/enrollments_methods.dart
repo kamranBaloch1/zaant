@@ -13,8 +13,8 @@ import 'package:zaanth/server/notifications/send_notifications.dart';
 import 'package:zaanth/sharedprefences/userPref.dart';
 
 class EnrollmentsMethods {
-
-  final FirebaseCollectionNamesFields _collectionNamesFields = FirebaseCollectionNamesFields();
+  final FirebaseCollectionNamesFields _collectionNamesFields =
+      FirebaseCollectionNamesFields();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -29,10 +29,12 @@ class EnrollmentsMethods {
         String? currentUserName = UserPreferences.getName();
 
         // References to user and instructor documents
-        DocumentReference userCollectionRef =
-            _firestore.collection(_collectionNamesFields.userCollection).doc(currentUserId);
-        DocumentReference instructorCollectionRef =
-            _firestore.collection(_collectionNamesFields.instructorsCollection).doc(instructorId);
+        DocumentReference userCollectionRef = _firestore
+            .collection(_collectionNamesFields.userCollection)
+            .doc(currentUserId);
+        DocumentReference instructorCollectionRef = _firestore
+            .collection(_collectionNamesFields.instructorsCollection)
+            .doc(instructorId);
 
         // Fetch user and instructor documents
         DocumentSnapshot userDocSnapshot = await userCollectionRef.get();
@@ -73,18 +75,18 @@ class EnrollmentsMethods {
             await instructorCollectionRef
                 .update({'enrollments': instructorEnrollments});
 
-           await SendNotificationsMethod()
+            await SendNotificationsMethod()
                 .sendNotificationsToInstructorForNewEnrollment(
               instructorUid: instructorId,
               userName: currentUserName!,
             );
 
- //Saving the notification to firestore
- 
+            //Saving the notification to firestore
+
             await NotificationMethod().saveNotificationToFireStore(
-          notificationText: "enrolled you",
-          receiverUserId: instructorId,
-          senderUserId: currentUserId);
+                notificationText: "enrolled you",
+                receiverUserId: instructorId,
+                senderUserId: currentUserId);
 
             // Show success message
             showCustomToast("Enrolled successfully!");
@@ -98,12 +100,12 @@ class EnrollmentsMethods {
         }
       } else {
         // User not authenticated
-        
+
         showCustomToast("User not authenticated.");
       }
     } catch (e) {
       // Handle errors gracefully and log the error
-     
+
       showCustomToast("Error enrolling user. Please try again later.");
     }
   }
@@ -139,7 +141,7 @@ class EnrollmentsMethods {
       }
     } catch (e) {
       // Handle any potential errors here
-    
+
       showCustomToast(
           "Error checking enrollment status. Please try again later.");
     }
@@ -152,8 +154,10 @@ class EnrollmentsMethods {
   Future<List<String>> getEnrollmentInstrcutorsIDsForUsers() async {
     String userId = FirebaseAuth.instance.currentUser!.uid;
     try {
-      final DocumentSnapshot userSnapshot =
-          await _firestore.collection(_collectionNamesFields.userCollection).doc(userId).get();
+      final DocumentSnapshot userSnapshot = await _firestore
+          .collection(_collectionNamesFields.userCollection)
+          .doc(userId)
+          .get();
       final Map<String, dynamic>? userData =
           userSnapshot.data() as Map<String, dynamic>?;
 
@@ -250,7 +254,6 @@ class EnrollmentsMethods {
     getEnrollmentUsersIDsForInstructors().then((enrollmentIds) {
       // Check if there are no enrollment IDs to avoid unnecessary Firestore queries.
       if (enrollmentIds.isEmpty) {
-      
         controller.add([]);
         return;
       }
@@ -283,11 +286,13 @@ class EnrollmentsMethods {
 
       if (user != null) {
         String currentUserId = user.uid;
-
-        DocumentReference userCollectionRef =
-            _firestore.collection(_collectionNamesFields.userCollection).doc(currentUserId);
-        DocumentReference instructorCollectionRef =
-            _firestore.collection(_collectionNamesFields.instructorsCollection).doc(instructorId);
+        String? currentUserName = UserPreferences.getName();
+        DocumentReference userCollectionRef = _firestore
+            .collection(_collectionNamesFields.userCollection)
+            .doc(currentUserId);
+        DocumentReference instructorCollectionRef = _firestore
+            .collection(_collectionNamesFields.instructorsCollection)
+            .doc(instructorId);
 
         DocumentSnapshot userDocSnapshot = await userCollectionRef.get();
         DocumentSnapshot instructorDocSnapshot =
@@ -316,6 +321,19 @@ class EnrollmentsMethods {
             await instructorCollectionRef
                 .update({'enrollments': instructorEnrollments});
 
+            await SendNotificationsMethod()
+                .sendNotificationsToInstructorForNewEnrollment(
+              instructorUid: instructorId,
+              userName: currentUserName!,
+            );
+
+            //Saving the notification to firestore
+
+            await NotificationMethod().saveNotificationToFireStore(
+                notificationText: "unenrolled you",
+                receiverUserId: instructorId,
+                senderUserId: currentUserId);
+
             Get.offAll(() => const ShowEnrolledInstructorForUserScreen());
 
             showCustomToast("Unenrolled successfully!");
@@ -326,11 +344,10 @@ class EnrollmentsMethods {
           showCustomToast("User or instructor not found.");
         }
       } else {
-      
         showCustomToast("User not authenticated.");
       }
     } catch (e) {
-        showCustomToast("Error unenrolling user. Please try again later.");
+      showCustomToast("Error unenrolling user. Please try again later.");
     }
   }
 
@@ -339,13 +356,17 @@ class EnrollmentsMethods {
     try {
       User? user = _auth.currentUser;
 
+
       if (user != null) {
         String currentUserId = user.uid;
+         String? currentUserName = UserPreferences.getName();
 
-        DocumentReference userCollectionRef =
-            _firestore.collection(_collectionNamesFields.userCollection).doc(userId);
-        DocumentReference instructorCollectionRef =
-            _firestore.collection(_collectionNamesFields.instructorsCollection).doc(currentUserId);
+        DocumentReference userCollectionRef = _firestore
+            .collection(_collectionNamesFields.userCollection)
+            .doc(userId);
+        DocumentReference instructorCollectionRef = _firestore
+            .collection(_collectionNamesFields.instructorsCollection)
+            .doc(currentUserId);
 
         DocumentSnapshot userDocSnapshot = await userCollectionRef.get();
         DocumentSnapshot instructorDocSnapshot =
@@ -373,6 +394,20 @@ class EnrollmentsMethods {
             await userCollectionRef.update({'enrollments': userEnrollments});
             await instructorCollectionRef
                 .update({'enrollments': instructorEnrollments});
+                  await SendNotificationsMethod()
+
+
+                .sendNotificationsToInstructorForNewEnrollment(
+              instructorUid: userId,
+              userName: currentUserName!,
+            );
+
+            //Saving the notification to firestore
+
+            await NotificationMethod().saveNotificationToFireStore(
+                notificationText: "unenrolled you",
+                receiverUserId: userId,
+                senderUserId: currentUserId);
 
             Get.offAll(() => const ShowEnrolledUsersForInstructor());
 
@@ -387,7 +422,6 @@ class EnrollmentsMethods {
         showCustomToast("User not authenticated.");
       }
     } catch (e) {
-     
       showCustomToast("Error unenrolling user. Please try again later.");
     }
   }

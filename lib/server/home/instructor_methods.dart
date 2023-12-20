@@ -780,7 +780,7 @@ Future<void> removeSubjects({
     try {
       final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
       final String replyId = const Uuid().v4();
-      String? currentUserName = UserPreferences.getName();
+      // String? currentUserName = UserPreferences.getName();
 
       ReviewReplyModel reviewReplyModel = ReviewReplyModel(
           userId: currentUserId,
@@ -798,15 +798,17 @@ Future<void> removeSubjects({
           .collection(_collectionNamesFields.reviewsReplyCollection)
           .doc(replyId)
           .set(reviewReplyModel.toMap());
-      await SendNotificationsMethod().sendNotificationsToUsersForReviewReplay(
-          userName: currentUserName!, userId: instructorUid);
 
-      //Saving the notification to firestore
 
-      await NotificationMethod().saveNotificationToFireStore(
-          notificationText: "replied you",
-          receiverUserId: instructorUid,
-          senderUserId: currentUserId);
+      // await SendNotificationsMethod().sendNotificationsToUsersForReviewReplay(
+      //     userName: currentUserName!, userId: instructorUid);
+
+      // //Saving the notification to firestore
+
+      // await NotificationMethod().saveNotificationToFireStore(
+      //     notificationText: "replied you",
+      //     receiverUserId: instructorUid,
+      //     senderUserId: currentUserId);
       showCustomToast("Reply added");
     } catch (e) {
       showCustomToast("error accoured while adding an reply");
