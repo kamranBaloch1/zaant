@@ -75,7 +75,7 @@ class _ShowInstructorReviewsScreenState
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBar(backgroundColor: appBarColor, title: "Reviews"),
+          appBar: const CustomAppBar(backgroundColor: appBarColor, title: "Reviews"),
           body: FutureBuilder<List<Map<String, dynamic>>>(
             future: Provider.of<InstructorProviders>(context, listen: false)
                 .fetchReviewsOfInstructorProvider(

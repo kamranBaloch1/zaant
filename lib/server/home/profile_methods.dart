@@ -246,27 +246,16 @@ class ProfileMethods {
       // Check if the new password is the same as the old password
       if (newPassword == currentPassword) {
         // Display an error message if the new password is the same as the old password
-        showCustomToast("New password cannot be the same as the old password");
+        showCustomToast("new password cannot be the same as the old password");
       } else {
         // Change the password
         await user.updatePassword(newPassword);
 
         // Password changed successfully
-        showCustomToast("Password changed successfully");
+        showCustomToast("password changed successfully");
       }
     } catch (error) {
-      // Handle password change error
-      if (error is FirebaseAuthException) {
-        // FirebaseAuthException provides more specific error information
-        if (error.code == 'wrong-password') {
-          showCustomToast("Error changing password: Wrong password provided");
-        } else {
-          showCustomToast("Error changing password");
-        }
-      } else {
-        // Handle other types of errors
-        showCustomToast("Error changing password");
-      }
+        showCustomToast("error changing password: Wrong password provided or try again");
     }
   }
 
