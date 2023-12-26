@@ -83,16 +83,20 @@ class LoginMethods {
   }
 
   // Method to reset user password
-  Future<void> resetUserPassword(String email) async {
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
-      showCustomToast(
-          "We have sent a password reset link to this email address");
-    } on FirebaseAuthException  {
-      showCustomToast("Invalid login credentials");
+  resetUserPassword({required String email}) async {
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: email)
+          .then((value) {
+        showCustomToast(
+          "we have sent a password reset link to this email",
+        );
+      });
     } catch (e) {
-      showCustomToast("An error occurred. Please try again later.");
+      showCustomToast(
+        "there is no user records corresponding this email address",
+      );
     }
   }
 }

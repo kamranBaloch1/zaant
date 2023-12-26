@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: <Widget>[
                     SizedBox(height: 40.h),
                     Center(
-                      child: Image.asset(
+                      child: Image.network(
                         assetLogoImg,
                         width: 250.w,
                         height: 180.h,

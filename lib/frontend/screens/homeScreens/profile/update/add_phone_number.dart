@@ -48,7 +48,7 @@ class _AddPhoneNumberScreenState extends State<AddPhoneNumberScreen> {
     String formattedNumber = "+92$phoneNumber";
 
     if (formattedNumber == widget.phoneNumber) {
-      showCustomToast("please write an another number");
+      showCustomToast("please use an diffrent number");
       setState(() {
         _isLoading = false;
       });

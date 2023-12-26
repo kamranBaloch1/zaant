@@ -19,9 +19,9 @@ class LoginProviders extends ChangeNotifier {
   }
 
   // Method to reset user password
-  Future<void> resetUserPasswordProvider(String email) async {
+  Future<void> resetUserPasswordProvider({required String email}) async {
     try {
-      await _loginMethods.resetUserPassword(email);
+      await _loginMethods.resetUserPassword(email:email);
       notifyListeners();
     } catch (e) {
       print("An error occurred. Please try again.");

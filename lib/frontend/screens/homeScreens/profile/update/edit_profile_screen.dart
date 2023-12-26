@@ -127,7 +127,7 @@ name = name.split(' ').map((word) => word.substring(0, 1).toUpperCase() + word.s
               ? Image.file(_selectedImage!).image
               : profilePicUrl != null
                   ? NetworkImage(profilePicUrl!)
-                  : NetworkImage(defaultNetworkProfileImage),
+                  : NetworkImage(defaultProfileImage),
         ),
       ),
     );

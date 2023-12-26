@@ -120,15 +120,19 @@ class _InstructorDetailScreenState extends State<InstructorDetailScreen> {
       _isLoading = false;
     });
   }
+ 
 
-  void _callInstructor(String phoneNumber) async {
-    String url = 'tel:$phoneNumber';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      showCustomToast("Could not launch dialer");
-    }
+
+ void _callInstructor(String phoneNumber) async {
+  String uri = 'tel:$phoneNumber';
+  Uri url = Uri.parse(uri);
+
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url);
+  } else {
+    showCustomToast("Could not launch dialer");
   }
+}
 
   void _showRatingDialog() {
     showDialog(

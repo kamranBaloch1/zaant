@@ -72,7 +72,7 @@ class _NumberOtpVerifyScreenState extends State<NumberOtpVerifyScreen> {
           appBar: const CustomAppBar(
               backgroundColor: appBarColor, title: "Enter OTP Code"),
           body: Padding(
-            padding:  EdgeInsets.all(16.w),
+            padding: EdgeInsets.all(16.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

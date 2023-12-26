@@ -45,6 +45,7 @@ dependencies:
   video_thumbnail: ^0.5.3
   permission_handler: ^11.0.1
   flutter_typeahead: ^4.8.0
+  firebase_app_check: ^0.2.1+8
  
   
  

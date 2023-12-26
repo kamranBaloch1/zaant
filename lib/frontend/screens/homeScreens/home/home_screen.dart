@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 40.h,
                   ),
-                  Image.asset(
+                  Image.network(
                     homeBannerImg,
                     width: double.infinity,
                     fit: BoxFit.cover,

@@ -48,17 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ), // Display the receiver's name here
           ],
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                // Get.to(() => AudioCallScreen(
-                //     callID: widget.senderId,
-                //     userName: widget.receiverName,
-                //     userID: widget.senderId));
-              },
-              icon: const Icon(Icons.call)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.video_call))
-        ],
+       
       ),
       body: Column(
         children: <Widget>[

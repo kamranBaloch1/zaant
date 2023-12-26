@@ -36,7 +36,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final loginProviders = Provider.of<LoginProviders>(context, listen: false);
 
     String email = _emailController.text.trim();
-    loginProviders.resetUserPasswordProvider(email).then((value) => {
+    loginProviders.resetUserPasswordProvider(email: email).then((value) => {
       _emailController.clear(),
       setState(() {
         _isLoading = false;
@@ -52,7 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           body: SingleChildScrollView(
             child: SafeArea(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 60.h, horizontal: 50.w),
+                 padding: EdgeInsets.symmetric(vertical: 60.h, horizontal: 50.w),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -66,20 +66,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                       ),
                       SizedBox(height: 100.h),
-                      CustomAuthTextField(
-                        hintText: "Email address",
-                        icon: const Icon(Icons.email),
-                        obSecure: false,
-                        keyBoardType: TextInputType.emailAddress,
-                        controller: _emailController,
-                        validator: (value) {
-                          return RegExp(
-                            // Regular expression to validate email
-                            r"[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                              .hasMatch(value!)
-                              ? null
-                              : "Please enter a valid email address";
-                        },
+                      SizedBox(
+                        width: 300.w,
+                        child: CustomAuthTextField(
+                          hintText: "Email address",
+                          icon: const Icon(Icons.email),
+                          obSecure: false,
+                          keyBoardType: TextInputType.emailAddress,
+                          controller: _emailController,
+                          validator: (value) {
+                            return RegExp(
+                              // Regular expression to validate email
+                              r"[a-z0-9!#%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                                .hasMatch(value!)
+                                ? null
+                                : "Please enter a valid email address";
+                          },
+                        ),
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(
