@@ -15,8 +15,8 @@ class StartLoadingBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // image goes here
-            Image.network(
-               assetLogoImg,
+            Image.asset(
+               logoImg,
                         width: 220.w,
                          height: 180.h,
             ),

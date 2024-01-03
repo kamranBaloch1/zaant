@@ -117,21 +117,22 @@ name = name.split(' ').map((word) => word.substring(0, 1).toUpperCase() + word.s
     }
   }
 
-  Widget _buildProfileAvatar() {
-    return Center(
-      child: GestureDetector(
-        onTap: _selectProfilePicture,
-        child: CircleAvatar(
-          radius: 80.r,
-          backgroundImage: _selectedImage != null
-              ? Image.file(_selectedImage!).image
-              : profilePicUrl != null
-                  ? NetworkImage(profilePicUrl!)
-                  : NetworkImage(defaultProfileImage),
-        ),
+ Widget _buildProfileAvatar() {
+  return Center(
+    child: GestureDetector(
+      onTap: _selectProfilePicture,
+      child: CircleAvatar(
+        radius: 80.r,
+        backgroundImage: _selectedImage != null
+            ? Image.file(_selectedImage!).image
+            : profilePicUrl != null
+                ? NetworkImage(profilePicUrl!)
+                : AssetImage(defaultProfileImage) as ImageProvider<Object>,
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {

@@ -64,7 +64,7 @@ class _SelectProfilePicScreenState extends State<SelectProfilePicScreen> {
                       radius: 80.r,
                     )
                   : CircleAvatar(
-                      backgroundImage: NetworkImage(defaultProfileImage),
+                      backgroundImage: AssetImage(defaultProfileImage),
                       radius: 80.r,
                     ),
             ),

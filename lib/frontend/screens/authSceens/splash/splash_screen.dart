@@ -80,8 +80,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     children: [
                       SizedBox(height: 50.h),
                       Center(
-                        child: Image.network(
-                          assetLogoImg,
+                        child: Image.asset(
+                          logoImg,
                           width: 250.w,
                           height: 180.h,
                         ),
