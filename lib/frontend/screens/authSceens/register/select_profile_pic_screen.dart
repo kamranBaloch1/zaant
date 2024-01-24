@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,6 +7,7 @@ import 'package:zaanth/frontend/screens/authSceens/register/register_screen.dart
 import 'package:zaanth/frontend/screens/widgets/custom_button.dart';
 import 'package:zaanth/frontend/screens/widgets/custom_toast.dart';
 import 'package:zaanth/global/constant_values.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class SelectProfilePicScreen extends StatefulWidget {
   const SelectProfilePicScreen({super.key});
@@ -22,9 +22,34 @@ class _SelectProfilePicScreenState extends State<SelectProfilePicScreen> {
   Future<void> _pickImageFromGallery() async {
     final imagePicker = ImagePicker();
     final pickedImg = await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _selectedImage = pickedImg;
-    });
+
+    if (pickedImg != null) {
+      // Crop the selected image
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: pickedImg.path,
+        compressQuality: 100,
+        maxWidth: 800,
+        maxHeight: 800,
+        compressFormat: ImageCompressFormat.jpg,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: Colors.white,
+              toolbarWidgetColor: Colors.black,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+        ],
+      );
+
+      if (croppedFile != null) {
+        setState(() {
+          _selectedImage = XFile(croppedFile.path);
+        });
+      }
+    }
   }
 
   @override
@@ -34,11 +59,11 @@ class _SelectProfilePicScreenState extends State<SelectProfilePicScreen> {
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-         IconButton(onPressed: (){
-          Navigator.pop(context);
-         }, icon: const Icon(Icons.arrow_back)),
-
+          IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back)),
           SizedBox(
             height: 50.h,
           ),

@@ -7,7 +7,7 @@ class CustomCitiesDropdown extends StatefulWidget {
   final String? labelText;
   final ValueChanged<String?> onChanged;
 
-  CustomCitiesDropdown({
+  const CustomCitiesDropdown({
     Key? key,
     required this.selectedCity,
     required this.labelText,
@@ -25,6 +25,7 @@ class _CustomCitiesDropdownState extends State<CustomCitiesDropdown> {
     "Quetta",
     "Gwadar",
     "Turbat",
+    "Pasni",
     "Khuzdar",
     "Loralai",
     "Zhob",
@@ -37,6 +38,28 @@ class _CustomCitiesDropdownState extends State<CustomCitiesDropdown> {
     "Kharan",
     "Mastung",
     "Panjgur",
+    
+    // Sindh
+    "Karachi",
+    "Hyderabad",
+    "Sukkur",
+    "Larkana",
+    "Nawabshah",
+    "Mirpur Khas",
+    "Jacobabad",
+    "Shikarpur",
+    "Dadu",
+    "Tando Adam",
+    "Badin",
+    "Khairpur",
+    "Tando Muhammad Khan",
+    "Sanghar",
+    "Tharparkar",
+    "Umerkot",
+    "Ghotki",
+    "Kamber Shahdadkot",
+
+
     // Islamabad Capital Territory
     "Islamabad",
 
@@ -72,26 +95,6 @@ class _CustomCitiesDropdownState extends State<CustomCitiesDropdown> {
     "Hafizabad",
     "Narowal",
     "Lodhran",
-
-    // Sindh
-    "Karachi",
-    "Hyderabad",
-    "Sukkur",
-    "Larkana",
-    "Nawabshah",
-    "Mirpur Khas",
-    "Jacobabad",
-    "Shikarpur",
-    "Dadu",
-    "Tando Adam",
-    "Badin",
-    "Khairpur",
-    "Tando Muhammad Khan",
-    "Sanghar",
-    "Tharparkar",
-    "Umerkot",
-    "Ghotki",
-    "Kamber Shahdadkot",
 
     // Khyber Pakhtunkhwa (KP)
     "Peshawar",

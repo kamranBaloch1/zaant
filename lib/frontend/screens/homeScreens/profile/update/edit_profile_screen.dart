@@ -12,6 +12,7 @@ import 'package:zaanth/global/colors.dart';
 import 'package:zaanth/global/constant_values.dart';
 import 'package:zaanth/sharedprefences/userPref.dart';
 import 'package:zaanth/frontend/screens/homeScreens/homeWidgets/custom_cities_dropdown.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -68,11 +69,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final picker = ImagePicker();
       final pickedImage = await picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedImage != null) {
+         if (pickedImage != null) {
+      // Crop the selected image
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: pickedImage.path,
+        compressQuality: 100,
+        maxWidth: 800,
+        maxHeight: 800,
+        compressFormat: ImageCompressFormat.jpg,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: Colors.white,
+              toolbarWidgetColor: Colors.black,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+        ],
+      );
+
+      if (croppedFile != null) {
         setState(() {
-          _selectedImage = File(pickedImage.path);
+          _selectedImage = File(croppedFile.path);
         });
       }
+    }
+
+     
     } catch (e) {
       showCustomToast("Error selecting profile picture: $e");
     }
@@ -80,9 +105,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _updateUserInfo() async {
     String name = _nameC.text.trim();
-   // Capitalize each word in the name
-name = name.split(' ').map((word) => word.substring(0, 1).toUpperCase() + word.substring(1)).join(' ');
-
+    // Capitalize each word in the name
+    name = name
+        .split(' ')
+        .map((word) => word.substring(0, 1).toUpperCase() + word.substring(1))
+        .join(' ');
 
     if (name.isNotEmpty) {
       if (selectedCity == null) {
@@ -117,22 +144,21 @@ name = name.split(' ').map((word) => word.substring(0, 1).toUpperCase() + word.s
     }
   }
 
- Widget _buildProfileAvatar() {
-  return Center(
-    child: GestureDetector(
-      onTap: _selectProfilePicture,
-      child: CircleAvatar(
-        radius: 80.r,
-        backgroundImage: _selectedImage != null
-            ? Image.file(_selectedImage!).image
-            : profilePicUrl != null
-                ? NetworkImage(profilePicUrl!)
-                : AssetImage(defaultProfileImage) as ImageProvider<Object>,
+  Widget _buildProfileAvatar() {
+    return Center(
+      child: GestureDetector(
+        onTap: _selectProfilePicture,
+        child: CircleAvatar(
+          radius: 80.r,
+          backgroundImage: _selectedImage != null
+              ? Image.file(_selectedImage!).image
+              : profilePicUrl != null
+                  ? NetworkImage(profilePicUrl!)
+                  : AssetImage(defaultProfileImage) as ImageProvider<Object>,
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

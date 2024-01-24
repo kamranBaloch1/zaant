@@ -95,13 +95,6 @@ class SearchResultScreen extends StatelessWidget {
               ),
             Row(
               children: [
-                const Text(
-                  'Rating: ',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 Row(
                   children: List.generate(
                     5,
