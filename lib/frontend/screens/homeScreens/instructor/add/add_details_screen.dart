@@ -24,16 +24,16 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
   String? selectedQualification;
   String? selectedTuitionType;
   String? selectedExperienceType;
-  String? selectedCompletionStatus="";
+  String? selectedCompletionStatus = "";
 
   bool _isLoading = false;
 
   final List<String> _qualificationList = [
-    "Matric",
-    "PhD",
-    "Bachelor",
     "School Student",
-    "Master"
+    "Matric",
+    "Bachelor",
+    "Master's",
+    "PHD"
   ];
   final List<String> _tuitionTypeList = ["online", "offline"];
   final List<String> _experiencedTypeList = ["Experienced", "Fresher"];
@@ -62,7 +62,8 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
         selectedExperienceType != null &&
         selectedExperienceType!.isNotEmpty) {
       // Check if job experience is required and not empty when user is "Experienced"
-      if (selectedExperienceType == "Experienced" && _teachingExperience.text.trim().isEmpty) {
+      if (selectedExperienceType == "Experienced" &&
+          _teachingExperience.text.trim().isEmpty) {
         setState(() {
           _isLoading = false;
         });
@@ -77,7 +78,9 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
         Get.to(() => PhoneNumberScreen(
               feesPerMonth: int.parse(feesPerMonth),
               selectedQualification: selectedQualification,
-              teachingExperience: selectedExperienceType == "Experienced" ? _teachingExperience.text.trim() : "Fresher",
+              teachingExperience: selectedExperienceType == "Experienced"
+                  ? _teachingExperience.text.trim()
+                  : "Fresher",
               tuitionType: selectedTuitionType,
               degreeCompletionStatus: selectedCompletionStatus,
             ));
@@ -126,18 +129,14 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                       selectedQualification = value;
                     });
 
-                    // Check if the selected qualification is a degree, and show the completion status dropdown
-                    if (_isDegree(value)) {
-                      _showCompletionStatusDropdown();
-                    } else {
-                      _hideCompletionStatusDropdown();
-                    }
+                    _showCompletionStatusDropdown();
                   },
                   labelText: "Select Qualification",
                   icon: Icons.book,
                 ),
+
                 // New dropdown for completion status
-                if (_isDegree(selectedQualification))
+                if (_isDegreeSelected(selectedQualification))
                   CustomDropdown(
                     items: _completionStatusList,
                     value: selectedCompletionStatus,
@@ -149,9 +148,7 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
                     labelText: "Select Completion Status",
                     icon: Icons.check,
                   ),
-               
-               
-               
+
                 SizedBox(
                   height: 20.h,
                 ),
@@ -210,25 +207,19 @@ class _AddDetailsScreenState extends State<AddDetailsScreen> {
     );
   }
 
-  // Helper method to check if the selected qualification is a degree
-  bool _isDegree(String? qualification) {
+  // Helper method to check if the selected qualification is a selected
+  bool _isDegreeSelected(String? qualification) {
     return qualification == "Matric" ||
-        qualification == "PhD" ||
+        qualification == "PHD" ||
         qualification == "Bachelor" ||
-        qualification == "Master";
+        qualification == "School Student" ||
+        qualification == "Master's";
   }
 
   // Helper method to show the completion status dropdown
   void _showCompletionStatusDropdown() {
     setState(() {
-      selectedCompletionStatus = _completionStatusList.first; // Set default value
-    });
-  }
-
-  // Helper method to hide the completion status dropdown
-  void _hideCompletionStatusDropdown() {
-    setState(() {
-      selectedCompletionStatus = null;
+      selectedCompletionStatus = _completionStatusList.first;
     });
   }
 }

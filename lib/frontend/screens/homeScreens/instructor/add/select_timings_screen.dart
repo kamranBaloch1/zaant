@@ -70,8 +70,9 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
     });
   }
 
-  Future<void> _sendVerificationCode() async {
+  Future<void> _addNewInstructor() async {
     try {
+    
       setState(() {
         _isLoading = true;
       });
@@ -223,7 +224,7 @@ class _SelectTimingsScreenState extends State<SelectTimingsScreen> {
               Padding(
                 padding: EdgeInsets.all(16.0.w),
                 child: CustomButton(
-                  onTap: _isLoading ? null : _sendVerificationCode,
+                  onTap: _isLoading ? null : _addNewInstructor,
                   width: 200,
                   height: 40,
                   text: "Done",

@@ -29,17 +29,16 @@ class _UpdateQualificationScreenState extends State<UpdateQualificationScreen> {
   String? selectedCompletionStatus;
   final List<String> _completionStatusList = ["Completed", "Not Completed"];
   final List<String> _qualificationList = [
-    "Matric",
-    "PhD",
-    "Bachelor",
     "School Student",
-    "Master"
+    "Matric",
+    "Bachelor",
+    "Master's",
+    "PHD"
   ];
 
   @override
   void initState() {
     super.initState();
-    // Initialize the selected qualification from the widget parameter
     // Initialize the selected qualification from the widget parameter
     selectedQualification = widget.selectedQualification;
     selectedCompletionStatus = widget.degreeCompletionStatus;
@@ -58,7 +57,8 @@ class _UpdateQualificationScreenState extends State<UpdateQualificationScreen> {
       final instructorProvider =
           Provider.of<InstructorProviders>(context, listen: false);
       await instructorProvider.updateInstructorQualificationProvider(
-          qualification: selectedQualification!,degreeCompletionStatus: selectedCompletionStatus!);
+          qualification: selectedQualification!,
+          degreeCompletionStatus: selectedCompletionStatus!);
 
       setState(() {
         _isLoading = false;
@@ -85,41 +85,37 @@ class _UpdateQualificationScreenState extends State<UpdateQualificationScreen> {
             children: [
               SizedBox(height: 40.h),
               CustomDropdown(
-                  items: _qualificationList,
-                  value: selectedQualification,
+                items: _qualificationList,
+                value: selectedQualification,
+                onChanged: (value) {
+                  setState(() {
+                    selectedQualification = value;
+                  });
+
+                  // Check if the selected qualification is a degree, and show the completion status dropdown
+                  if (_isDegree(value)) {
+                    _showCompletionStatusDropdown();
+                  } else {
+                    _hideCompletionStatusDropdown();
+                  }
+                },
+                labelText: "Select Qualification",
+                icon: Icons.book,
+              ),
+              // New dropdown for completion status
+              if (_isDegree(selectedQualification))
+                CustomDropdown(
+                  items: _completionStatusList,
+                  value: selectedCompletionStatus,
                   onChanged: (value) {
                     setState(() {
-                      selectedQualification = value;
+                      selectedCompletionStatus = value;
                     });
-
-                    // Check if the selected qualification is a degree, and show the completion status dropdown
-                    if (_isDegree(value)) {
-                      _showCompletionStatusDropdown();
-                    } else {
-                      _hideCompletionStatusDropdown();
-                    }
                   },
-                  labelText: "Select Qualification",
-                  icon: Icons.book,
+                  labelText: "Select Completion Status",
+                  icon: Icons.check,
                 ),
-                // New dropdown for completion status
-                if (_isDegree(selectedQualification))
-                  CustomDropdown(
-                    items: _completionStatusList,
-                    value: selectedCompletionStatus,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCompletionStatus = value;
-                      });
-                    },
-                    labelText: "Select Completion Status",
-                    icon: Icons.check,
-                  ),
-               
-               
-            
-            
-            
+
               SizedBox(height: 40.h),
               CustomButton(
                 onTap: _updateQualification,
@@ -136,19 +132,21 @@ class _UpdateQualificationScreenState extends State<UpdateQualificationScreen> {
       ],
     );
   }
-    // Helper method to check if the selected qualification is a degree
+
+  // Helper method to check if the selected qualification is a degree
   bool _isDegree(String? qualification) {
     return qualification == "Matric" ||
         qualification == "PhD" ||
         qualification == "Bachelor" ||
-        qualification == "Master" || 
+        qualification == "Master" ||
         qualification == "School Student";
   }
 
   // Helper method to show the completion status dropdown
   void _showCompletionStatusDropdown() {
     setState(() {
-      selectedCompletionStatus = _completionStatusList.first; // Set default value
+      selectedCompletionStatus =
+          _completionStatusList.first; // Set default value
     });
   }
 
@@ -159,5 +157,3 @@ class _UpdateQualificationScreenState extends State<UpdateQualificationScreen> {
     });
   }
 }
-
-

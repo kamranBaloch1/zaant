@@ -62,10 +62,12 @@ class _SyllabusTypeScreenState extends State<SyllabusTypeScreen> {
               spacing: 16.w,
               runSpacing: 16.w,
               children: [
-                _buildSyllabusTypeOption("O Level"),
-                _buildSyllabusTypeOption("Balochistan Borad"),
-                _buildSyllabusTypeOption("Karachi Board"),
-                _buildSyllabusTypeOption("Punjab Board"),
+                _buildSyllabusTypesOption("Karachi Board"),
+                _buildSyllabusTypesOption("Balochistan Borad"),
+                _buildSyllabusTypesOption("Sindh Board"),
+                _buildSyllabusTypesOption("Punjab Board"),
+                _buildSyllabusTypesOption("Federal Board"),
+                _buildSyllabusTypesOption("KPK Board"),
                 CustomButton(
                   onTap: () {
                     if (selectedSyllabusTypes.isNotEmpty &&
@@ -99,7 +101,7 @@ class _SyllabusTypeScreenState extends State<SyllabusTypeScreen> {
     );
   }
 
-  Widget _buildSyllabusTypeOption(String syllabusType) {
+  Widget _buildSyllabusTypesOption(String syllabusType) {
     bool isSelected = selectedSyllabusTypes.contains(syllabusType);
     bool isDisabled = selectedSyllabusTypes.length >= 2 && !isSelected;
 

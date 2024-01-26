@@ -18,10 +18,19 @@ class PickSubjectsDropdown extends StatefulWidget {
 
 class _PickSubjectsDropdownState extends State<PickSubjectsDropdown> {
  final List<String> _subjectsList = [
-    "Mathematics",
-    "Science",
-    "English",
-    "History",
+        "English",
+        "Urdu",
+        "Mathematics",
+        "Science",
+        "Social Studies",
+        "Pakistan Studies",
+        "Islamic Studies",
+        "Computer Science",
+        "Biology",
+        "Chemistry",
+        "Physics",
+        "Arts"
+  
   ];
 
   @override

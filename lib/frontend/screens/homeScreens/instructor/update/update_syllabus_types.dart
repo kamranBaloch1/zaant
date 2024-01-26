@@ -143,10 +143,12 @@ class _UpdateSyllabusTypesScreenState extends State<UpdateSyllabusTypesScreen> {
         spacing: 16.w,
         runSpacing: 16.w,
         children: [
-          _buildSyllabusTypesOption("O Level"),
-          _buildSyllabusTypesOption("Balochistan Borad"),
           _buildSyllabusTypesOption("Karachi Board"),
+          _buildSyllabusTypesOption("Balochistan Borad"),
+          _buildSyllabusTypesOption("Sindh Board"),
           _buildSyllabusTypesOption("Punjab Board"),
+          _buildSyllabusTypesOption("Federal Board"),
+          _buildSyllabusTypesOption("KPK Board"),
           SizedBox(height: 20.h),
           CustomButton(
             onTap: () async {

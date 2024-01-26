@@ -51,10 +51,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Card(
-                       elevation: 5.0,
+                      elevation: 5.0,
                       margin: EdgeInsets.symmetric(vertical: 10.h),
                       child: Padding(
-                         padding: EdgeInsets.all(16.w),
+                        padding: EdgeInsets.all(16.w),
                         child: CustomCitiesDropdown(
                             selectedCity: selectedCity,
                             labelText: "Select city",
@@ -171,10 +171,12 @@ class _SearchScreenState extends State<SearchScreen> {
                               spacing: 10.0,
                               runSpacing: 10.0,
                               children: [
-                                _buildSyllabusTypesWidget("O Level"),
-                                _buildSyllabusTypesWidget("Karachi Board"),
-                                _buildSyllabusTypesWidget("Balochistan Borad"),
-                                _buildSyllabusTypesWidget("Punjab Board"),
+                                _buildSyllabusTypesOption("Karachi Board"),
+                                _buildSyllabusTypesOption("Balochistan Borad"),
+                                _buildSyllabusTypesOption("Sindh Board"),
+                                _buildSyllabusTypesOption("Punjab Board"),
+                                _buildSyllabusTypesOption("Federal Board"),
+                                _buildSyllabusTypesOption("KPK Board"),
                               ],
                             ),
                           ],
@@ -268,9 +270,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           bottomNavigationBar: ElevatedButton(
             onPressed: () async {
-           
-                await _performSearch(context);
-            
+              await _performSearch(context);
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -375,7 +375,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildSyllabusTypesWidget(String syllabusType) {
+  Widget _buildSyllabusTypesOption(String syllabusType) {
     bool isSelected = _selectedSyllabusTypes.contains(syllabusType);
     bool isDisabled = _selectedSyllabusTypes.length >= 1 && !isSelected;
 
@@ -436,11 +436,10 @@ class _SearchScreenState extends State<SearchScreen> {
     int maxPrice =
         int.tryParse(_maxPriceController.text.trim()) ?? (1 << 63) - 1;
 
-
-        if(selectedCity==null){
-          showCustomToast("please select an city to search");
-          return;
-        }
+    if (selectedCity == null) {
+      showCustomToast("please select an city to search");
+      return;
+    }
 
     try {
       setState(() {
@@ -451,17 +450,16 @@ class _SearchScreenState extends State<SearchScreen> {
       StreamController<List<Map<String, dynamic>>> searchResultController =
           StreamController<List<Map<String, dynamic>>>();
 
-      List<Map<String, dynamic>> searchResults =
-          await InstructorMethods().searchInstructors(
-        address: address,
-        gender: gender,
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-        subjects: _selectedSubjects,
-        selectedGradesLevel: _selectedGradeLevels,
-        selectedSyllabusTypes: _selectedSyllabusTypes,
-        city: selectedCity!
-      );
+      List<Map<String, dynamic>> searchResults = await InstructorMethods()
+          .searchInstructors(
+              address: address,
+              gender: gender,
+              minPrice: minPrice,
+              maxPrice: maxPrice,
+              subjects: _selectedSubjects,
+              selectedGradesLevel: _selectedGradeLevels,
+              selectedSyllabusTypes: _selectedSyllabusTypes,
+              city: selectedCity!);
 
       // Update the stream with the search results
       searchResultController.add(searchResults);
