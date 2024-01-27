@@ -78,25 +78,24 @@ class SearchResultScreen extends StatelessWidget {
               ],
             ),
             if (subjects.isNotEmpty)
-            Row(
-  children: [
-    const Text(
-      'Subjects: ',
-      style: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    Expanded(
-      child: Text(
-        subjects.join(', '),
-        style: const TextStyle(color: Colors.black),
-        overflow: TextOverflow.ellipsis,
-      ),
-    ),
-  ],
-)
-,
+              Row(
+                children: [
+                  const Text(
+                    'Subjects: ',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      subjects.join(', '),
+                      style: const TextStyle(color: Colors.black),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             Row(
               children: [
                 Row(
